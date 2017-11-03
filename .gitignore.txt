@@ -1,0 +1,8 @@
+.hex
+.o
+.elf
+.lss
+.d
+.srec
+.map
+.eep
