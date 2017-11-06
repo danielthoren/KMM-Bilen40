@@ -70,8 +70,8 @@ me@avinashgupta.com
 #define LCD_DATA B			//Port PB0-PB3 are connected to D4-D7
 #define LCD_DATA_POS 0	
 
-#define LCD_E B 			//Enable/strobe signal
-#define LCD_E_POS	PB4		//Position of enable in above port
+#define LCD_E C 			//Enable/strobe signal
+#define LCD_E_POS	PC0		//Position of enable in above port
 
 #define LCD_RS D			//RS SIGNAL
 #define LCD_RS_POS PD3

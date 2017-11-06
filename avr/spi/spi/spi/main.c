@@ -13,12 +13,12 @@
 // Initialize SPI Slave Device
 void spi_init_slave (void)
 {
-	DDRB = (1<<6);     //MISO as OUTPUT
-	SPCR = (1<<SPE);   //Enable SPI
+	DDRB = (1 << DDB6);	//Set MISO as output
+	SPCR = (1 << SPE);	//Enable interrupts and set AVR as slave
 }
 
 //Function to send and receive data for both master and slave
-unsigned char spi_tranceiver (char data)
+char spi_tranceiver (unsigned char data)
 {
 	// Load data into the buffer
 	SPDR = data;
@@ -40,14 +40,10 @@ int main(void)
    
 	//initialize spi
 	spi_init_slave();
-	LCDWriteString("Slave");
+	LCDWriteString(" Slave");
    
-   char num = 0;
-   char recieved = 0;
+   LCDClear();
 	while (1){
-		recieved = spi_tranceiver(num);
-		num++;
-		LCDClear();
 		LCDWriteString(&recieved);
 	}
 }
