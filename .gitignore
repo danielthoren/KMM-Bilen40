@@ -6,3 +6,5 @@
 .srec
 .map
 .eep
+
+.o
