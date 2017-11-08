@@ -8,22 +8,16 @@ mosi = 0
 miso = 2
 sclk = 3 
 
-wiringpi.wiringPiSetup()
+if (wiringpi.wiringPiSPISetup(0,5000) == -1):
+    print("error in wiringpi setup. Initialization failed!")
+    
+#buf = bytes("gurra","UTF-8")
+buf = bytes([116, 117, 114, 110, 101, 114, 0])
 
-wiringpi.pinMode(mosi, OUTPUT)
-wiringpi.pinMode(miso, INPUT)
-wiringpi.pinMode(sclk, OUTPUT)
+print(buf)
 
-print 'qwerty'
+retlen, retdata = wiringpi.wiringPiSPIDataRW(0,buf)
 
-wiringpi.delay(1500) #delay for 1.5 seconds
 
-wiringpi.digitalWrite(mosi, HIGH)
-wiringpi.delay(1500)
 
-print 'tjo'
-
-wiringpi.delay(1000)
-wiringpi.shiftOut(mosi, sclk, 0, 65)
-
-print 'hejdo'
+print("length ",retlen," data ",retdata, " buf ", buf)
