@@ -6,19 +6,26 @@
  */ 
 
 #include <avr/io.h>
+#include <avr/interrupt.h>
 
 #include "lcd.h"
 #include "myutils.h"
 
+#define BUFFSIZE 20
+
+volatile unsigned char incomming[BUFFSIZE] = {0};
+volatile unsigned char outgoing[BUFFSIZE] = {0};
+volatile short int recieved=0;
+
 // Initialize SPI Slave Device
 void spi_init_slave (void)
 {
-	DDRB = (1 << DDB6);	//Set MISO as output
-	SPCR = (1 << SPE);	//Enable interrupts and set AVR as slave
+	DDRB = (1 << DDB6);			//Set MISO as output
+	SPCR=(1<<SPE)|(1<<SPIE);	//Enable SPI && interrupt enable bit
 }
 
 //Function to send and receive data for both master and slave
-char spi_tranceiver (char data)
+unsigned char spi_tranceiver2 (unsigned char data)
 {
 	// Load data into the buffer
 	SPDR = data;
@@ -30,8 +37,33 @@ char spi_tranceiver (char data)
 	return(SPDR);
 }
 
+//interprets the message and resets the spi bus
+void interpret_message(){
+	LCDWriteString((char*)&incomming[0]);
+	recieved = 0;
+}
+
+//Checks if this is the end of message, if not then stores it and sends the next byte
+void spi_tranciever(){
+	if (SPDR == 0x00){
+		interpret_message();
+	}
+	else{
+		incomming[recieved] = SPDR;
+		SPDR = outgoing[recieved++];
+	}
+}
+
+//Spi interrupt routine
+ISR(SPI_STC_vect){
+	
+}
+
 int main(void)
 {
+	//enabling interrupts
+	sei();
+	
    //Initialize LCD module
    LCDInit(LS_BLINK | LS_ULINE);
    
@@ -41,16 +73,7 @@ int main(void)
 	//initialize spi
 	spi_init_slave();
    
-   char recieve[7];
-   recieve[0] = ' ';
-   char send[6] = "pandan";
-   
 	while (1){
-		for (int i = 0; i < 6; i++)
-		{
-			recieve[i+1] =  spi_tranceiver(send[i]);
-		}
-		LCDWriteString(&recieve[0]);
 	}
 }
 
