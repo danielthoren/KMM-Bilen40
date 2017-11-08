@@ -18,7 +18,7 @@ void spi_init_slave (void)
 }
 
 //Function to send and receive data for both master and slave
-char spi_tranceiver (unsigned char data)
+char spi_tranceiver (char data)
 {
 	// Load data into the buffer
 	SPDR = data;
@@ -33,18 +33,24 @@ char spi_tranceiver (unsigned char data)
 int main(void)
 {
    //Initialize LCD module
-   LCDInit(LS_BLINK|LS_ULINE);
+   LCDInit(LS_BLINK | LS_ULINE);
    
    //Clear the screen
    LCDClear();
    
 	//initialize spi
 	spi_init_slave();
-	LCDWriteString(" Slave");
    
-   LCDClear();
+   char recieve[7];
+   recieve[0] = ' ';
+   char send[6] = "pandan";
+   
 	while (1){
-		LCDWriteString(&recieved);
+		for (int i = 0; i < 6; i++)
+		{
+			recieve[i+1] =  spi_tranceiver(send[i]);
+		}
+		LCDWriteString(&recieve[0]);
 	}
 }
 

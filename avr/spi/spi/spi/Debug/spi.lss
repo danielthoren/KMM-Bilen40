@@ -3,29 +3,29 @@ spi.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000048  00800100  000002b6  0000032a  2**0
+  0 .data         00000048  00800100  000002f0  00000364  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         000002b6  00000000  00000000  00000074  2**1
+  1 .text         000002f0  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .comment      00000030  00000000  00000000  00000372  2**0
+  2 .comment      00000030  00000000  00000000  000003ac  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000003a4  2**2
+  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000003dc  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000078  00000000  00000000  000003e4  2**0
+  4 .debug_aranges 00000078  00000000  00000000  0000041c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   000010a6  00000000  00000000  0000045c  2**0
+  5 .debug_info   000010c4  00000000  00000000  00000494  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 00000a71  00000000  00000000  00001502  2**0
+  6 .debug_abbrev 00000a8e  00000000  00000000  00001558  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   000006e0  00000000  00000000  00001f73  2**0
+  7 .debug_line   000006ec  00000000  00000000  00001fe6  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000114  00000000  00000000  00002654  2**2
+  8 .debug_frame  00000114  00000000  00000000  000026d4  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    000004e6  00000000  00000000  00002768  2**0
+  9 .debug_str    000004ea  00000000  00000000  000027e8  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    0000093a  00000000  00000000  00002c4e  2**0
+ 10 .debug_loc    00000983  00000000  00000000  00002cd2  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000058  00000000  00000000  00003588  2**0
+ 11 .debug_ranges 00000058  00000000  00000000  00003655  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -114,7 +114,7 @@ Disassembly of section .text:
   98:	11 e0       	ldi	r17, 0x01	; 1
   9a:	a0 e0       	ldi	r26, 0x00	; 0
   9c:	b1 e0       	ldi	r27, 0x01	; 1
-  9e:	e6 eb       	ldi	r30, 0xB6	; 182
+  9e:	e0 ef       	ldi	r30, 0xF0	; 240
   a0:	f2 e0       	ldi	r31, 0x02	; 2
   a2:	00 e0       	ldi	r16, 0x00	; 0
   a4:	0b bf       	out	0x3b, r16	; 59
@@ -125,7 +125,7 @@ Disassembly of section .text:
   ae:	b1 07       	cpc	r27, r17
   b0:	d9 f7       	brne	.-10     	; 0xa8 <__do_copy_data+0x10>
   b2:	e8 d0       	rcall	.+464    	; 0x284 <main>
-  b4:	fe c0       	rjmp	.+508    	; 0x2b2 <_exit>
+  b4:	1b c1       	rjmp	.+566    	; 0x2ec <_exit>
 
 000000b6 <__bad_interrupt>:
   b6:	a4 cf       	rjmp	.-184    	; 0x0 <__vectors>
@@ -473,7 +473,7 @@ void spi_init_slave (void)
 00000278 <spi_tranceiver>:
 
 //Function to send and receive data for both master and slave
-char spi_tranceiver (unsigned char data)
+char spi_tranceiver (char data)
 {
 	// Load data into the buffer
 	SPDR = data;
@@ -497,45 +497,87 @@ int main(void)
 {
  284:	cf 93       	push	r28
  286:	df 93       	push	r29
- 288:	1f 92       	push	r1
- 28a:	cd b7       	in	r28, 0x3d	; 61
- 28c:	de b7       	in	r29, 0x3e	; 62
+ 288:	cd b7       	in	r28, 0x3d	; 61
+ 28a:	de b7       	in	r29, 0x3e	; 62
+ 28c:	2d 97       	sbiw	r28, 0x0d	; 13
+ 28e:	0f b6       	in	r0, 0x3f	; 63
+ 290:	f8 94       	cli
+ 292:	de bf       	out	0x3e, r29	; 62
+ 294:	0f be       	out	0x3f, r0	; 63
+ 296:	cd bf       	out	0x3d, r28	; 61
    //Initialize LCD module
-   LCDInit(LS_BLINK|LS_ULINE);
- 28e:	83 e0       	ldi	r24, 0x03	; 3
- 290:	aa df       	rcall	.-172    	; 0x1e6 <LCDInit>
+   LCDInit(LS_BLINK | LS_ULINE);
+ 298:	83 e0       	ldi	r24, 0x03	; 3
+ 29a:	a5 df       	rcall	.-182    	; 0x1e6 <LCDInit>
    
    //Clear the screen
    LCDClear();
- 292:	60 e0       	ldi	r22, 0x00	; 0
- 294:	81 e0       	ldi	r24, 0x01	; 1
+ 29c:	60 e0       	ldi	r22, 0x00	; 0
+ 29e:	81 e0       	ldi	r24, 0x01	; 1
    
 	//initialize spi
 	spi_init_slave();
- 296:	40 df       	rcall	.-384    	; 0x118 <LCDByte>
-	LCDWriteString(" Slave");
- 298:	eb df       	rcall	.-42     	; 0x270 <spi_init_slave>
- 29a:	80 e4       	ldi	r24, 0x40	; 64
- 29c:	91 e0       	ldi	r25, 0x01	; 1
+ 2a0:	3b df       	rcall	.-394    	; 0x118 <LCDByte>
+ 2a2:	e6 df       	rcall	.-52     	; 0x270 <spi_init_slave>
    
-   unsigned char num = 1;
-   unsigned char recieved = 10;
- 29e:	67 df       	rcall	.-306    	; 0x16e <LCDWriteString>
- 2a0:	8a e0       	ldi	r24, 0x0A	; 10
+   char recieve[7];
+   recieve[0] = ' ';
+ 2a4:	80 e2       	ldi	r24, 0x20	; 32
+ 2a6:	89 83       	std	Y+1, r24	; 0x01
+   char send[6] = "pandan";
+ 2a8:	86 e0       	ldi	r24, 0x06	; 6
+ 2aa:	e0 e4       	ldi	r30, 0x40	; 64
+ 2ac:	f1 e0       	ldi	r31, 0x01	; 1
+ 2ae:	de 01       	movw	r26, r28
+ 2b0:	18 96       	adiw	r26, 0x08	; 8
+ 2b2:	01 90       	ld	r0, Z+
+ 2b4:	0d 92       	st	X+, r0
+ 2b6:	8a 95       	dec	r24
+ 2b8:	e1 f7       	brne	.-8      	; 0x2b2 <main+0x2e>
+ 2ba:	6e 01       	movw	r12, r28
+ 2bc:	8e e0       	ldi	r24, 0x0E	; 14
+ 2be:	c8 0e       	add	r12, r24
+ 2c0:	d1 1c       	adc	r13, r1
+ 2c2:	8e 01       	movw	r16, r28
+ 2c4:	08 5f       	subi	r16, 0xF8	; 248
+ 2c6:	1f 4f       	sbci	r17, 0xFF	; 255
+ 2c8:	7e 01       	movw	r14, r28
+ 2ca:	e2 e0       	ldi	r30, 0x02	; 2
+ 2cc:	ee 0e       	add	r14, r30
+ 2ce:	f1 1c       	adc	r15, r1
+   
 	while (1){
-		recieved = spi_tranceiver(num);
- 2a2:	89 83       	std	Y+1, r24	; 0x01
- 2a4:	81 e0       	ldi	r24, 0x01	; 1
- 2a6:	e8 df       	rcall	.-48     	; 0x278 <spi_tranceiver>
-		LCDWriteString(&recieved);
- 2a8:	89 83       	std	Y+1, r24	; 0x01
- 2aa:	ce 01       	movw	r24, r28
- 2ac:	01 96       	adiw	r24, 0x01	; 1
- 2ae:	5f df       	rcall	.-322    	; 0x16e <LCDWriteString>
- 2b0:	f9 cf       	rjmp	.-14     	; 0x2a4 <main+0x20>
+		for (int i = 0; i < 6; i++)
+		{
+			recieve[i+1] =  spi_tranceiver(send[i]);
+ 2d0:	f8 01       	movw	r30, r16
+ 2d2:	81 91       	ld	r24, Z+
+ 2d4:	8f 01       	movw	r16, r30
+ 2d6:	d0 df       	rcall	.-96     	; 0x278 <spi_tranceiver>
+ 2d8:	f7 01       	movw	r30, r14
+ 2da:	81 93       	st	Z+, r24
+ 2dc:	7f 01       	movw	r14, r30
+   char recieve[7];
+   recieve[0] = ' ';
+   char send[6] = "pandan";
+   
+	while (1){
+		for (int i = 0; i < 6; i++)
+ 2de:	0c 15       	cp	r16, r12
+ 2e0:	1d 05       	cpc	r17, r13
+		{
+			recieve[i+1] =  spi_tranceiver(send[i]);
+		}
+		LCDWriteString(&recieve[0]);
+ 2e2:	b1 f7       	brne	.-20     	; 0x2d0 <main+0x4c>
+ 2e4:	ce 01       	movw	r24, r28
+ 2e6:	01 96       	adiw	r24, 0x01	; 1
+ 2e8:	42 df       	rcall	.-380    	; 0x16e <LCDWriteString>
+	}
+ 2ea:	eb cf       	rjmp	.-42     	; 0x2c2 <main+0x3e>
 
-000002b2 <_exit>:
- 2b2:	f8 94       	cli
+000002ec <_exit>:
+ 2ec:	f8 94       	cli
 
-000002b4 <__stop_program>:
- 2b4:	ff cf       	rjmp	.-2      	; 0x2b4 <__stop_program>
+000002ee <__stop_program>:
+ 2ee:	ff cf       	rjmp	.-2      	; 0x2ee <__stop_program>
