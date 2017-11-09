@@ -4,7 +4,7 @@
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
-
+#include <stdio.h>
 //Frequency
 #define F_CPU 16000000
 
@@ -17,17 +17,19 @@
 //Sonar echo-pins
 #define echo1 PD0
 
-int32_t sonar_data;
+long double sonar_data = 0;
+double pulse = 0;
+unsigned short sonar_nr;
 
-#define blue_led_on() PORTC |= _BV(0);
+#define blue_led_on() PORTA |= _BV(1);
 
-#define blue_led_off() PORTC &= ~_BV(0);
+#define blue_led_off() PORTA &= ~_BV(1);
 //Mode
 int mode = 0;
 
 void sonar_timer_interrupt();
 
-void calc_sonar_data();
+void calc_sonar_data(unsigned short sonar_nr, double pulse);
 
 int main(void)
 {
@@ -36,7 +38,7 @@ int main(void)
 		DDRD = 0b00010000;
 		_delay_ms(10);
 		//Pins is now an output
-		DDRC = 0b00000001;
+		DDRA = 0b00000010;
 		_delay_ms(10);
 		PORTD |= _BV(0);
 		
@@ -46,63 +48,65 @@ int main(void)
 		//Theses pins now trigger an interrupt
 		PCMSK3 |= _BV(0);
 
-		TCCR0B = 0;
+		TCCR1B = 0;
+		
+		  //Counter interrupt
+		  TIMSK1 |= (1 << TOIE0);
+		  
+	  			
 	//Turn on global interrupt
 	sei();
 	
 	
 	while(1 == 1)
-	{
-			_delay_ms(10);
+	{		_delay_ms(10);
 			if( mode == 0){
 			//Triggerpin is high for 15uS
 			PORTD|=_BV(4);
 			_delay_us(15);
 			PORTD &= ~_BV(4);
 			mode = 1;
-			_delay_ms(10);
 			}
-
+			if(sonar_data < 30){
+				blue_led_on();
+			}
+			else{
+				blue_led_off();
+			}
 	}
 }
 //Interrupt function
 ISR(PCINT3_vect)
-{
-
-	sonar_timer_interrupt(0);
+{	
+	sonar_timer_interrupt();
 }
 
 
 
-void sonar_timer_interrupt(int sonar_nr){
+void sonar_timer_interrupt(){
 	//LOW -> HIGH
 	if( (PIND & (1 << PIND0)) == 1)
 	{
-		blue_led_on();
 			// Raknare=0
-			TCNT0=0;
-			
-			//Turn on counter
-			TCCR0B |= (1 << CS02) | (0 << CS01) | (1 << CS00);
+			TCNT1=0;
+			TCCR1B = (0 << CS12) | (0 << CS11) | (1 << CS10);
 			}
+
+			
 	//HIGh -> LOW
 	else{
 				//Stops conter
-				TCCR0B=0;
-				int32_t pulse=TCNT0;
-				calc_sonar_data(0, pulse);
+				TCCR1B = (0 << CS12) | (0 << CS11) | (0 << CS10);
+				pulse=TCNT1;
+				sonar_nr = 0;
+				calc_sonar_data(sonar_nr, pulse);
 				mode = 0;
 				
 	}
 }
 
-void calc_sonar_data(int sonar_nr, int32_t pulse){
-	int cm;
-	cm = (pulse*64)/58;
-	if (pulse <= 200){
-		blue_led_off();
-	}
-	sonar_data= cm;
+void calc_sonar_data(unsigned short sonar_nr, double pulse){
+	sonar_data = pulse/58;
 }
 
 
@@ -110,7 +114,7 @@ void calc_sonar_data(int sonar_nr, int32_t pulse){
 ISR (TIMER1_OVF_vect)
 {
 	//Stops counter
-	TCCR1B=0;
+	mode = 0;
 	//////////////////////////////////////////
 	//Reset everything
 	//////////////////////////////////////////
