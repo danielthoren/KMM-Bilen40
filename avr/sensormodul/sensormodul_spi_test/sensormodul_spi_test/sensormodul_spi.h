@@ -9,12 +9,18 @@
 #include <avr/interrupt.h>
 
 //data sent from 'sensormodul' (A = AVR) to rasberry pi (=P)
-struct sensormodul_PA_data;
+struct sensormoduldata{
+	unsigned char sonar_data[4];
+	unsigned char lapsensor;
+};
+
+typedef struct sensormoduldata sensormodul_PA_data;
 
 /************************************************************************/
 /* Functions                                                             */
 /************************************************************************/
 
-void set_outgoing_data(struct sensormodul_PA_data data);
-void spi_init_slave (void);
+void set_outgoing_data(sensormodul_PA_data data);
+void spi_init (void);
+void spi_tranciever(void);
 
