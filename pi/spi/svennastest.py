@@ -13,10 +13,11 @@ if (wiringpi.wiringPiSPISetup(0,5000) == -1):
 
 
 #def sensorReceive():
-buffern = ([0,0,0,5,0])
-retlen, retdata = wiringpi.wiringPiSPIDataRW(0,buffern)
+buff = bytes([0, 0, 0, 0, 0])
+retlen, retdata = wiringpi.wiringPiSPIDataRW(0,buff)
 print(retdata)
-#print(retdata[1])
+print(retdata[0], retdata[1], retdata[2], retdata[3], retdata[4])
+
 #indata = int.from_bytes(retdata, byteorder='big')
     #ta emot 5 bytes
     #lägg dem i en lista
@@ -46,7 +47,7 @@ print(hexbuf)
 
 print(int.from_bytes(hexbuf, byteorder='big'))
 
-hexbuf += bytes([0, 25, 0])
+hexbuf += bytes([0, 25, 0])l
 
 print(hexbuf)
 
