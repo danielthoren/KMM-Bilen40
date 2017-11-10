@@ -11,9 +11,19 @@ sclk = 3
 if (wiringpi.wiringPiSPISetup(0,5000) == -1):
     print("error in wiringpi setup. Initialization failed!")
 
-'''
+
+#def sensorReceive():
+buffern = ([0,0,0,5,0])
+retlen, retdata = wiringpi.wiringPiSPIDataRW(0,buffern)
+print(retdata)
+#print(retdata[1])
+#indata = int.from_bytes(retdata, byteorder='big')
+    #ta emot 5 bytes
+    #lägg dem i en lista
     
-number = 13375
+
+'''
+number = 1337
 
 number_hex = hex(number).split('x')[-1]
 
@@ -21,6 +31,14 @@ if (len(number_hex) % 2 != 0):
     number_hex = '0' + number_hex
 
 print(number_hex)
+
+number_length = len(number_hex)
+
+print(number_length)
+
+print(number_hex[0])
+
+buffer = bytes([0, 0, ])
 
 hexbuf = bytes.fromhex(number_hex)
 
@@ -35,14 +53,13 @@ print(hexbuf)
 print(hexbuf[0], hexbuf[1], hexbuf[2], hexbuf[3], hexbuf[4])
 
 print(int.from_bytes(hexbuf, byteorder='big'))
-    
 '''
 
-buf = bytes([0, 0, 16, 0, 0])
+#buf = bytes([0, 0, 5, 57, 0])
 
-print("sending out databuf: ", buf)
+#print("sending out databuf: ", buf)
 
-retlen, retdata = wiringpi.wiringPiSPIDataRW(0,buf)
+#retlen, retdata = wiringpi.wiringPiSPIDataRW(0,buf)
 #sends out data which is replaced by data from bus
 
 '''
@@ -55,4 +72,4 @@ retdata.decode("utf-8")
 
 '''
 
-print("|length: ", retlen," | data: ", retdata, " | buf: ", buf, " | int: ", int.from_bytes(retdata, byteorder='big'))
+#print("|length: ", retlen," | data: ", retdata, " | buf: ", buf, " | int: ", int.from_bytes(retdata, byteorder='big'))
