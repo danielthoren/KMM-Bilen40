@@ -1,27 +1,3 @@
-import wiringpi
-
-INPUT = 0
-OUTPUT = 1
-LOW = 0
-HIGH = 1
-mosi = 0
-miso = 2
-sclk = 3 
-
-if (wiringpi.wiringPiSPISetup(0,5000) == -1):
-    print("error in wiringpi setup. Initialization failed!")
-
-
-#def sensorReceive():
-buff = bytes([0, 0, 0, 0, 0])
-retlen, retdata = wiringpi.wiringPiSPIDataRW(0,buff)
-print(retdata)
-print(retdata[0], retdata[1], retdata[2], retdata[3], retdata[4])
-
-#indata = int.from_bytes(retdata, byteorder='big')
-    #ta emot 5 bytes
-    #lägg dem i en lista
-    
 
 '''
 number = 1337
