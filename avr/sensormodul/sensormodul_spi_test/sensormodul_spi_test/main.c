@@ -20,7 +20,7 @@ int main(void)
 {
 	spi_init();
 	sei();
-	sensormodul_PA_data data;
+	sensormodul_AP_data data;
 	
 	data.lapsensor = 1;
 	unsigned char tmp_data[4] = {13,55,3,7};
