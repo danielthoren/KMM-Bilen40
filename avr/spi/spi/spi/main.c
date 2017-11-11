@@ -40,7 +40,7 @@ int32_t build_int32(unsigned char input[4]){
 
 //Spi interrupt routine
 ISR(SPI_STC_vect){
-	spi_tra
+	spi_tranciever();
 }
 
 int main(void)

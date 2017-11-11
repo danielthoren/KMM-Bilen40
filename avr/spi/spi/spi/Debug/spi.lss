@@ -3,31 +3,31 @@ spi.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000040  00800100  00000260  000002f4  2**0
+  0 .data         00000040  00800100  000002e8  0000037c  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         00000260  00000000  00000000  00000094  2**1
+  1 .text         000002e8  00000000  00000000  00000094  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .bss          0000000a  00800140  00800140  00000334  2**0
+  2 .bss          00000011  00800140  00800140  000003bc  2**0
                   ALLOC
-  3 .comment      00000030  00000000  00000000  00000334  2**0
+  3 .comment      00000030  00000000  00000000  000003bc  2**0
                   CONTENTS, READONLY
-  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000364  2**2
+  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000003ec  2**2
                   CONTENTS, READONLY
-  5 .debug_aranges 000000b0  00000000  00000000  000003a4  2**0
+  5 .debug_aranges 000000b0  00000000  00000000  0000042c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   0000123a  00000000  00000000  00000454  2**0
+  6 .debug_info   00001268  00000000  00000000  000004dc  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 00000b79  00000000  00000000  0000168e  2**0
+  7 .debug_abbrev 00000b7b  00000000  00000000  00001744  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   000007e6  00000000  00000000  00002207  2**0
+  8 .debug_line   000007ec  00000000  00000000  000022bf  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  00000174  00000000  00000000  000029f0  2**2
+  9 .debug_frame  000001b0  00000000  00000000  00002aac  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    00000581  00000000  00000000  00002b64  2**0
+ 10 .debug_str    00000581  00000000  00000000  00002c5c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    00000a34  00000000  00000000  000030e5  2**0
+ 11 .debug_loc    00000ad0  00000000  00000000  000031dd  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000080  00000000  00000000  00003b19  2**0
+ 12 .debug_ranges 00000080  00000000  00000000  00003cad  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -116,7 +116,7 @@ Disassembly of section .text:
   98:	11 e0       	ldi	r17, 0x01	; 1
   9a:	a0 e0       	ldi	r26, 0x00	; 0
   9c:	b1 e0       	ldi	r27, 0x01	; 1
-  9e:	e0 e6       	ldi	r30, 0x60	; 96
+  9e:	e8 ee       	ldi	r30, 0xE8	; 232
   a0:	f2 e0       	ldi	r31, 0x02	; 2
   a2:	00 e0       	ldi	r16, 0x00	; 0
   a4:	0b bf       	out	0x3b, r16	; 59
@@ -137,11 +137,11 @@ Disassembly of section .text:
   ba:	1d 92       	st	X+, r1
 
 000000bc <.do_clear_bss_start>:
-  bc:	aa 34       	cpi	r26, 0x4A	; 74
+  bc:	a1 35       	cpi	r26, 0x51	; 81
   be:	b2 07       	cpc	r27, r18
   c0:	e1 f7       	brne	.-8      	; 0xba <.do_clear_bss_loop>
-  c2:	bd d0       	rcall	.+378    	; 0x23e <main>
-  c4:	cb c0       	rjmp	.+406    	; 0x25c <_exit>
+  c2:	da d0       	rcall	.+436    	; 0x278 <main>
+  c4:	0f c1       	rjmp	.+542    	; 0x2e4 <_exit>
 
 000000c6 <__bad_interrupt>:
   c6:	9c cf       	rjmp	.-200    	; 0x0 <__vectors>
@@ -440,56 +440,130 @@ ISR(SPI_STC_vect){
  22e:	0f b6       	in	r0, 0x3f	; 63
  230:	0f 92       	push	r0
  232:	11 24       	eor	r1, r1
-
+ 234:	0b b6       	in	r0, 0x3b	; 59
+ 236:	0f 92       	push	r0
+ 238:	2f 93       	push	r18
+ 23a:	3f 93       	push	r19
+ 23c:	4f 93       	push	r20
+ 23e:	5f 93       	push	r21
+ 240:	6f 93       	push	r22
+ 242:	7f 93       	push	r23
+ 244:	8f 93       	push	r24
+ 246:	9f 93       	push	r25
+ 248:	af 93       	push	r26
+ 24a:	bf 93       	push	r27
+ 24c:	ef 93       	push	r30
+ 24e:	ff 93       	push	r31
+	spi_tranciever();
+ 250:	22 d0       	rcall	.+68     	; 0x296 <spi_tranciever>
 }
- 234:	0f 90       	pop	r0
- 236:	0f be       	out	0x3f, r0	; 63
- 238:	0f 90       	pop	r0
- 23a:	1f 90       	pop	r1
- 23c:	18 95       	reti
+ 252:	ff 91       	pop	r31
+ 254:	ef 91       	pop	r30
+ 256:	bf 91       	pop	r27
+ 258:	af 91       	pop	r26
+ 25a:	9f 91       	pop	r25
+ 25c:	8f 91       	pop	r24
+ 25e:	7f 91       	pop	r23
+ 260:	6f 91       	pop	r22
+ 262:	5f 91       	pop	r21
+ 264:	4f 91       	pop	r20
+ 266:	3f 91       	pop	r19
+ 268:	2f 91       	pop	r18
+ 26a:	0f 90       	pop	r0
+ 26c:	0b be       	out	0x3b, r0	; 59
+ 26e:	0f 90       	pop	r0
+ 270:	0f be       	out	0x3f, r0	; 63
+ 272:	0f 90       	pop	r0
+ 274:	1f 90       	pop	r1
+ 276:	18 95       	reti
 
-0000023e <main>:
+00000278 <main>:
 
 int main(void)
 {
 	//enabling interrupts
 	sei();
- 23e:	78 94       	sei
+ 278:	78 94       	sei
 	
    //Initialize LCD module
    LCDInit(LS_BLINK | LS_ULINE);
- 240:	83 e0       	ldi	r24, 0x03	; 3
- 242:	ae df       	rcall	.-164    	; 0x1a0 <LCDInit>
+ 27a:	83 e0       	ldi	r24, 0x03	; 3
+ 27c:	91 df       	rcall	.-222    	; 0x1a0 <LCDInit>
    
    //Clear the screen
    LCDClear();
- 244:	60 e0       	ldi	r22, 0x00	; 0
- 246:	81 e0       	ldi	r24, 0x01	; 1
+ 27e:	60 e0       	ldi	r22, 0x00	; 0
+ 280:	81 e0       	ldi	r24, 0x01	; 1
    
 	//initialize spi
 	spi_init_spi();
- 248:	6f df       	rcall	.-290    	; 0x128 <LCDByte>
- 24a:	01 d0       	rcall	.+2      	; 0x24e <spi_init_spi>
- 24c:	ff cf       	rjmp	.-2      	; 0x24c <main+0xe>
+ 282:	52 df       	rcall	.-348    	; 0x128 <LCDByte>
+ 284:	01 d0       	rcall	.+2      	; 0x288 <spi_init_spi>
+ 286:	ff cf       	rjmp	.-2      	; 0x286 <main+0xe>
 
-0000024e <spi_init_spi>:
+00000288 <spi_init_spi>:
 }
 
 // Initialize SPI Slave Device
 void spi_init_spi (void)
 {
 	DDRB = (1 << DDB6);			//Set MISO as output
- 24e:	80 e4       	ldi	r24, 0x40	; 64
- 250:	84 b9       	out	0x04, r24	; 4
+ 288:	80 e4       	ldi	r24, 0x40	; 64
+ 28a:	84 b9       	out	0x04, r24	; 4
 	SPCR=(1<<SPE)|(1<<SPIE);	//Enable SPI && interrupt enable bit
- 252:	80 ec       	ldi	r24, 0xC0	; 192
- 254:	8c bd       	out	0x2c, r24	; 44
+ 28c:	80 ec       	ldi	r24, 0xC0	; 192
+ 28e:	8c bd       	out	0x2c, r24	; 44
 	buffer.lapsensor = 0;
- 256:	10 92 44 01 	sts	0x0144, r1	; 0x800144 <__data_end+0x4>
- 25a:	08 95       	ret
+ 290:	10 92 4b 01 	sts	0x014B, r1	; 0x80014b <buffer+0x4>
+ 294:	08 95       	ret
 
-0000025c <_exit>:
- 25c:	f8 94       	cli
+00000296 <spi_tranciever>:
+}
 
-0000025e <__stop_program>:
- 25e:	ff cf       	rjmp	.-2      	; 0x25e <__stop_program>
+//Checks if this is the end of the message, else sends next byte
+void spi_tranciever(){
+	if (recieved == OUTGOING_PACKET_SIZE){
+ 296:	80 91 40 01 	lds	r24, 0x0140	; 0x800140 <__data_end>
+ 29a:	90 91 41 01 	lds	r25, 0x0141	; 0x800141 <__data_end+0x1>
+ 29e:	05 97       	sbiw	r24, 0x05	; 5
+ 2a0:	81 f4       	brne	.+32     	; 0x2c2 <spi_tranciever+0x2c>
+		if (buffer.lapsensor != 0){
+ 2a2:	80 91 4b 01 	lds	r24, 0x014B	; 0x80014b <buffer+0x4>
+ 2a6:	88 23       	and	r24, r24
+ 2a8:	e1 f0       	breq	.+56     	; 0x2e2 <spi_tranciever+0x4c>
+			outgoing_data = buffer;
+ 2aa:	85 e0       	ldi	r24, 0x05	; 5
+ 2ac:	e7 e4       	ldi	r30, 0x47	; 71
+ 2ae:	f1 e0       	ldi	r31, 0x01	; 1
+ 2b0:	ac e4       	ldi	r26, 0x4C	; 76
+ 2b2:	b1 e0       	ldi	r27, 0x01	; 1
+ 2b4:	01 90       	ld	r0, Z+
+ 2b6:	0d 92       	st	X+, r0
+ 2b8:	8a 95       	dec	r24
+ 2ba:	e1 f7       	brne	.-8      	; 0x2b4 <spi_tranciever+0x1e>
+			buffer.lapsensor = 0;
+ 2bc:	10 92 4b 01 	sts	0x014B, r1	; 0x80014b <buffer+0x4>
+ 2c0:	08 95       	ret
+		}
+	}
+	else{
+		SPDR = outgoing[recieved++];
+ 2c2:	80 91 40 01 	lds	r24, 0x0140	; 0x800140 <__data_end>
+ 2c6:	90 91 41 01 	lds	r25, 0x0141	; 0x800141 <__data_end+0x1>
+ 2ca:	9c 01       	movw	r18, r24
+ 2cc:	2f 5f       	subi	r18, 0xFF	; 255
+ 2ce:	3f 4f       	sbci	r19, 0xFF	; 255
+ 2d0:	30 93 41 01 	sts	0x0141, r19	; 0x800141 <__data_end+0x1>
+ 2d4:	20 93 40 01 	sts	0x0140, r18	; 0x800140 <__data_end>
+ 2d8:	fc 01       	movw	r30, r24
+ 2da:	ee 5b       	subi	r30, 0xBE	; 190
+ 2dc:	fe 4f       	sbci	r31, 0xFE	; 254
+ 2de:	80 81       	ld	r24, Z
+ 2e0:	8e bd       	out	0x2e, r24	; 46
+ 2e2:	08 95       	ret
+
+000002e4 <_exit>:
+ 2e4:	f8 94       	cli
+
+000002e6 <__stop_program>:
+ 2e6:	ff cf       	rjmp	.-2      	; 0x2e6 <__stop_program>

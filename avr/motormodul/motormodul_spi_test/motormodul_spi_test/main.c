@@ -32,15 +32,15 @@ int main(void)
 		sei();
 		
 		motormodul_AP_data data_out;
-		data_out.curr_rpm = 42;
-		set_outgoing_data(data_out);
-		
 		motormodul_PA_data data_in;
+		data_in.speed = 0xFF;
+		data_out.curr_rpm = 42;
+		get_set_spi_data(&data_in, data_out);
+
     /* Replace with your application code */
     while (1) 
     {
-		data_in = get_incomming_data();
-		
+		data_in = get_set_spi_data(&data_in, data_out);
 		if(data_in.speed != 0xFF){
 			LCDClear();
 			LCDWriteInt(data_in.speed, 3);

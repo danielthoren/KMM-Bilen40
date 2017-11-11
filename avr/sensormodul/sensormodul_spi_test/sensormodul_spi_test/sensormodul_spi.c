@@ -16,13 +16,25 @@ volatile short int recieved=0;
 sensormodul_AP_data buffer;
 
 void set_outgoing_data(sensormodul_AP_data data){
-	if ((PORTB & 0b00001000) != 0){
-		memcpy((void*) &outgoing, (void*) &data.sonar_data, 4);
+	/*
+	if (PINB5 != 0){
+		memcpy((void*) outgoing, (void*) data.sonar_data, 4);
 		outgoing[4] = data.lapsensor;
+		
+		//initializing first transfer
+		spi_tranciever();
 	}
 	else{
-		buffer = data;
+		LCDWriteString("buffer set");
+		buffer.lapsensor = data.lapsensor;
 	}
+	*/
+	
+			memcpy((void*) outgoing, (void*) data.sonar_data, 4);
+			outgoing[4] = data.lapsensor;
+			
+			//initializing first transfer
+			spi_tranciever();
 }
 
 // Initialize SPI Slave Device
@@ -37,12 +49,15 @@ void spi_init (void)
 void spi_tranciever(){
 	if (recieved == OUTGOING_PACKET_SIZE){
 		if (buffer.lapsensor != 0xFF){
+			while (PORTB5 != 0) {}
 			set_outgoing_data(buffer);
 			buffer.lapsensor = 0xFF;
-			recieved = 0;
 		}
+		recieved = 0;
 	}
 	else{
-		SPDR = outgoing[recieved++];
+		LCDWriteInt(outgoing[recieved], 2);
+		SPDR = outgoing[recieved];
+		recieved++;
 	}
 }

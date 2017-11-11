@@ -20,6 +20,8 @@ typedef struct sensormodul_AP sensormodul_AP_data;
 /* Functions                                                             */
 /************************************************************************/
 
+//only sets data if the SS pin is high, if it is low that means that a transfer is in progress.
+//The data is saved in a buffer and set as outgoing data when SS goes high.
 void set_outgoing_data(sensormodul_AP_data data);
 void spi_init (void);
 void spi_tranciever(void);
