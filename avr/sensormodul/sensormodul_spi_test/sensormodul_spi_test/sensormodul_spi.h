@@ -10,8 +10,8 @@
 
 //data sent from 'sensormodul' (A = AVR) to rasberry pi (=P)
 struct sensormoduldata{
-	unsigned char sonar_data[4];
-	unsigned char lapsensor;
+	volatile unsigned char sonar_data[4];
+	volatile unsigned char lapsensor;
 };
 
 typedef struct sensormoduldata sensormodul_PA_data;

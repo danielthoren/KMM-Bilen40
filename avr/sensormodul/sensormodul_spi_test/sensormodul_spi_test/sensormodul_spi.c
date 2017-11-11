@@ -4,7 +4,7 @@
  * Created: 2017-11-10 14:28:31
  *  Author: Daniel Thorén
  */ 
-
+#include <string.h>
 
 #include "lcd.h"
 #include "sensormodul_spi.h"
@@ -13,10 +13,7 @@
 
 volatile unsigned char outgoing[OUTGOING_PACKET_SIZE] = {0};
 volatile short int recieved=0;
-sensormodul_PA_data outgoing_data;
 sensormodul_PA_data buffer;
-
-
 
 void set_outgoing_data(sensormodul_PA_data data){
 	if ((PORTB & 0b00001000) != 0){
