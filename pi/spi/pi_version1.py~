@@ -18,10 +18,10 @@ if (wiringpi.wiringPiSPISetup(0,5000) == -1):
     print("error in wiringpi setup. Initialization failed!")
 
 wiringpi.wiringPiSetupGpio()
-#wiringpi.pinMode(SS, OUTPUT)
-#wiringpi.digitalWrite(SS, HIGH)
-#print('Starting')
-#wiringpi.delay(2000)
+wiringpi.pinMode(SS, OUTPUT)
+wiringpi.digitalWrite(SS, HIGH)
+print('Starting')
+wiringpi.delay(2000)
 
 '''''''''''''''''
 End Setup
@@ -30,20 +30,18 @@ End Setup
 
 #Receives data from sensor and returns it in a list
 def sensorTransceiver():
-    #wiringpi.digitalWrite(SS, LOW)
+    wiringpi.digitalWrite(SS, LOW)
     
     buff = bytes([0, 0, 0, 0, 0])
     retlen, retdata = wiringpi.wiringPiSPIDataRW(0, buff)
-    print(buff)
-    print(retdata)
 
     indata_list = [retdata[0], retdata[1], retdata[2], retdata[3], retdata[4]]
 
     print(indata_list)
 
-    #wiringpi.delay(1000)
+    wiringpi.delay(1000)
     
-    #wiringpi.digitalWrite(SS, HIGH)
+    wiringpi.digitalWrite(SS, HIGH)
     
     return indata_list
 
@@ -85,15 +83,15 @@ The Testchamber
 
 sensorTransceiver()
 
-#wiringpi.delay(1000)
+wiringpi.delay(1000)
 
-#sensorTransceiver()
+sensorTransceiver()
 
-#speed = 5
+speed = 5
 
-#angle = 30
+angle = 30
 
-#motor_list = [0, speed, angle]
+motor_list = [0, speed, angle]
 
 #motorTransceiver(motor_list)
 
