@@ -28,13 +28,14 @@ typedef struct motormodul_AP motormodul_AP_data;
 /* Functions                                                             */
 /************************************************************************/
 
-//
+//returns the data that has been recieved from the pi
 unsigned char get_set_spi_data(motormodul_PA_data* data_in, motormodul_AP_data data_out);
 
 //initializes the spi
 void spi_init (void);
 
-//This function must be called from the spi interrupt function. It takes the sent byte and saves it, then 
-//updates the outgoing byte
+//only sets data if the SS pin is high, if it is low that means that a transfer is in progress.
+//The data is saved in a buffer and set as outgoing data when SS goes high.
+//When new data is available PORTD0 goes high until the pi has read the data, then it goes low again.
 void spi_tranciever(void);
 

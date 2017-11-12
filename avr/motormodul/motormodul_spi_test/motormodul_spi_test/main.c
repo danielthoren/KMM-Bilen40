@@ -40,7 +40,7 @@ int main(void)
     /* Replace with your application code */
     while (1) 
     {
-		data_in = get_set_spi_data(&data_in, data_out);
+		get_set_spi_data(&data_in, data_out);
 		if(data_in.speed != 0xFF){
 			LCDClear();
 			LCDWriteInt(data_in.speed, 3);
