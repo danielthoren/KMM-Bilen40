@@ -10,32 +10,30 @@
 #include "motormodul_spi.h"
 
 #define OUTGOING_PACKET_SIZE 1
-#define INCOMMING_PACKET_SIZE 1
+#define INCOMMING_PACKET_SIZE 2
 
 volatile unsigned char outgoing[OUTGOING_PACKET_SIZE] = {0};
 volatile unsigned char incomming[INCOMMING_PACKET_SIZE] = {0};
 volatile short int recieved=0;
 motormodul_AP_data buffer;
+unsigned char data_retrieved = 0;
+unsigned char data_set = 0;
 
-void set_outgoing_data(motormodul_AP_data data){
+unsigned char get_set_spi_data(motormodul_PA_data* data_in, motormodul_AP_data data_out){
 	if ((PORTB & 0b00001000) != 0){
-		outgoing[0] = data.curr_rpm;
+		//dismantling struct to outgoing data
+		outgoing[0] = data_out.curr_rpm;
+		
+		//building up struct from incomming data
+		data_in->speed = incomming[0];
+		data_in->angle = incomming[1];
+		
+		//initializing spi transfer
+		SPDR = outgoing[0];
 	}
 	else{
-		buffer = data;
+		buffer = data_out;
 	}
-}
-
-motormodul_PA_data get_incomming_data(){
-	motormodul_PA_data data;
-	if ((PORTB & 0b00001000) != 0){
-		data.speed = incomming[0];
-		incomming[0] = 0xFF;
-	}
-	else{
-		data.speed = 0xFF;
-	}
-	return data;
 }
 
 // Initialize SPI Slave Device
@@ -49,15 +47,16 @@ void spi_init (void)
 
 //Checks if this is the end of the message, else sends next byte
 void spi_tranciever(){
-	if (recieved == OUTGOING_PACKET_SIZE){
-		if (buffer.curr_rpm != 0xFF){
-			set_outgoing_data(buffer);
+	if (recieved == INCOMMING_PACKET_SIZE){
+		if(buffer.curr_rpm != 0xFF){
+			get_set_data(buffer);
 			buffer.curr_rpm = 0xFF;
-			recieved = 0;
 		}
+		recieved = 0;
 	}
 	else{
 		incomming[recieved] = SPDR;
-		SPDR = outgoing[recieved++];
+		recieved++;
+		SPDR = outgoing[recieved];
 	}
 }
