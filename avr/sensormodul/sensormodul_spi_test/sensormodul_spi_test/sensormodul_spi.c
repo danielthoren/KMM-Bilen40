@@ -27,20 +27,20 @@ unsigned char calc_outgoing_checksum(volatile unsigned char data[OUTGOING_PACKET
 
 //converts the data of the incomming 'sensormodul_AP_data' to the 'outgoing' char array
 void set_outgoing(sensormodul_AP_data data){
-	outgoing_data = data;
 	memcpy((void*) outgoing, (void*) data.sonar_data, 4);
 	outgoing[4] = data.lapsensor;
 			
 	outgoing[5] = calc_outgoing_checksum(outgoing);
+	
+	spi_tranciever();
 }
 
 void set_outgoing_data(sensormodul_AP_data data){
 	if ((PINB & 0b00010000) != 0){
 		set_outgoing(data);
+		outgoing_data = data;
 		
 		PORTD |= 0b00000001;
-		//initializing first transfer
-		spi_tranciever();
 	}
 	else{
 		buffer = data;
@@ -63,15 +63,12 @@ void spi_tranciever(){
 		tranciever_count = 0;
 		PORTD &= 0b11111110;
 		if (buffer.lapsensor != 0xFF){
-			set_outgoing(buffer);
+			set_outgoing_data(buffer);
 			
-			SPDR = outgoing[0];
-			tranciever_count++;
 			buffer.lapsensor = 0xFF;
 		}
 		else{
 			set_outgoing(outgoing_data);
-			PORTD |= 0b00000001;
 		}
 	}
 	else{

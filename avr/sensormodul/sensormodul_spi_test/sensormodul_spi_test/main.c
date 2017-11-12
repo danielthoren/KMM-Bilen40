@@ -34,6 +34,12 @@ int main(void)
 	memcpy((void*) data.sonar_data, (void*) tmp_data, 4);
 	
 	set_outgoing_data(data);
+	
+		data.lapsensor = 1;
+		unsigned char tmp_data2[4] = {1,3,3,7};
+		memcpy((void*) data.sonar_data, (void*) tmp_data2, 4);
+		
+		set_outgoing_data(data);
 
     while (1) 
     {
