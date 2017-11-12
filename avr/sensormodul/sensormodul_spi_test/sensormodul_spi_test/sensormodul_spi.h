@@ -22,6 +22,7 @@ typedef struct sensormodul_AP sensormodul_AP_data;
 
 //only sets data if the SS pin is high, if it is low that means that a transfer is in progress.
 //The data is saved in a buffer and set as outgoing data when SS goes high.
+//When new data is available PORTD0 goes high until the pi has read the data, then it goes low again.
 void set_outgoing_data(sensormodul_AP_data data);
 
 //initializes the spi
