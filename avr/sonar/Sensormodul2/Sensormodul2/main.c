@@ -1,14 +1,15 @@
 //Frequency
 #define F_CPU 16000000
-
-#include <avr/io.h>
-#include <avr/interrupt.h>
 #include <stdio.h>
-
 #include <util/delay.h>
 #include <stdlib.h>
+#include "sensormodul_spi.h"
+#include <avr/io.h>
+#include <avr/interrupt.h>
 
-uint32_t sonar_data[4];
+
+sensormodul_AP_data data;
+volatile unsigned char sonar_data[4];
 uint32_t pulse = 0;
 unsigned short sonar_nr;
 
@@ -38,7 +39,7 @@ int main(void)
 	PCMSK0 |= _BV(0);
 	PCMSK1 |= _BV(0);
 	PCMSK2 |= _BV(0);
-	PCMSK3 |= _BV(0);
+	PCMSK3 |= _BV(2);
 
 	TCCR1B = 0;
 	//Turn on global interrupt
@@ -82,11 +83,15 @@ int main(void)
 				mode = 5;
 				_delay_ms(10);
 				break;
-		
-		
-		
 		}
-	}
+		if (mode == 6){
+		cli();
+		//data.sonar_data = sonar_data;
+		set_outgoing_data(data);
+		mode = 0;
+		sei();
+		}
+}
 }
 
 
@@ -145,7 +150,7 @@ void sonar_timer_interrupt(int sonar_nr){
 		}break;
 		case 3:
 		//LOW -> HIGH
-		if( (PIND & (1 << PIND0)) == 1)
+		if( (PIND & (1 << PIND2)) == 1)
 		{
 			// Raknare=0
 			TCNT1=0;
@@ -157,7 +162,7 @@ void sonar_timer_interrupt(int sonar_nr){
 			TCCR1B = (0 << CS12) | (0 << CS11) | (0 << CS10);
 			pulse=TCNT1;
 			calc_sonar_data(0, pulse);
-			mode = 0;
+			mode = 6;
 		}break;
 	}
 }
@@ -187,8 +192,9 @@ ISR (TIMER1_OVF_vect)
 {
 	//Stops counter
 	TCCR1B=0;
-	//////////////////////////////////////////
-	//Reset everything
-	//////////////////////////////////////////
+	mode = 0;
 }
 
+ISR(SPI_STC_vect){
+	spi_tranciever();
+}

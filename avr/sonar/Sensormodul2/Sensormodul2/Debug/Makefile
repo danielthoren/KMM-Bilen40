@@ -37,7 +37,9 @@ SUBDIRS :=
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
-../main.c
+../lcd.c \
+../main.c \
+../sensormodul_spi.c
 
 
 PREPROCESSING_SRCS += 
@@ -47,16 +49,24 @@ ASM_SRCS +=
 
 
 OBJS +=  \
-main.o
+lcd.o \
+main.o \
+sensormodul_spi.o
 
 OBJS_AS_ARGS +=  \
-main.o
+lcd.o \
+main.o \
+sensormodul_spi.o
 
 C_DEPS +=  \
-main.d
+lcd.d \
+main.d \
+sensormodul_spi.d
 
 C_DEPS_AS_ARGS +=  \
-main.d
+lcd.d \
+main.d \
+sensormodul_spi.d
 
 OUTPUT_FILE_PATH +=Sensormodul2.elf
 
@@ -72,6 +82,10 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
+
+
 
 
 
