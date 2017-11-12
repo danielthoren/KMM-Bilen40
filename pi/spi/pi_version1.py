@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import wiringpi
 
 '''''''''''''''''
@@ -12,59 +14,60 @@ HIGH = 1
 MOSI = 10
 MISO = 9
 SCLK = 11
-SS = 22
+SSS = 22
+SSM = 23
+NEWDATA = 5
 
+wiringpi.wiringPiSetupGpio()
 if (wiringpi.wiringPiSPISetup(0,5000) == -1):
     print("error in wiringpi setup. Initialization failed!")
 
-wiringpi.wiringPiSetupGpio()
-#wiringpi.pinMode(SS, OUTPUT)
-#wiringpi.digitalWrite(SS, HIGH)
-#print('Starting')
-#wiringpi.delay(2000)
+wiringpi.pinMode(SSS, OUTPUT)
+wiringpi.digitalWrite(SSS, HIGH)
+
 
 '''''''''''''''''
 End Setup
 
 '''''''''''''''''
 
-#Receives data from sensor and returns it in a list
+'''
+Checks if there is data to receive.
+Has needs to be done before Trancieving data, to take load of the AVR.
+'''
+def hasNewData():
+    return wiringpi.digitalRead(NEWDATA)
+
+
+'''
+Receives data from sensor and returns it in a list
+'''
 def sensorTransceiver():
-    #wiringpi.digitalWrite(SS, LOW)
     
-    buff = bytes([0, 0, 0, 0, 0])
+    wiringpi.digitalWrite(SSS, LOW)
+    
+    buff = bytes([0, 0, 0, 0, 0, 0])
     retlen, retdata = wiringpi.wiringPiSPIDataRW(0, buff)
-    print(buff)
-    print(retdata)
-
-    indata_list = [retdata[0], retdata[1], retdata[2], retdata[3], retdata[4]]
-
-    print(indata_list)
-
-    #wiringpi.delay(1000)
     
-    #wiringpi.digitalWrite(SS, HIGH)
     
-    return indata_list
+    data = [retdata[0], retdata[1], retdata[2], retdata[3], retdata[4], retdata[5]]
+
+    #print("buff =\t\t",buff)
+    #print("retdata =\t", retdata)
+    #print("data =\t", data)
+    
+    wiringpi.digitalWrite(SSS, HIGH)
+
+    if checksum(data):
+        return data[:-1]
+    return None
 
 '''
-#Probably not going to be needed
-def sensorSendData(int_data):
-    wiringpi.digitalWrite(SS, LOW)
-
-    buff = bytes(int_data)
-    print(buff)
-    retlen, retdata = wiringpi.wiringPiSPIDataRW(0, buff)
-
-    wiringpi.digitalWrite(SS, HIGH)
-    
-    return
+Transceives data with motor, receives one value(rotations per minute, rpm) and
+sends two values(speed and angle).
 '''
-
-#Transceives data with motor, receives one value(rotations per minute, rpm) and
-#sends two values(speed and angle).
 def motorTransceiver(data):
-    wiringpi.digitalWrite(SS, LOW)
+    wiringpi.digitalWrite(SSM, LOW)
 
     buff = bytes(data)
     retlen, retdata = wiringpi.wiringPiSPIDataRW(0, buff)
@@ -73,29 +76,36 @@ def motorTransceiver(data):
 
     print(motor_data)
 
-    wiringpi.digitalWrite(SS, HIGH)
+    wiringpi.digitalWrite(SSM, HIGH)
 
     return motor_data
 
 
+'''
+Calculates checksum for received data. 
+'''
+def checksum(data):
+    chk = 0
+    _chk = data[-1]
+    for elem in data[:-1]:
+        chk ^= elem
+
+    #print("Calculated checksum:", chk, "\nReceived checksum:", _chk)
+    return chk == _chk
+
+        
 '''''''''''''''''
 The Testchamber
 
 '''''''''''''''''
+if __name__ == "__main__":
 
-sensorTransceiver()
+    while True:
+        if hasNewData():
 
-#wiringpi.delay(1000)
-
-#sensorTransceiver()
-
-#speed = 5
-
-#angle = 30
-
-#motor_list = [0, speed, angle]
-
-#motorTransceiver(motor_list)
-
-
-
+            data = sensorTransceiver()
+            if data:
+                #print(hasNewData())
+                print(data)
+            else:
+                print("Invalid checksum.")
