@@ -135,6 +135,7 @@ int main(void)
 
 ISR(PCINT0_vect)
 {
+	if( PINA & (1 << PIND0) == 1){
 	LCDClear();
 	if (led_is_on())
 	led_off();
@@ -148,8 +149,9 @@ ISR(PCINT0_vect)
 	tot_overflow = 0;
 	TCNT3 = 0;
 	
-	rpm = (float) 1/(time_elapsed*8) ;
+	rpm = (float) (1/(time_elapsed*4)) ;
 	LCDWriteInt(rpm,6);
+	}
 	//LCDWriteString("triggered");
 }
 
