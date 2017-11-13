@@ -7,42 +7,37 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-
+//Struct to send over spi
 sensormodul_AP_data data;
+//Temporary saved sonar data
 volatile unsigned char sonar_data[4];
+//Timer ticks
 uint32_t pulse = 0;
+//Whitch sensor
 unsigned short sonar_nr;
 
 #define blue_led_on() PORTC |= _BV(1);
-
 #define blue_led_off() PORTC &= ~_BV(1);
-//Mode
+
+
+//Which mode/sensor is active. 
 int mode = 0;
 
+//Interruptrutin for sonarsensorer, save pulses from timer1, from burst to receive signal.
 void sonar_timer_interrupt();
 
+//Convert pulses to cm. 
 void calc_sonar_data(unsigned short sonar_nr, uint32_t pulse);
 
 int main(void)
 {
-	//Pins is now an output and input
-	DDRA = 0b00000010;
-	DDRB = 0b00000010;
-	DDRC = 0b00000010;
-	DDRD = 0b00000010;
-	_delay_ms(10);
+	//Init pins for sensormodul
+	sensor_init();
 	
+	//Init SPI
+	spi_init();
 	
-	//Turn on interrupt on PCMSK2 pins
-	PCICR |= _BV(3)| _BV(2)| _BV(1)| _BV(0);
-	//Theses pins now trigger an interrupt
-	PCMSK0 |= _BV(0);
-	PCMSK1 |= _BV(0);
-	PCMSK2 |= _BV(0);
-	PCMSK3 |= _BV(2);
-
-	TCCR1B = 0;
-	//Turn on global interrupt
+	//Enable globel interrupt
 	sei();
 	
 	
@@ -84,14 +79,41 @@ int main(void)
 				_delay_ms(10);
 				break;
 		}
-		if (mode == 6){
+		ready_to_send_spi();
+		
+}
+}
+
+void ready_to_send_spi(){
+	if (mode == 6){
 		cli();
 		//data.sonar_data = sonar_data;
 		set_outgoing_data(data);
 		mode = 0;
 		sei();
-		}
+	}
 }
+
+void sensor_init(){
+	
+	//Pins is now an output and input
+	DDRA = 0b00000010;
+	DDRB = 0b00000010;
+	DDRC = 0b00000010;
+	DDRD = 0b00000010;
+	_delay_ms(10);
+	
+	
+	//Turn on interrupt on PCMSK2 pins
+	PCICR |= _BV(3)| _BV(2)| _BV(1)| _BV(0);
+	//Theses pins now trigger an interrupt
+	PCMSK0 |= _BV(0);
+	PCMSK1 |= _BV(0);
+	PCMSK2 |= _BV(0);
+	PCMSK3 |= _BV(2);
+
+	TCCR1B = 0;
+	//Turn on global interrupt
 }
 
 
