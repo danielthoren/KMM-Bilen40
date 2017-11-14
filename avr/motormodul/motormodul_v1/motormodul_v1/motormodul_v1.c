@@ -64,6 +64,12 @@ void pwm_init()
 	TCCR1A |= _BV(1) | _BV(7) | _BV(5);
 	TCCR1B |= _BV(3)| _BV(4) | _BV(1);
 	ICR1 = 40000;
+	//send out neutral mode
+	turn = natural;
+	speed = natural;
+	OCR1A = turn;
+	OCR1B = speed;
+	_delay_ms(5000);
 }
 
 void halleffect_init()
@@ -75,7 +81,16 @@ void halleffect_init()
 	PCMSK0 |= (1 << PCINT0);  // set PCINT0 to trigger an interrupt on state change
 	tot_overflow = 0;
 }
-/*
+void lcd_init(){
+		//		--- LCD SETUP ---
+		//Initialize LCD module
+		LCDInit(LS_BLINK|LS_ULINE);
+		
+		//Clear the screen
+		LCDClear();
+		
+		LCDWriteString("STARTING");
+}
 void scale(){
 	if(scale_turn <= 180 && scale_turn >= 1)
 	{
@@ -87,43 +102,29 @@ void scale(){
 	}
 	//Uppdatera granser för hastighet,
 	//maxhastighet troligen innan speed = 40000
-	if(scale_speed <= 40 && scale_speed >= 1)
+	if(scale_speed <= 200 && scale_speed >= 101)
 	{
-		speed = (1000*scale_speed);
+		speed = 3180 + (scale_speed - 100)*0.5;
 	}
-	else
-	{
+	else if (scale_speed <= 99 && scale_speed >= 0)
+	{	
+		speed = 2820 + (scale_speed - 100)*0.5;
+	}
+	else{
 		speed = natural;
 	}
 	
-}*/
+}
 
 int main(void)
 {
-	//		--- LCD SETUP ---
-	//Initialize LCD module
-	LCDInit(LS_BLINK|LS_ULINE);
-			
-	//Clear the screen
-	LCDClear();
-			
-	LCDWriteString("STARTING");
-	
+	lcd_init();
 	pwm_init();
 	halleffect_init();
 	// TIMER INTERRUPT FOR MEASURING SPEED
 	timer3_init();
 
 	sei();
-	
-	//send out neutral mode
-	turn = natural;
-	speed = natural;
-	OCR1A = turn;
-	OCR1B = speed;
-	_delay_ms(5000);
-	
-	speed = 3230;
 	
     while(1)
     {
@@ -135,7 +136,7 @@ int main(void)
 
 ISR(PCINT0_vect)
 {
-	if( PINA & (1 << PIND0) == 1){
+	if( PINA & ((1 << PIND0) == 1)){
 	LCDClear();
 	if (led_is_on())
 	led_off();
