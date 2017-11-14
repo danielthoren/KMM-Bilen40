@@ -10,8 +10,8 @@
 #include "lcd.h"
 #include "motormodul_spi.h"
 
-#define OUTGOING_PACKET_SIZE 1
-#define INCOMMING_PACKET_SIZE 2
+#define OUTGOING_PACKET_SIZE 2
+#define INCOMMING_PACKET_SIZE 3
 
 volatile unsigned char outgoing[OUTGOING_PACKET_SIZE] = {0};
 volatile unsigned char incomming[INCOMMING_PACKET_SIZE] = {0};
@@ -106,6 +106,11 @@ void spi_tranciever(){
 	else{
 		incomming[tranciever_count] = SPDR;
 		tranciever_count++;
-		SPDR = outgoing[tranciever_count];
+		if(tranciever_count >= OUTGOING_PACKET_SIZE){
+			SPDR = 0b00000000;
+		}
+		else{
+			SPDR = outgoing[tranciever_count];
+		}
 	}
 }
