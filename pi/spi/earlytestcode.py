@@ -50,3 +50,6 @@ retdata.decode("utf-8")
 '''
 
 #print("|length: ", retlen," | data: ", retdata, " | buf: ", buf, " | int: ", int.from_bytes(retdata, byteorder='big'))
+
+
+buffer = bytes([0, 0, ])

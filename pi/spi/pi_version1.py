@@ -1,7 +1,5 @@
 #!/usr/bin/python3
-
 import wiringpi
-
 '''''''''''''''''
 Setup
 
@@ -15,8 +13,9 @@ MOSI = 10
 MISO = 9
 SCLK = 11
 SSS = 22
-SSM = 23
-NEWDATA = 5
+SSM = 27
+NEWDATASENSOR = 5
+NEWDATAMOTOR = 6
 
 wiringpi.wiringPiSetupGpio()
 if (wiringpi.wiringPiSPISetup(0,5000) == -1):
@@ -24,7 +23,11 @@ if (wiringpi.wiringPiSPISetup(0,5000) == -1):
 
 wiringpi.pinMode(SSS, OUTPUT)
 wiringpi.digitalWrite(SSS, HIGH)
+wiringpi.pinMode(SSM, OUTPUT)
+wiringpi.digitalWrite(SSM, HIGH)
 
+
+#wiringpi.pinMode(NEWDATAMOTOR, INPUT)
 
 '''''''''''''''''
 End Setup
@@ -35,9 +38,8 @@ End Setup
 Checks if there is data to receive.
 Has needs to be done before Trancieving data, to take load of the AVR.
 '''
-def hasNewData():
-    return wiringpi.digitalRead(NEWDATA)
-
+def hasNewData(pin):
+    return wiringpi.digitalRead(pin)
 
 '''
 Receives data from sensor and returns it in a list
@@ -69,17 +71,29 @@ sends two values(speed and angle).
 def motorTransceiver(data):
     wiringpi.digitalWrite(SSM, LOW)
 
+    data.append(checksum(data))
+
     buff = bytes(data)
     retlen, retdata = wiringpi.wiringPiSPIDataRW(0, buff)
 
-    motor_data = retdata[2]
-
-    print(motor_data)
+    #motor_data = retdata[1]
+    motor_data = [retdata[0], retdata[1], retdata[2]]
+    #print(retdata)
 
     wiringpi.digitalWrite(SSM, HIGH)
 
-    return motor_data
+    if checksum(motor_data):
+        return motor_data[:-1]
+    return None
 
+'''
+Creates a list with values for speed and angle
+'''
+def motorDataList():
+    speed = 10
+    angle = 10
+    data_list = [speed, angle]
+    return data_list
 
 '''
 Calculates checksum for received data. 
@@ -101,11 +115,20 @@ The Testchamber
 if __name__ == "__main__":
 
     while True:
-        if hasNewData():
+        '''
+        if hasNewData(NEWDATASENSOR):
 
-            data = sensorTransceiver()
-            if data:
-                #print(hasNewData())
-                print(data)
+            sensor_data = sensorTransceiver()
+            if sensor_data:
+                print(sensor_data)
             else:
                 print("Invalid checksum.")
+'''
+        if hasNewData(NEWDATAMOTOR):
+            motor_data = motorTransceiver(motorDataList())
+            if motor_data:
+                print("Motordata")
+                print(motor_data)
+            else:
+                print("Invalid checksum.")
+                
