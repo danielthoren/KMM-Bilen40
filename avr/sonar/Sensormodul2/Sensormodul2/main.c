@@ -3,9 +3,11 @@
 #include <stdio.h>
 #include <util/delay.h>
 #include <stdlib.h>
-#include "sensormodul_spi.h"
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include <string.h>
+
+#include "sensormodul_spi.h"
 
 //Struct to send over spi
 sensormodul_AP_data data;
@@ -19,15 +21,14 @@ uint32_t pulse = 0;
 #define blue_led_off() PORTC &= ~_BV(1);
 
 //Which mode/sensor is active.
-enum Modes {sonar1=0,sonar2=1, sonar3=2, sonar4=3, sensor_active, send_data};
+enum Modes {sonar1=0,sonar2=1, sonar3=2, sonar4=3, sensor_active=4, send_data=5};
 enum Modes mode = sonar1;
-enum Modes sonar;
 
 //Interruptrutin for sonarsensorer, save pulses from timer1, from burst to receive signal.
 void sonar_timer_interrupt();
 
 //Convert pulses to cm. 
-void calc_sonar_data(int sonar_nr, uint32_t pulse);
+void calc_sonar_data(int sonar, uint32_t pulse);
 //Init SPI
 void ready_to_send_spi();
 //Init for sensormodul
@@ -36,7 +37,7 @@ void sensor_init();
 int main(void)
 {
 	sensor_init();
-	spi_init();
+	//spi_init();
 	
 	//Enable globel interrupt
 	sei();
@@ -44,51 +45,50 @@ int main(void)
 	
 	while(1 == 1)
 	{
-		_delay_ms(100);
-		switch (mode)
-		{
+		_delay_ms(10);
+		switch (mode){
 			case sonar1:
+				mode = sensor_active;
 				//Triggerpin is high for 15uS
 				PORTA|=_BV(1);
 				_delay_us(15);
 				PORTA &= ~_BV(1);
-				mode = sensor_active;
 				break;
 			case sonar2:
+				mode = sensor_active;
 				//Triggerpin is high for 15uS
 				PORTB|=_BV(1);
 				_delay_us(15);
 				PORTB &= ~_BV(1);
-				mode = sensor_active;
 				break;
 			case sonar3:
+				mode = sensor_active;
 				//Triggerpin is high for 15uS
 				PORTC|=_BV(1);
 				_delay_us(15);
 				PORTC &= ~_BV(1);
-				mode = sensor_active;
 				break;
 			case sonar4:
+				mode = sensor_active;
 				//Triggerpin is high for 15uS
 				PORTD|=_BV(1);
 				_delay_us(15);
 				PORTD &= ~_BV(1);
-				mode = sensor_active;
 				break;
 			case sensor_active:
 				break;
 			case send_data:
+				ready_to_send_spi();
 				break;
 		}
-		ready_to_send_spi();
 		
-}
+		}
 }
 
 void ready_to_send_spi(){
 	if (mode == send_data){
 		cli();
-		//data.sonar_data = sonar_data;
+		memcpy((void*) data.sonar_data, (void*) sonar_data, 4);
 		set_outgoing_data(data);
 		//start over
 		mode = sonar1;
@@ -99,14 +99,20 @@ void ready_to_send_spi(){
 void sensor_init(){
 	
 	//Pins is now an output and input
-	DDRA = 0b00000010;
-	DDRB = 0b00000010;
-	DDRC = 0b00000010;
-	DDRD = 0b00000010;
+	DDRA |= 0b00000010;
+	DDRB |= 0b00000010;
+	DDRC |= 0b00000010;
+	DDRD |= 0b00000010;
+	
+	DDRA &= 0b11111110;
+	DDRB &= 0b11111110;
+	DDRC &= 0b11111110;
+	DDRD &= 0b11111011;
+	
 	_delay_ms(10);
 	
 	
-	//Turn on interrupt on PCMSK2 pins
+	//Turn on interrupt on PCMSK pins
 	PCICR |= _BV(3)| _BV(2)| _BV(1)| _BV(0);
 	//Theses pins now trigger an interrupt
 	PCMSK0 |= _BV(0);
@@ -114,16 +120,15 @@ void sensor_init(){
 	PCMSK2 |= _BV(0);
 	PCMSK3 |= _BV(2);
 
+	TIMSK1 |= _BV(1);	OCR1A = 50000;
 	TCCR1B = 0;
-	//Turn on global interrupt
 }
 
 
-void sonar_timer_interrupt(int sonar_nr){
+void sonar_timer_interrupt(int sonar){
 	
-	switch (sonar_nr)
-	{
-		case 0:
+	switch (sonar)
+	{	case 0:
 		//LOW -> HIGH
 		if( (PINA & (1 << PINA0)) == 1)
 		{
@@ -136,9 +141,8 @@ void sonar_timer_interrupt(int sonar_nr){
 			//Stops conter
 			TCCR1B = (0 << CS12) | (0 << CS11) | (0 << CS10);
 			pulse=TCNT1;
-			calc_sonar_data(0, pulse);
+			calc_sonar_data(sonar, pulse);
 			mode = sonar2;
-			
 		}break;
 		case 1:
 		//LOW -> HIGH
@@ -153,7 +157,7 @@ void sonar_timer_interrupt(int sonar_nr){
 			//Stops conter
 			TCCR1B = (0 << CS12) | (0 << CS11) | (0 << CS10);
 			pulse=TCNT1;
-			calc_sonar_data(0, pulse);
+			calc_sonar_data(sonar, pulse);
 			mode = sonar3;
 		}break;
 		case 2:
@@ -169,7 +173,7 @@ void sonar_timer_interrupt(int sonar_nr){
 			//Stops conter
 			TCCR1B = (0 << CS12) | (0 << CS11) | (0 << CS10);
 			pulse=TCNT1;
-			calc_sonar_data(0, pulse);
+			calc_sonar_data(sonar, pulse);
 			mode = sonar4;
 		}break;
 		case 3:
@@ -185,38 +189,42 @@ void sonar_timer_interrupt(int sonar_nr){
 			//Stops conter
 			TCCR1B = (0 << CS12) | (0 << CS11) | (0 << CS10);
 			pulse=TCNT1;
-			calc_sonar_data(0, pulse);
+			calc_sonar_data(sonar, pulse);
 			mode = send_data;
 		}break;
-	}
+		}
 }
 
 void calc_sonar_data(int sonar, uint32_t pulse){
+	if (pulse > 50000){
+		sonar_data[sonar] = 0xFF;
+	}
+	else{
 	uint32_t cm;
-	cm = (pulse/480)+2;
-	sonar_data[sonar] = cm;
+	cm = (pulse/580);
+	sonar_data[sonar] = cm;}
 }
 
 
-ISR(PCINT0_vect){sonar_timer_interrupt(sonar1);}
+ISR(PCINT0_vect){sonar_timer_interrupt(0);}
 
 
-ISR(PCINT1_vect){sonar_timer_interrupt(sonar2);}
+ISR(PCINT1_vect){sonar_timer_interrupt(1);}
 
 
-ISR(PCINT2_vect){sonar_timer_interrupt(sonar3);}
+ISR(PCINT2_vect){sonar_timer_interrupt(2);}
 
 
-ISR(PCINT3_vect){sonar_timer_interrupt(sonar4);}
+ISR(PCINT3_vect){sonar_timer_interrupt(3);}
 
 
 
 //Take too long time too get data, reset
-ISR (TIMER1_OVF_vect)
+ISR (TIMER1_COMPA_vect)
 {
 	//Stops counter
 	TCCR1B=0;
-	mode = sonar1;
+	mode = mode + 1;
 }
 
 ISR(SPI_STC_vect){
