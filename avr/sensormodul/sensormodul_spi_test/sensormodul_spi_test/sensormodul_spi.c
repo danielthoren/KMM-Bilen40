@@ -64,7 +64,6 @@ void spi_tranciever(){
 		PORTD &= 0b11111110;
 		if (buffer.lapsensor != 0xFF){
 			set_outgoing_data(buffer);
-			
 			buffer.lapsensor = 0xFF;
 		}
 		else{

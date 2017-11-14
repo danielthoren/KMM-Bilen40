@@ -28,8 +28,18 @@ typedef struct motormodul_AP motormodul_AP_data;
 /* Functions                                                             */
 /************************************************************************/
 
-//returns the data that has been recieved from the pi
-unsigned char get_set_spi_data(motormodul_PA_data* data_in, motormodul_AP_data data_out);
+/*
+sets the data that has been recieved from the pi in the pointer 'data_in' if the checksum checks out. Else sets the
+'data_in' pointer to NULL (defined in stdlib.h). Also splits the 'data_out' and sends it over spi.
+If the SS pin is low (transfer is ongoing) or the checksum is bad, then sets the speed parameter of 'data_in' to 0xFF
+
+The recieved data is expected in the following order:
+incomming[0] = speed;	incomming[1] = angle;
+
+The outgoing data is sent in the following order:
+outgoing[0] = curr_rpm
+*/
+void get_set_spi_data(motormodul_PA_data* data_in, motormodul_AP_data data_out);
 
 //initializes the spi
 void spi_init (void);

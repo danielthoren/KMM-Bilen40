@@ -31,20 +31,25 @@ int main(void)
 		spi_init();
 		sei();
 		
+		//PORTD |= 0b00000001;
+		
+		
 		motormodul_AP_data data_out;
 		motormodul_PA_data data_in;
-		data_in.speed = 0xFF;
+		data_in.speed = 0;
 		data_out.curr_rpm = 42;
 		get_set_spi_data(&data_in, data_out);
-
+		
     /* Replace with your application code */
     while (1) 
     {
+		/*
 		get_set_spi_data(&data_in, data_out);
 		if(data_in.speed != 0xFF){
 			LCDClear();
 			LCDWriteInt(data_in.speed, 3);
 		}
+		*/
     }
 }
 
