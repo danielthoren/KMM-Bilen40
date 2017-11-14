@@ -36,8 +36,8 @@ void sensor_init();
 
 int main(void)
 {
+	spi_init();
 	sensor_init();
-	//spi_init();
 	
 	//Enable globel interrupt
 	sei();
@@ -87,12 +87,10 @@ int main(void)
 
 void ready_to_send_spi(){
 	if (mode == send_data){
-		cli();
 		memcpy((void*) data.sonar_data, (void*) sonar_data, 4);
 		set_outgoing_data(data);
 		//start over
 		mode = sonar1;
-		sei();
 	}
 }
 
