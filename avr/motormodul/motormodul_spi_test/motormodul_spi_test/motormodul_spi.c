@@ -55,11 +55,12 @@ void get_incomming(motormodul_PA_data* data){
 }
 
 void get_set_spi_data(motormodul_PA_data* data_in, motormodul_AP_data data_out){
-	//setting outgoing data
-	if ((PORTB & 0b00001000) != 0){
+	//if ((PINB & 0b00010000) != 0){
+		if (1){
 		//dismantling struct to outgoing data
-		set_outgoing(&data_out);
 		outgoing_data = data_out;
+		set_outgoing(&data_out);
+		
 		
 		//signal pi that there is new data
 		PORTD |= 0b00000001;
@@ -89,14 +90,15 @@ void spi_init (void)
 
 //Checks if this is the end of the message, else sends next byte
 void spi_tranciever(){
-	if (tranciever_count >= INCOMMING_PACKET_SIZE &&
-		tranciever_count >= OUTGOING_PACKET_SIZE){
-			
+	//if (tranciever_count >= INCOMMING_PACKET_SIZE &&
+		//tranciever_count >= OUTGOING_PACKET_SIZE){
+	if(tranciever_count == 3){
 			PORTD &= 0b11111110;
 			tranciever_count = 0;
 			if(buffer.curr_rpm != 0xFF){
 				set_outgoing(&buffer);
 				//signal pi that there is new data
+				PORTD |= 0b00000001;
 				buffer.curr_rpm = 0xFF;
 			}
 			else{
@@ -107,7 +109,7 @@ void spi_tranciever(){
 		incomming[tranciever_count] = SPDR;
 		tranciever_count++;
 		if(tranciever_count >= OUTGOING_PACKET_SIZE){
-			SPDR = 0b00000000;
+			SPDR = 0xFF;
 		}
 		else{
 			SPDR = outgoing[tranciever_count];
