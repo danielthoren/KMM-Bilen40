@@ -12,14 +12,20 @@
 #include "motormodul_spi.h"
 #include "lcd.h"
 
-
+/*
 ISR(SPI_STC_vect){
 	spi_tranciever();
+}*/
+
+//Function will be called when new data from rasberry is available
+ISR(PCINT1_vect){
+
 }
 
 int main(void)
 {
-		//enabling interrupts
+		spi_init();
+		
 		sei();
 		
 		//Initialize LCD module
@@ -27,19 +33,25 @@ int main(void)
 		
 		//Clear the screen
 		LCDClear();
-	
-		spi_init();
-		sei();
 		
-		//PORTD &= 0b11111110;
-		PORTD |= 0b00000001;
 		motormodul_AP_data data_out;
-		motormodul_PA_data data_in;
 		data_out.curr_rpm = 42;
-		//get_set_spi_data(&data_in, data_out);
+		set_spi_data(data_out);
 
     while (1) 
     {
+		// OBS!!!! data_available never gets high for some reason?
+		if(data_available){
+			motormodul_PA_data data;
+			data.angle = 0;
+			data.speed = 0;
+			get_spi_data(&data);
+			//LCDWriteString(" ");
+			//LCDWriteInt(data.angle, 3);
+			//LCDWriteString(" ");
+			//LCDWriteInt(data.speed, 3);
+		}
+		_delay_ms(10);
     }
 }
 
