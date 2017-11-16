@@ -1,8 +1,7 @@
-global speed = 0 # 0 <= speed <= 200
-global angle = 0 # 0 <= angle <= 180
-#prop = 0 => use the proportional term in pid motormodul
-#prop = 1 => use no pid in motormodul
-global prop = 0
+speed = 0 # 0 <= speed <= 200
+angle = 0 # 0 <= angle <= 180
+#Pid == true => use pid in motormodul, if false, dont use pid.
+pid = True
 roundCount = 0 #Counts the amount of rounds we have driven
 
 
@@ -14,15 +13,16 @@ def syncSonar():
 def syncLidar():
 
 #Returns a int, sends two ints
-def syncMotor(speed, angle, prop):
-    data = [speed,angle, prop]
-    prop = 0 #Sets prop back to zero in case it has been changed
+def syncMotor(speed, angle, pid):
+    data = [speed,angle, pid]
+    pid = True #Sets prop back to True in case it has been changed
     return motorTransciver(data)
 
 #Stops the car
 def stop():
     speed = 3
-    prop = 1
+    pid = False
+    syncMotor(speed, angle, pid)
 
 #Counts the rounds
 def countRounds(sensorValue):
@@ -60,7 +60,6 @@ def regualteSpeed(lidarValue):
     #Free road ahed
     if(anvrageDistance > 6000):
         speed = 200 #Full speed
-        prop = 1
     #Free road ahead, but not for long
     elif anvrageDistance > 3000:
         speed = 150
@@ -70,7 +69,6 @@ def regualteSpeed(lidarValue):
     #If we are at distance 1000 mm from an obsticle, drive slowley
     elif anvrageDistance < 1000:
         speed = 60
-        prop = 1
     #Keep constant speed inbetween 1000 and 3000
     else:
         speed = 100
@@ -82,11 +80,10 @@ def regulateAngle(lidarValue, sensorValue):
 def main():
     while 1:
         sensorValue = syncSonar() #List of values, 0-3 is sonar, 4 is round count
-        rpm = syncMotor(speed, angle, prop) #Int
+        rpm = syncMotor(speed, angle, pid) #Int
         lidarValue = syncLidar() #List of tuples
 
         if hitbox(sensorValue) or countRounds(sensorValue):
-            stop()
             break
 
         regulateSpeed(lidarValue)
