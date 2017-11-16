@@ -28,11 +28,13 @@ wiringpi.digitalWrite(SSS, HIGH)
 wiringpi.pinMode(SSM, OUTPUT)
 wiringpi.digitalWrite(SSM, HIGH)
 
+
 wiringpi.pinMode(NEWDATAMOTOR, INPUT)
 wiringpi.pinMode(NEWDATASENSOR, INPUT)
 
 wiringpi.pinMode(SSS, OUTPUT)
 wiringpi.pinMode(SSM, OUTPUT)
+
 
 '''''''''''''''''
 End Setup
@@ -46,28 +48,6 @@ Has needs to be done before Trancieving data, to take load of the AVR.
 def hasNewData(pin):
     return wiringpi.digitalRead(pin)
 
-'''
-Receives data from sensor and returns it in a list
-'''
-def sensorTransceiver():
-    
-    wiringpi.digitalWrite(SSS, LOW)
-    
-    buff = bytes([0, 0, 0, 0, 0, 0])
-    retlen, retdata = wiringpi.wiringPiSPIDataRW(0, buff)
-    
-    
-    data = [retdata[0], retdata[1], retdata[2], retdata[3], retdata[4], retdata[5]]
-
-    #print("buff =\t\t",buff)
-    #print("retdata =\t", retdata)
-    #print("data =\t", data)
-    
-    wiringpi.digitalWrite(SSS, HIGH)
-
-    if checksum(data):
-        return data[:-1]
-    return None
 
 '''
 Transceives data with motor, receives one value(rotations per minute, rpm) and
@@ -79,10 +59,12 @@ def motorTransceiver(data):
     data.append(checksum(data))
 
     #buff = bytes(data)
-    buff = bytes([10, 10, 0])
+    tmp = [66, 22]
+    buff = bytes([66, 22, checksum(tmp)])
     retlen, retdata = wiringpi.wiringPiSPIDataRW(0, buff)
 
-    #motor_data = retdata[1]
+    print("length", retlen)
+
     motor_data = [retdata[0], retdata[1], retdata[2]]
 
     wiringpi.digitalWrite(SSM, HIGH)
@@ -103,11 +85,30 @@ def motorTransceiver(data):
     return None
 
 '''
+Receives data from sensor and returns it in a list
+'''
+def sensorTransceiver():
+    
+    wiringpi.digitalWrite(SSS, LOW)
+    
+    buff = bytes([0, 0, 0, 0, 0, 0])
+    retlen, retdata = wiringpi.wiringPiSPIDataRW(0, buff)
+    
+    
+    data = [retdata[0], retdata[1], retdata[2], retdata[3], retdata[4], retdata[5]]
+    
+    wiringpi.digitalWrite(SSS, HIGH)
+
+    if checksum(data):
+        return data[:-1]
+    return None
+
+'''
 Creates a list with values for speed and angle
 '''
 def motorDataList():
     speed = 10
-    angle = 10
+    angle = 40
     data_list = [speed, angle]
     return data_list
 
@@ -120,7 +121,6 @@ def checksum(data):
     for elem in data[:-1]:
         chk ^= elem
 
-    #print("Calculated checksum:", chk, "\nReceived checksum:", _chk)
     return chk == _chk
 
         
@@ -131,7 +131,7 @@ The Testchamber
 if __name__ == "__main__":
 
     while True:
-        print(wiringpi.digitalRead(5))
+        print(wiringpi.digitalRead(6))
         
         if hasNewData(NEWDATASENSOR):
 
@@ -141,11 +141,11 @@ if __name__ == "__main__":
             else:
                 print("Invalid checksum.")
 
-        # if (hasNewData(NEWDATAMOTOR) == 1):
-        #     motor_data = motorTransceiver(motorDataList())
+        if hasNewData(NEWDATAMOTOR):
+             motor_data = motorTransceiver(motorDataList())
             
-        #     if motor_data:
-        #         print("Motordata")
-        #         print(motor_data)
-        # time.sleep(1)
-                
+             if motor_data:
+                 print("Motordata")
+                 print(motor_data)
+        time.sleep(1)
+
