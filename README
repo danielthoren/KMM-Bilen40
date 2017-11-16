@@ -1,0 +1,28 @@
+Nu funkar pythonwrappern för SDK-koden.
+
+se till att följande är installerat:
+- cython3
+- numpy (inte ett måste men numpy arrays är snabbare än python-listor)
+
+bygg först på raspberry pi med setup.py:
+- python3 setup.py build_ext --inplace
+
+sedan, i python:
+>>> import memelidar
+>>> import numpy as np
+
+>>> lidar = memelidar.PyLidar()
+>>> lidar.setup_lidar()
+>>> lidar.start_motor()
+>>> lidar.start_scan()
+
+>>> data = np.array(lidar.grabData())
+
+>>> lidar.stop()
+>>> lidar.stop_motor()
+>>> #Profit
+
+getData() ger 2D-array men mätningar för ett varv,
+där varje mätning ser ut såhär:
+[   0.        327.828125  714.         47.      ]
+[ bool(sista mätning på varvet?), vinkel, avst., kvalitet]
