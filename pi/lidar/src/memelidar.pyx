@@ -1,5 +1,5 @@
 # distutils: language = c++
-# distutils: sources = ["src/rplidar_driver.cpp", "src/RPlidar.cpp","src/arch/linux/net_serial.cpp","src/arch/linux/timer.cpp","src/hal/thread.cpp"]
+# distutils: sources = ["src/rplidar_driver.cpp", "src/memeRPlidar.cpp","src/arch/linux/net_serial.cpp","src/arch/linux/timer.cpp","src/hal/thread.cpp"]
 # distutils: include_dirs = ["include","src"]
 from cython.operator cimport dereference as deref
 
@@ -9,37 +9,34 @@ from libcpp.vector cimport vector
 from libcpp cimport float
 from libcpp cimport bool
 
-cdef extern from "myRPLidar.h" namespace "rp::standalone::rplidar":
-  cdef cppclass RPlidar:
-    #ptrs
-    #void *drv
-    #funcs
-    RPlidar() except +
+cdef extern from "memeRPlidar.h" namespace "rp::standalone::rplidar":
+  cdef cppclass memeRPlidar:
+    memeRPlidar() except +
     bool setup()
     vector[vector[float]] grabData()
-    void _startMotor()
-    void _startScan()
-    void _stop()
-    void _stopMotor()
+    void startMotor()
+    void startScan()
+    void stop()
+    void stopMotor()
 
 cdef class PyLidar:
-  cdef RPlidar* c_lidar
+  cdef memeRPlidar* c_lidar
   def __cinit__(self):
-    self.c_lidar = new RPlidar();
+    self.c_lidar = new memeRPlidar();
   def __dealloc__(self):
     del self.c_lidar
 
-  def setup_lidar(self):
+  def setup(self):
     return self.c_lidar.setup()
 
   def grab_data(self):
     return self.c_lidar.grabData()
 
   def start_motor(self):
-    self.c_lidar._startMotor()
+    self.c_lidar.startMotor()
   def start_scan(self):
-    self.c_lidar._startScan()
-  def stop_scan(self):
-    self.c_lidar._stop()
+    self.c_lidar.startScan()
+  def stop(self):
+    self.c_lidar.stop()
   def stop_motor(self):
-    self.c_lidar._stopMotor()
+    self.c_lidar.stopMotor()

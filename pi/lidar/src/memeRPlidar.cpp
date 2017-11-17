@@ -6,7 +6,7 @@
  *
  * //ALex
  */
-#include "myRPLidar.h"
+#include "memeRPlidar.h"
 
 #include <unistd.h>
 #ifndef _countof
@@ -56,7 +56,7 @@ namespace rp {namespace standalone { namespace rplidar {
 
   /////////////////////////////////////////
   // Tänkt att returnera ett object som repr. rplidarn.
-  bool RPlidar::setup() {
+  bool memeRPlidar::setup() {
       const char * opt_com_path = NULL;
       _u32         opt_com_baudrate = 115200;
       u_result     op_result;
@@ -123,7 +123,7 @@ namespace rp {namespace standalone { namespace rplidar {
   // Hämta en uppsättning data från lidar.//
   //////////////////////////////////////////
 
-  std::vector<std::vector<float> > RPlidar::grabData() {
+  std::vector<std::vector<float> > memeRPlidar::grabData() {
     u_result     op_result;
     std::vector<std::vector<float> > tot;
     rplidar_response_measurement_node_t nodes[360*2];
@@ -145,24 +145,24 @@ namespace rp {namespace standalone { namespace rplidar {
     return tot;
   }
 
-  void RPlidar::_startMotor() {
+  void memeRPlidar::startMotor() {
     drv->startMotor();
   }
-  void RPlidar::_startScan() {
+  void memeRPlidar::startScan() {
     drv->startScan();
   }
-  void RPlidar::_stopMotor() {
+  void memeRPlidar::stopMotor() {
     drv->stopMotor();
   }
-  void RPlidar::_stop() {
+  void memeRPlidar::stop() {
     drv->stop();
   }
-  RPlidar::RPlidar() {
-    std::cout << "Creating RPlidar object, remember to run setup()" << std::endl;
+  memeRPlidar::memeRPlidar() {
+    std::cout << "Creating RPlidar object, running setup()" << std::endl;
+    memeRPlidar::setup();
   }
-  RPlidar::~RPlidar() {
+  memeRPlidar::~memeRPlidar() {
     std::cout << "Disposing of lidar driver." << std::endl;
     RPlidarDriver::DisposeDriver(drv);
   }
-}
-}}
+}}}

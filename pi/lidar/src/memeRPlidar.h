@@ -16,21 +16,19 @@
 // Används vid översättnign från C++ data till numpy array i python.
 #include <vector>
 ////////////////////////////////////
-using namespace rp::standalone::rplidar;
 namespace rp {namespace standalone {namespace rplidar {
-  class RPlidar {
+  class memeRPlidar {
   public:
     //attrib
     RPlidarDriver * drv;
     //funcs
-    RPlidar();
-    ~RPlidar();
+    memeRPlidar();
+    ~memeRPlidar();
     bool setup();
     std::vector<std::vector<float> > grabData();
-    void _startMotor();
-    void _startScan();
-    void _stop();
-    void _stopMotor();
+    void startMotor();
+    void startScan();
+    void stop();
+    void stopMotor();
   };
-}
-}}
+}}}
