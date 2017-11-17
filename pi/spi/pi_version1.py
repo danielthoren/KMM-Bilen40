@@ -52,15 +52,22 @@ def hasNewData(pin):
 '''
 Transceives data with motor, receives one value(rotations per minute, rpm) and
 sends two values(speed and angle).
+
+order in 'data' list is following:
+[speed, angle]
+
+order in recieved data is following:
+[rpm]
 '''
 def motorTransceiver(data):
     wiringpi.digitalWrite(SSM, LOW)
 
-    data.append(checksum(data))
+    data.append(calcChecksum(data))
 
-    #buff = bytes(data)
-    tmp = [66, 22]
-    buff = bytes([66, 22, checksum(tmp)])
+    buff = bytes(data)
+    #check = calcChecksum([66,22])
+    #buff = bytes([66, 22, check])
+    
     retlen, retdata = wiringpi.wiringPiSPIDataRW(0, buff)
 
     print("length", retlen)
@@ -78,7 +85,7 @@ def motorTransceiver(data):
             motor_data = motor_data[:i]
             break
 
-    if len(motor_data) > 1 and checksum(motor_data):
+    if len(motor_data) > 1 and calcChecksum(motor_data[:-1]) == motor_data[-1]:
         return motor_data[:-1]
     else:
          print("Invalid checksum, data: ", motor_data)
@@ -86,6 +93,9 @@ def motorTransceiver(data):
 
 '''
 Receives data from sensor and returns it in a list
+
+order of recieved data is as follows:
+[sonar0, sonar1, sonar2, sonar3, lapsensor]
 '''
 def sensorTransceiver():
     
@@ -99,7 +109,7 @@ def sensorTransceiver():
     
     wiringpi.digitalWrite(SSS, HIGH)
 
-    if checksum(data):
+    if calcChecksum(data[:-1]) == data[-1]:
         return data[:-1]
     return None
 
@@ -113,15 +123,14 @@ def motorDataList():
     return data_list
 
 '''
-Calculates checksum for received data. 
+Calculates checksum of data. 
 '''
-def checksum(data):
+def calcChecksum(data):
     chk = 0
-    _chk = data[-1]
-    for elem in data[:-1]:
+    for elem in data:
         chk ^= elem
 
-    return chk == _chk
+    return chk
 
         
 '''''''''''''''''
@@ -131,7 +140,7 @@ The Testchamber
 if __name__ == "__main__":
 
     while True:
-        print(wiringpi.digitalRead(6))
+        #print(wiringpi.digitalRead(6))
         
         if hasNewData(NEWDATASENSOR):
 
@@ -147,5 +156,5 @@ if __name__ == "__main__":
              if motor_data:
                  print("Motordata")
                  print(motor_data)
-        time.sleep(1)
+        #time.sleep(1)
 
