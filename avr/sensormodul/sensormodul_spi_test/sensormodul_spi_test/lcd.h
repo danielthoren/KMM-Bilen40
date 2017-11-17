@@ -67,17 +67,17 @@ me@avinashgupta.com
 	LCD CONNECTIONS
 *************************************************/
 
-#define LCD_DATA B			//Port PB0-PB3 are connected to D4-D7
-#define LCD_DATA_POS 0	
+#define LCD_DATA D			//Port PB0-PB3 are connected to D4-D7
+#define LCD_DATA_POS 3	
 
 #define LCD_E C 			//Enable/strobe signal
 #define LCD_E_POS	PC0		//Position of enable in above port
 
 #define LCD_RS D			//RS SIGNAL
-#define LCD_RS_POS PD3
+#define LCD_RS_POS PD2
 
 #define LCD_RW D			//RW SIGNAL
-#define LCD_RW_POS PD6
+#define LCD_RW_POS PD1
 
 /***********************************************
 

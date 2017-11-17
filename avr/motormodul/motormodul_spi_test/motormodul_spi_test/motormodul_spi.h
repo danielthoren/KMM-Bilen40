@@ -8,9 +8,6 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-//0 if no new data has been recieved, 1 if new data has been recieved
-unsigned char data_available;
-
 //data sent from rasberry pi (=P) to motormodul (A = AVR)
 struct motormodul_PA{
 	//the speed of the engine, may be between 0-40 (3 is neutral)
@@ -50,6 +47,9 @@ void get_spi_data(motormodul_PA_data* data);
 
 //initializes the spi
 void spi_init (void);
+
+//0 if no new data has been recieved, 1 if new data has been recieved
+unsigned char get_data_available();
 
 //Interrupt that is called when a new byte has been transferred over spi
 ISR(SPI_STC_vect);

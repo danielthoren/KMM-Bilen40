@@ -6,6 +6,7 @@
  */ 
 #include <string.h>
 #include <stdlib.h>
+#include <stdlib.h>
 
 #include "lcd.h"
 #include "motormodul_spi.h"
@@ -19,11 +20,16 @@ volatile short int tranciever_count=0;
 motormodul_AP_data buffer;
 motormodul_AP_data outgoing_data;
 unsigned char data_set = 0;
+unsigned char data_available;
+
+unsigned char get_data_available(){
+	return data_available;
+}
 
 //Calculates a simple XOR checksum for the incomming package
 unsigned char calc_checksum(volatile unsigned char data[], int size){
 		unsigned char checksum = 0;
-		for (int i = 0; i < (size - 1); i++){
+		for (int i = 0; i < (size); i++){
 			checksum = checksum ^ data[i];
 		}
 		return checksum;
@@ -38,19 +44,11 @@ void set_outgoing(motormodul_AP_data* data){
 	SPDR = outgoing[0];
 	tranciever_count++;
 }
-#include <stdlib.h>
+
 //converts the incomming char array to a struct of type 'motormodul_PA_data'
 void get_incomming(motormodul_PA_data* data){
-	if(calc_checksum(incomming, INCOMMING_PACKET_SIZE-1) == incomming[INCOMMING_PACKET_SIZE- 1]){
-		LCDWriteInt(incomming[0], 2);
-		LCDWriteInt(incomming[1], 2);
-		
-		data->speed = incomming[0];
-		data->angle = incomming[1];
-	}
-	else{
-		LCDWriteString("checksum failed");
-	}
+	data->speed = incomming[0];
+	data->angle = incomming[1];
 }
 
 void set_spi_data(motormodul_AP_data data){
@@ -70,7 +68,7 @@ void set_spi_data(motormodul_AP_data data){
 void get_spi_data(motormodul_PA_data* data){
 	data_available = 0;
 	//building up struct from incomming data
-	if(calc_checksum(incomming, INCOMMING_PACKET_SIZE) == incomming[INCOMMING_PACKET_SIZE - 1]){
+	if(calc_checksum(incomming, INCOMMING_PACKET_SIZE - 1) == incomming[INCOMMING_PACKET_SIZE - 1]){
 		get_incomming(data);
 	}
 	else{
@@ -83,7 +81,6 @@ void spi_init (void)
 {
 	DDRB = (1 << DDB6);			//Set MISO as output
 	SPCR = (1<<SPE)|(1<<SPIE);	//Enable SPI && interrupt enable bit
-	DDRD = (1 << DDB2);			//Set pin 0 of PORTD as output, used to tell pi when new data is available
 	DDRD = (1 << DDD0);			//Set pin 0 of PORTD as output, used to tell pi when new data is available
 	PORTD &= 0b11111110;		//Inits pin 0 of PORTD to 0
 	data_available = 0;
