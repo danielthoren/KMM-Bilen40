@@ -17,11 +17,6 @@ ISR(SPI_STC_vect){
 	spi_tranciever();
 }*/
 
-//Function will be called when new data from rasberry is available
-ISR(PCINT1_vect){
-
-}
-
 int main(void)
 {
 		spi_init();
@@ -41,17 +36,17 @@ int main(void)
     while (1) 
     {
 		// OBS!!!! data_available never gets high for some reason?
-		if(data_available){
+		//LCDWriteInt(data_available, 1);
+		if(get_data_available()){
 			motormodul_PA_data data;
 			data.angle = 0;
 			data.speed = 0;
 			get_spi_data(&data);
-			//LCDWriteString(" ");
-			//LCDWriteInt(data.angle, 3);
-			//LCDWriteString(" ");
-			//LCDWriteInt(data.speed, 3);
+			LCDWriteString(" ");
+			LCDWriteInt(data.angle, 3);
+			LCDWriteString(" ");
+			LCDWriteInt(data.speed, 3);
 		}
-		_delay_ms(10);
     }
 }
 
