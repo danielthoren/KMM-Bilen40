@@ -36,7 +36,10 @@ void sensor_init();
 
 int main(void)
 {
+	//Init spi
 	spi_init();
+	
+	//Init sensormodule
 	sensor_init();
 	
 	//Enable globel interrupt
@@ -46,6 +49,7 @@ int main(void)
 	while(1 == 1)
 	{
 		_delay_ms(10);
+		//One sensor is triggerd at a time 
 		switch (mode){
 			case sonar1:
 				mode = sensor_active;
@@ -85,6 +89,7 @@ int main(void)
 		}
 }
 
+//Collectad data sent to spi module
 void ready_to_send_spi(){
 	if (mode == send_data){
 		memcpy((void*) data.sonar_data, (void*) sonar_data, 4);
@@ -96,12 +101,12 @@ void ready_to_send_spi(){
 
 void sensor_init(){
 	
-	//Pins is now an output and input
+	//Pins is now an output
 	DDRA |= 0b00000010;
 	DDRB |= 0b00000010;
 	DDRC |= 0b00000010;
 	DDRD |= 0b00000010;
-	
+	//Pins is now an input
 	DDRA &= 0b11111110;
 	DDRB &= 0b11111110;
 	DDRC &= 0b11111110;
@@ -118,13 +123,15 @@ void sensor_init(){
 	PCMSK2 |= _BV(0);
 	PCMSK3 |= _BV(2);
 
+	//Timer interrupt enable when timer hits 50000
 	TIMSK1 |= _BV(1);	OCR1A = 50000;
+	//Timer stopped
 	TCCR1B = 0;
 }
 
 
 void sonar_timer_interrupt(int sonar){
-	
+	//Echo pin interrupt
 	switch (sonar)
 	{	case 0:
 		//LOW -> HIGH
@@ -192,8 +199,9 @@ void sonar_timer_interrupt(int sonar){
 		}break;
 		}
 }
-
+//Calculate distance with timer value and speed of sound
 void calc_sonar_data(int sonar, uint32_t pulse){
+	//Longer then 86 cm, invalide value
 	if (pulse > 50000){
 		sonar_data[sonar] = 0xFF;
 	}
@@ -203,16 +211,16 @@ void calc_sonar_data(int sonar, uint32_t pulse){
 	sonar_data[sonar] = cm;}
 }
 
-
+//Sonar 1 interrupt
 ISR(PCINT0_vect){sonar_timer_interrupt(0);}
 
-
+//Sonar 2 interrupt
 ISR(PCINT1_vect){sonar_timer_interrupt(1);}
 
-
+//Sonar 3 interrupt
 ISR(PCINT2_vect){sonar_timer_interrupt(2);}
 
-
+//Sonar 4 interrupt
 ISR(PCINT3_vect){sonar_timer_interrupt(3);}
 
 
@@ -222,9 +230,11 @@ ISR (TIMER1_COMPA_vect)
 {
 	//Stops counter
 	TCCR1B=0;
+	//Take next sensor
 	mode = mode + 1;
 }
 
+//Send data to master
 ISR(SPI_STC_vect){
 	spi_tranciever();
 }
