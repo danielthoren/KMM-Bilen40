@@ -10,6 +10,7 @@
 #include <avr/io.h>
 #include <avr/delay.h>
 #include <avr/interrupt.h>
+#include "motormodul_spi.h"
 
 #include "lcd.h"
 
@@ -40,6 +41,12 @@ volatile int tot_overflow;
 uint32_t current_ticks;
 volatile long TIMER_TICKS = 65536;
 volatile float seconds_per_tick = 0.000016;
+int new_rpm;
+
+motormodul_PA_data data_in;
+ 
+//data sent from 'motormodul' (A = AVR) to rasberry pi (=P)
+motormodul_AP_data data_out;
 
 
 
@@ -121,6 +128,7 @@ int main(void)
 	lcd_init();
 	pwm_init();
 	halleffect_init();
+	spi_init();
 	// TIMER INTERRUPT FOR MEASURING SPEED
 	timer3_init();
 
@@ -128,8 +136,20 @@ int main(void)
 	
     while(1)
     {
-	    OCR1A = turn;
-	    OCR1B = speed;
+		if(new_rpm == 1){
+		set_spi_data(data_out);
+		new_rpm = 0;
+		}
+		if (get_data_available()){
+		get_spi_data(&data_in);
+		scale_turn = data_in.angle;
+		scale_speed = data_in.speed;
+		scale();
+		}
+		cli();
+		OCR1A = turn;
+		OCR1B = speed;
+		sei();
     }
 }
 
@@ -151,9 +171,8 @@ ISR(PCINT0_vect)
 	TCNT3 = 0;
 	
 	rpm = (float) (1/(time_elapsed*4)) ;
-	LCDWriteInt(rpm,6);
+	new_rpm = 1;
 	}
-	//LCDWriteString("triggered");
 }
 
 
