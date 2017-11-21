@@ -79,9 +79,9 @@ void get_spi_data(motormodul_PA_data* data){
 // Initialize SPI Slave Device
 void spi_init (void)
 {
-	DDRB = (1 << DDB6);			//Set MISO as output
-	SPCR = (1<<SPE)|(1<<SPIE);	//Enable SPI && interrupt enable bit
-	DDRD = (1 << DDD0);			//Set pin 0 of PORTD as output, used to tell pi when new data is available
+	DDRB |= (1 << DDB6);			//Set MISO as output
+	SPCR |= (1<<SPE)|(1<<SPIE);	//Enable SPI && interrupt enable bit
+	DDRD |= (1 << DDD0);			//Set pin 0 of PORTD as output, used to tell pi when new data is available
 	PORTD &= 0b11111110;		//Inits pin 0 of PORTD to 0
 	data_available = 0;
 	buffer.curr_rpm = 0xFF;

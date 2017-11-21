@@ -30,8 +30,8 @@ const int max_speed; //FIND ITS VALUE
 const int min_speed = 3170; //FIND ITS VALUE
 int turn; //Turn < natural => right, turn > natural => left
 int speed;
-uint8_t scale_turn;
-uint8_t scale_speed;
+int scale_turn;
+int scale_speed;
 
 //		--- HALLEFFECT ---
 volatile long ticks_elapsed;
@@ -76,7 +76,9 @@ void pwm_init()
 	speed = natural;
 	OCR1A = turn;
 	OCR1B = speed;
+	 led_on();
 	_delay_ms(5000);
+	 led_off();
 }
 
 void halleffect_init()
@@ -125,7 +127,7 @@ void scale(){
 
 int main(void)
 {
-	lcd_init();
+	//lcd_init();
 	pwm_init();
 	halleffect_init();
 	spi_init();
@@ -150,6 +152,7 @@ int main(void)
 		OCR1A = turn;
 		OCR1B = speed;
 		sei();
+
     }
 }
 
