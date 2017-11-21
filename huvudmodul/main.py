@@ -1,5 +1,7 @@
-speed = 0 # 0 <= speed <= 200
-angle = 0 # 0 <= angle <= 180
+from pid import *
+
+speed = 100 # 0 <= speed <= 200, 100 is neutral
+angle = 90 # 0 <= angle <= 180, 90 is straight
 #Pid == true => use pid in motormodul, if false, dont use pid.
 pid = True
 roundCount = 0 #Counts the amount of rounds we have driven
@@ -20,7 +22,7 @@ def syncMotor(speed, angle, pid):
 
 #Stops the car
 def stop():
-    speed = 3
+    speed = 100
     pid = False
     syncMotor(speed, angle, pid)
 
@@ -45,7 +47,7 @@ def hitbox(sensorValue):
 def regualteSpeed(lidarValue):
     #Variables used in the loop down below
     count = 0
-    anvrageDistance = 0
+    avrageDistance = 0
 
     #Lidarvalue is a list of tuples
     for data in lidarValue:
@@ -53,29 +55,122 @@ def regualteSpeed(lidarValue):
         #from angle 0, i.e straight forward. (The cone forward)
         #data[2] > 0 is the quality of the meassurmetn, 0 is bad.
         if(data[0] <= 18 and data[0] >= 342 and data[2] > 0):
-            anvrageDistance += data[1]
+            avrageDistance += data[1]
             count += 1
 
-    anvrageDistance = anvrageDistance/count
+    avrageDistance = anvrageDistance/count
     #Free road ahed
-    if(anvrageDistance > 6000):
+    if(avrageDistance > 6000):
         speed = 200 #Full speed
+        syncMotor(speed, angle, pid)
     #Free road ahead, but not for long
-    elif anvrageDistance > 3000:
+    elif avrageDistance > 3000:
         speed = 150
+        syncMotor(speed, angle, pid)
     #To close to a obsticle
-    elif anvrageDistance < 300:
+    elif avrageDistance < 300:
         stop()
     #If we are at distance 1000 mm from an obsticle, drive slowley
-    elif anvrageDistance < 1000:
-        speed = 60
+    elif avrageDistance < 1000:
+        speed = 110
+        syncMotor(speed, angle, pid)
     #Keep constant speed inbetween 1000 and 3000
     else:
-        speed = 100
+        speed = 120
+        syncMotor(speed, angle, pid)
 
+#Regulates the angle of the tires with the help of the pidLoop in pid.py
+#Uses the cones to the far right and left
 def regulateAngle(lidarValue, sensorValue):
+        #Variables used in the loop down below
+        count = 0
+        avrageDistanceLeft = 0
+        avrageDistanceRight = 0
 
+        #Lidarvalue is a list of tuples
+        for data in lidarValue:
+            #data[0] is the angle of the meassurment, <90 and >54 is the
+            #cone to the far left.
+            #data[2] > 0 is the quality of the meassurmetn, 0 is bad.
+            if(data[0] <= 90 and data[0] >= 54 and data[2] > 0):
+                avrageDistanceLeft += data[1]
+                count += 1
 
+        avrageDistanceLeft = avrageDistanceLeft / count
+        count = 0
+
+        for data in lidarValue:
+            #data[0] is the angle of the meassurment, <306 and >270 is the
+            #cone to the far right.
+            #data[2] > 0 is the quality of the meassurmetn, 0 is bad.
+            if(data[0] <= 306 and data[0] >= 270 and data[2] > 0):
+                avrageDistanceRight += data[1]
+                count += 1
+
+        avrageDistanceRight = avrageDistanceRight / count
+
+        #Positive value means we are more to the right, negative value
+        #means we are more to the left.
+        pid.currVal = avrageDistanceRight - avrageDistanceLeft
+
+        anglePid()
+
+        secondRegulateAngle()
+
+#regulates the angle with the upper left and right cones.
+def secondRegulateAngle():
+    #Variables used in the loop down below
+    count = 0
+    avrageDistanceUpperLeft = 0
+    avrageDistanceUpperRight = 0
+
+    #Lidarvalue is a list of tuples
+    for data in lidarValue:
+        #data[0] is the angle of the meassurment, <54 and >18 is the
+        #cone to the upper left.
+        #data[2] > 0 is the quality of the meassurmetn, 0 is bad.
+        if(data[0] < 54 and data[0] > 18 and data[2] > 0):
+            avrageDistanceUpperLeft += data[1]
+            count += 1
+
+    avrageDistanceUpperLeft = avrageDistanceUpperLeft / count
+    count = 0
+
+    for data in lidarValue:
+        #data[0] is the angle of the meassurment, <342 and >306 is the
+        #cone to the upper right.
+        #data[2] > 0 is the quality of the meassurmetn, 0 is bad.
+        if(data[0] < 342 and data[0] > 306 and data[2] > 0):
+            avrageDistanceUpperRight += data[1]
+            count += 1
+
+    avrageDistanceUpperRight = avrageDistanceUpperRight / count
+
+    #Positive value means we are more to the right, negative value
+    #means we are more to the left.
+    pid.currVal = avrageDistanceUpperRight - avrageDistanceUpperLeft
+
+    anglePid()
+
+#Calls the pidLoop to change the angle
+def anglePid():
+    pid.pidLoop()
+
+    #Incase the pidloop wnats to turn to much, in this case, lower the speed
+    if angle > 180:
+        angle = 180
+        speed = 110 #Slow
+
+    elif angle < 0:
+        angle = 0
+        speed = 110 #Slow
+
+    #Speed should be less when we turn more, find some good scale to caclulate
+    #The speed depending on the angle (Maybee)
+
+    syncMotor(speed, angle, pid)
+
+    pid.currOutVal = angle
 
 def main():
     while 1:
