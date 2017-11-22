@@ -11,9 +11,9 @@
 //data sent from rasberry pi (=P) to motormodul (A = AVR)
 struct motormodul_PA{
 	//the speed of the engine, may be between 0-40 (3 is neutral)
-	uint8_t speed;
+	unsigned char speed;
 	//the angle of the front wheels, may be between 1-180 (90 is neutral)
-	uint8_t angle;
+	unsigned char angle;
 };
 
 //data sent from 'motormodul' (A = AVR) to rasberry pi (=P)

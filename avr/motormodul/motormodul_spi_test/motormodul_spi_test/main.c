@@ -24,10 +24,10 @@ int main(void)
 		sei();
 		
 		//Initialize LCD module
-		LCDInit(LS_BLINK | LS_ULINE);
+		//LCDInit(LS_BLINK | LS_ULINE);
 		
 		//Clear the screen
-		LCDClear();
+		//LCDClear();
 		
 		motormodul_AP_data data_out;
 		data_out.curr_rpm = 42;
@@ -42,10 +42,10 @@ int main(void)
 			data.angle = 0;
 			data.speed = 0;
 			get_spi_data(&data);
-			LCDWriteString(" ");
-			LCDWriteInt(data.angle, 3);
-			LCDWriteString(" ");
-			LCDWriteInt(data.speed, 3);
+			//LCDWriteString(" ");
+			//LCDWriteInt(data.angle, 3);
+			//LCDWriteString(" ");
+			//LCDWriteInt(data.speed, 3);
 		}
     }
 }

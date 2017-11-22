@@ -30,8 +30,8 @@ const int max_speed; //FIND ITS VALUE
 const int min_speed = 3170; //FIND ITS VALUE
 int turn; //Turn < natural => right, turn > natural => left
 int speed;
-int scale_turn;
-int scale_speed;
+uint8_t scale_turn;
+uint8_t scale_speed;
 
 //		--- HALLEFFECT ---
 volatile long ticks_elapsed;
@@ -101,9 +101,9 @@ void lcd_init(){
 		LCDWriteString("STARTING");
 }
 void scale(){
-	if(scale_turn <= 180 && scale_turn >= 1)
+	if(scale_turn <= 180 && scale_turn >= 0)
 	{
-		turn = (10 *scale_turn) + 2100;
+		turn = (int)((10 *scale_turn) + 2100);
 	}
 	else
 	{
@@ -113,11 +113,11 @@ void scale(){
 	//maxhastighet troligen innan speed = 40000
 	if(scale_speed <= 200 && scale_speed >= 101)
 	{
-		speed = 3180 + (scale_speed - 100)*0.5;
+		speed = (int)(3180 + (scale_speed - 100)*0.5);
 	}
 	else if (scale_speed <= 99 && scale_speed >= 0)
 	{	
-		speed = 2820 + (scale_speed - 100)*0.5;
+		speed = (int)(2820 + (scale_speed - 100)*0.5);
 	}
 	else{
 		speed = natural;
@@ -135,13 +135,11 @@ int main(void)
 	timer3_init();
 
 	sei();
-	
+	set_spi_data(data_out);
     while(1)
     {
-		if(new_rpm == 1){
-		set_spi_data(data_out);
-		new_rpm = 0;
-		}
+
+		
 		if (get_data_available()){
 		get_spi_data(&data_in);
 		scale_turn = data_in.angle;
@@ -187,4 +185,8 @@ ISR(TIMER3_OVF_vect)
 	timer_led_on();
 	
 	tot_overflow++;
+	if(tot_overflow >= 2){
+		rpm = 0;
+		new_rpm=1;
+	}
 }

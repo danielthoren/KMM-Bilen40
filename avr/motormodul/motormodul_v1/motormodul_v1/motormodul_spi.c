@@ -74,6 +74,7 @@ void get_spi_data(motormodul_PA_data* data){
 	else{
 		data->speed = 0xFF;
 	}
+	memcpy((void*) incomming, 0, sizeof(incomming));
 }
 
 // Initialize SPI Slave Device
