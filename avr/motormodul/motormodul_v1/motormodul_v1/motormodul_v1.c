@@ -135,11 +135,11 @@ int main(void)
 	timer3_init();
 
 	sei();
-	set_spi_data(data_out);
+	
     while(1)
     {
 
-		
+		set_spi_data(data_out);
 		if (get_data_available()){
 		get_spi_data(&data_in);
 		scale_turn = data_in.angle;

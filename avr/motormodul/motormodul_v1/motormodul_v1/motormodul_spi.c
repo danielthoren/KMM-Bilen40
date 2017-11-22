@@ -42,7 +42,6 @@ void set_outgoing(motormodul_AP_data* data){
 	outgoing[1] = calc_checksum(outgoing, OUTGOING_PACKET_SIZE);
 	
 	SPDR = outgoing[0];
-	tranciever_count++;
 }
 
 //converts the incomming char array to a struct of type 'motormodul_PA_data'
@@ -92,6 +91,7 @@ void spi_init (void)
 //The data is saved in a buffer and set as outgoing data when SS goes high.
 //When new data is available PORTD0 goes high until the pi has read the data, then it goes low again.
 void spi_tranciever(){
+	tranciever_count++;
 	if (tranciever_count >= INCOMMING_PACKET_SIZE &&
 		tranciever_count >= OUTGOING_PACKET_SIZE){
 			//getting the last byte of the incomming package
@@ -102,7 +102,6 @@ void spi_tranciever(){
 			if(buffer.curr_rpm != 0xFF){
 				set_outgoing(&buffer);
 				//signal pi that there is new data
-				tranciever_count++;
 				PORTD |= 0b00000001;
 				buffer.curr_rpm = 0xFF;
 			}
@@ -118,7 +117,7 @@ void spi_tranciever(){
 		else{
 			SPDR = outgoing[tranciever_count];
 		}
-		tranciever_count++;
+		
 	}
 }
 
