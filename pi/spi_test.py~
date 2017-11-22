@@ -1,0 +1,9 @@
+import spi
+import time
+
+data = [100, 90]
+recieved = 0
+
+recieved = motorTranciever(data)
+
+print("recieved data: ", recieved)
