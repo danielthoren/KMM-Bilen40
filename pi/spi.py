@@ -16,7 +16,6 @@ SCLK = 11
 SSS = 22
 SSM = 27
 NEWDATASENSOR = 5
-NEWDATAMOTOR = 6
 
 wiringpi.wiringPiSetup()
 wiringpi.wiringPiSetupGpio()
@@ -28,8 +27,6 @@ wiringpi.digitalWrite(SSS, HIGH)
 wiringpi.pinMode(SSM, OUTPUT)
 wiringpi.digitalWrite(SSM, HIGH)
 
-
-wiringpi.pinMode(NEWDATAMOTOR, INPUT)
 wiringpi.pinMode(NEWDATASENSOR, INPUT)
 
 wiringpi.pinMode(SSS, OUTPUT)
@@ -42,11 +39,10 @@ End Setup
 '''''''''''''''''
 
 '''
-Checks if there is data to receive.
-Has needs to be done before Trancieving data, to take load of the AVR.
+Checks if there is data to receive from the 'sensormodul'
 '''
-def hasNewData(pin):
-    return wiringpi.digitalRead(pin)
+def hasNewDataSensor():
+    return wiringpi.digitalRead(NEWDATASENSOR)
 
 
 '''
@@ -64,7 +60,6 @@ def motorTransceiver(data):
 
     data.append(calcChecksum(data))
     buff = bytes([data[0], data[1], data[2]])
-    #buff = bytes(data)
 
     print("data: ", data)
     
@@ -103,8 +98,7 @@ def sensorTransceiver():
     wiringpi.digitalWrite(SSS, LOW)
     
     buff = bytes([0, 0, 0, 0, 0, 0])
-    retlen, retdata = wiringpi.wiringPiSPIDataRW(0, buff)
-    
+    retlen, retdata = wiringpi.wiringPiSPIDataRW(0, buff)    
     
     data = [retdata[0], retdata[1], retdata[2], retdata[3], retdata[4], retdata[5]]
     
@@ -115,15 +109,6 @@ def sensorTransceiver():
     return None
 
 '''
-Creates a list with values for speed and angle
-'''
-def motorDataList():
-    speed = 10
-    angle = 40
-    data_list = [speed, angle]
-    return data_list
-
-'''
 Calculates checksum of data. 
 '''
 def calcChecksum(data):
@@ -132,30 +117,4 @@ def calcChecksum(data):
         chk ^= elem
 
     return chk
-
-        
-'''''''''''''''''
-The Testchamber
-
-'''''''''''''''''
-if __name__ == "__main__":
-
-    while True:
-        print(wiringpi.digitalRead(6))
-        
-        if hasNewData(NEWDATASENSOR):
-
-            sensor_data = sensorTransceiver()
-            if sensor_data:
-                print(sensor_data)
-            else:
-                print("Invalid checksum.")
-        
-        if hasNewData(NEWDATAMOTOR):
-            motor_data = motorTransceiver(motorDataList())
-            
-            if motor_data:
-                print("Motordata")
-                print(motor_data)
-        time.sleep(1)
 

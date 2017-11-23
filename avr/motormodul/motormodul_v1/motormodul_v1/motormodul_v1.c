@@ -8,7 +8,7 @@
 #define F_CPU 16000000
 
 #include <avr/io.h>
-#include <avr/delay.h>
+#include <util/delay.h>
 #include <avr/interrupt.h>
 #include "motormodul_spi.h"
 
@@ -29,8 +29,6 @@ const int max_right = 2100; //Ish max left (pulse should be 1ms)
 const int max_speed; //FIND ITS VALUE
 const int min_speed = 3170; //FIND ITS VALUE
 int turn; //Turn < natural => right, turn > natural => left
-int speed;
-int scale_turn;
 int scale_speed;
 
 //		--- HALLEFFECT ---
@@ -73,9 +71,9 @@ void pwm_init()
 	ICR1 = 40000;
 	//send out neutral mode
 	turn = natural;
-	speed = natural;
+	scale_speed = natural;
 	OCR1A = turn;
-	OCR1B = speed;
+	OCR1B = scale_speed;
 	 led_on();
 	_delay_ms(5000);
 	 led_off();
@@ -101,26 +99,28 @@ void lcd_init(){
 		LCDWriteString("STARTING");
 }
 void scale(){
-	if(scale_turn <= 180 && scale_turn >= 1)
+	if(data_in.angle <= 180 && data_in.angle >= 0)
 	{
-		turn = (10 *scale_turn) + 2100;
+		turn = (int)((10 *data_in.angle) + 2100);
 	}
+	else if(data_in.angle == 90){ turn = natural;} 
 	else
 	{
-		turn = natural;
+		turn = turn;
 	}
 	//Uppdatera granser för hastighet,
 	//maxhastighet troligen innan speed = 40000
-	if(scale_speed <= 200 && scale_speed >= 101)
+	if(data_in.speed <= 200 && data_in.speed >= 101)
 	{
-		speed = 3180 + (scale_speed - 100)*0.5;
+		scale_speed = (int)(3180 + (data_in.speed - 100));
 	}
-	else if (scale_speed <= 99 && scale_speed >= 0)
+	else if (data_in.speed <= 99 && data_in.speed >= 0)
 	{	
-		speed = 2820 + (scale_speed - 100)*0.5;
+		scale_speed = (int)(2820 + (data_in.speed - 100));
 	}
+	else if (data_in.speed == 100){scale_speed = natural;}
 	else{
-		speed = natural;
+		scale_speed = scale_speed;
 	}
 	
 }
@@ -138,21 +138,14 @@ int main(void)
 	
     while(1)
     {
-		if(new_rpm == 1){
+		data_out.curr_rpm = rpm;
 		set_spi_data(data_out);
-		new_rpm = 0;
-		}
-		if (get_data_available()){
-		get_spi_data(&data_in);
-		scale_turn = data_in.angle;
-		scale_speed = data_in.speed;
-		scale();
-		}
-		cli();
+		if(get_data_available()){
+			get_spi_data(&data_in);
+			scale();
+			}
 		OCR1A = turn;
-		OCR1B = speed;
-		sei();
-
+		OCR1B = scale_speed;
     }
 }
 
@@ -160,21 +153,20 @@ int main(void)
 ISR(PCINT0_vect)
 {
 	if( PINA & ((1 << PIND0) == 1)){
-	LCDClear();
-	if (led_is_on())
-	led_off();
-	else
-	led_on();
+
+		if (led_is_on())
+			led_off();
+		else
+			led_on();
 	
-	current_ticks = TCNT3;
-	ticks_elapsed = (tot_overflow * TIMER_TICKS) + current_ticks;
-	time_elapsed = (float) ticks_elapsed * seconds_per_tick;//seconds
+		current_ticks = TCNT3;
+		ticks_elapsed = (tot_overflow * TIMER_TICKS) + current_ticks;
+		time_elapsed = (float) ticks_elapsed * seconds_per_tick;//seconds
 	
-	tot_overflow = 0;
-	TCNT3 = 0;
+		tot_overflow = 0;
+		TCNT3 = 0;
 	
-	rpm = (float) (1/(time_elapsed*4)) ;
-	new_rpm = 1;
+		rpm = (float) (1/(time_elapsed*2))*60 ;
 	}
 }
 
@@ -187,4 +179,8 @@ ISR(TIMER3_OVF_vect)
 	timer_led_on();
 	
 	tot_overflow++;
+	if(tot_overflow >= 2){
+		rpm = 0;
+		new_rpm=1;
+	}
 }

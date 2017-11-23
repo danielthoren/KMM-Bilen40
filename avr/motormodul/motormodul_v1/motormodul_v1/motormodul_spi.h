@@ -11,9 +11,9 @@
 //data sent from rasberry pi (=P) to motormodul (A = AVR)
 struct motormodul_PA{
 	//the speed of the engine, may be between 0-40 (3 is neutral)
-	uint8_t speed;
+	unsigned char speed;
 	//the angle of the front wheels, may be between 1-180 (90 is neutral)
-	uint8_t angle;
+	unsigned char angle;
 };
 
 //data sent from 'motormodul' (A = AVR) to rasberry pi (=P)
@@ -45,11 +45,11 @@ incomming[0] = speed;	incomming[1] = angle;
 */
 void get_spi_data(motormodul_PA_data* data);
 
+//If data available, return 1, else 0
+unsigned char get_data_available();
+
 //initializes the spi
 void spi_init (void);
-
-//0 if no new data has been recieved, 1 if new data has been recieved
-unsigned char get_data_available();
 
 //Interrupt that is called when a new byte has been transferred over spi
 ISR(SPI_STC_vect);

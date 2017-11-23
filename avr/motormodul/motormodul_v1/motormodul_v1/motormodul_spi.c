@@ -42,7 +42,6 @@ void set_outgoing(motormodul_AP_data* data){
 	outgoing[1] = calc_checksum(outgoing, OUTGOING_PACKET_SIZE);
 	
 	SPDR = outgoing[0];
-	tranciever_count++;
 }
 
 //converts the incomming char array to a struct of type 'motormodul_PA_data'
@@ -56,9 +55,6 @@ void set_spi_data(motormodul_AP_data data){
 		//dismantling struct to outgoing data
 		memcpy((void*) &outgoing_data, (void*) &data, sizeof(data));
 		set_outgoing(&data);
-		
-		//signal pi that there is new data
-		PORTD |= 0b00000001;
 	}
 	else{
 		buffer = data;
@@ -66,22 +62,19 @@ void set_spi_data(motormodul_AP_data data){
 }
 
 void get_spi_data(motormodul_PA_data* data){
-	data_available = 0;
 	//building up struct from incomming data
+	data_available = 0;
 	if(calc_checksum(incomming, INCOMMING_PACKET_SIZE - 1) == incomming[INCOMMING_PACKET_SIZE - 1]){
 		get_incomming(data);
 	}
-	else{
-		data->speed = 0xFF;
-	}
+	memcpy((void*) incomming, 0, sizeof(incomming));
 }
 
 // Initialize SPI Slave Device
 void spi_init (void)
 {
-	DDRB |= (1 << DDB6);			//Set MISO as output
+	DDRB |= (1 << DDB6);		//Set MISO as output
 	SPCR |= (1<<SPE)|(1<<SPIE);	//Enable SPI && interrupt enable bit
-	DDRD |= (1 << DDD0);			//Set pin 0 of PORTD as output, used to tell pi when new data is available
 	PORTD &= 0b11111110;		//Inits pin 0 of PORTD to 0
 	data_available = 0;
 	buffer.curr_rpm = 0xFF;
@@ -91,23 +84,23 @@ void spi_init (void)
 //The data is saved in a buffer and set as outgoing data when SS goes high.
 //When new data is available PORTD0 goes high until the pi has read the data, then it goes low again.
 void spi_tranciever(){
+	//If SS line is low then message is still being trancieved. Else there might have been a lost bit or
+	//involentary reset of the other side, thus aborting current message and getting ready for a new one
+	tranciever_count++;
 	if (tranciever_count >= INCOMMING_PACKET_SIZE &&
-		tranciever_count >= OUTGOING_PACKET_SIZE){
-			//getting the last byte of the incomming package
-			incomming[tranciever_count-1] = SPDR;
-			PORTD &= 0b11111110;
-			data_available = 1;
-			tranciever_count = 0;
-			if(buffer.curr_rpm != 0xFF){
-				set_outgoing(&buffer);
-				//signal pi that there is new data
-				tranciever_count++;
-				PORTD |= 0b00000001;
-				buffer.curr_rpm = 0xFF;
-			}
-			else{
-				set_outgoing(&outgoing_data);
-			}
+	tranciever_count >= OUTGOING_PACKET_SIZE){
+		//getting the last byte of the incomming package
+		incomming[tranciever_count-1] = SPDR;
+		data_available = 1;
+		tranciever_count = 0;
+		memcpy((void*) outgoing, 0, OUTGOING_PACKET_SIZE);
+		if(buffer.curr_rpm != 0xFF){
+			set_outgoing(&buffer);
+			buffer.curr_rpm = 0xFF;
+		}
+		else{
+			set_outgoing(&outgoing_data);
+		}
 	}
 	else{
 		incomming[tranciever_count-1] = SPDR;
@@ -117,7 +110,6 @@ void spi_tranciever(){
 		else{
 			SPDR = outgoing[tranciever_count];
 		}
-		tranciever_count++;
 	}
 }
 
