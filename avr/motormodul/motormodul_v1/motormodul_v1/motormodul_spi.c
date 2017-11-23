@@ -70,9 +70,6 @@ void get_spi_data(motormodul_PA_data* data){
 	if(calc_checksum(incomming, INCOMMING_PACKET_SIZE - 1) == incomming[INCOMMING_PACKET_SIZE - 1]){
 		get_incomming(data);
 	}
-	else{
-		data->speed = 0xFF;
-	}
 	memcpy((void*) incomming, 0, sizeof(incomming));
 }
 
@@ -93,40 +90,33 @@ void spi_init (void)
 void spi_tranciever(){
 	//If SS line is low then message is still being trancieved. Else there might have been a lost bit or
 	//involentary reset of the other side, thus aborting current message and getting ready for a new one
-	if ((PINB & 0b00010000) == 0){
-		tranciever_count++;
-		if (tranciever_count >= INCOMMING_PACKET_SIZE &&
-		tranciever_count >= OUTGOING_PACKET_SIZE){
-			//getting the last byte of the incomming package
-			incomming[tranciever_count-1] = SPDR;
-			PORTD &= 0b11111110;
-			data_available = 1;
-			tranciever_count = 0;
-			memcpy((void*) outgoing, 0, OUTGOING_PACKET_SIZE);
-			if(buffer.curr_rpm != 0xFF){
-				set_outgoing(&buffer);
-				//signal pi that there is new data
-				PORTD |= 0b00000001;
-				buffer.curr_rpm = 0xFF;
-			}
-			else{
-				set_outgoing(&outgoing_data);
-			}
+	tranciever_count++;
+	if (tranciever_count >= INCOMMING_PACKET_SIZE &&
+	tranciever_count >= OUTGOING_PACKET_SIZE){
+		//getting the last byte of the incomming package
+		incomming[tranciever_count-1] = SPDR;
+		PORTD &= 0b11111110;
+		data_available = 1;
+		tranciever_count = 0;
+		memcpy((void*) outgoing, 0, OUTGOING_PACKET_SIZE);
+		if(buffer.curr_rpm != 0xFF){
+			set_outgoing(&buffer);
+			//signal pi that there is new data
+			PORTD |= 0b00000001;
+			buffer.curr_rpm = 0xFF;
 		}
 		else{
-			incomming[tranciever_count-1] = SPDR;
-			if(tranciever_count >= OUTGOING_PACKET_SIZE){
-				SPDR = 0xFF;
-			}
-			else{
-				SPDR = outgoing[tranciever_count];
-			}
+			set_outgoing(&outgoing_data);
 		}
 	}
 	else{
-		tranciever_count = 0;
-		memcpy((void*) outgoing, 0, OUTGOING_PACKET_SIZE);
-		memcpy((void*) incomming, 0, INCOMMING_PACKET_SIZE);
+		incomming[tranciever_count-1] = SPDR;
+		if(tranciever_count >= OUTGOING_PACKET_SIZE){
+			SPDR = 0xFF;
+		}
+		else{
+			SPDR = outgoing[tranciever_count];
+		}
 	}
 }
 

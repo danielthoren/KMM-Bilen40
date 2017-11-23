@@ -29,9 +29,7 @@ const int max_right = 2100; //Ish max left (pulse should be 1ms)
 const int max_speed; //FIND ITS VALUE
 const int min_speed = 3170; //FIND ITS VALUE
 int turn; //Turn < natural => right, turn > natural => left
-int speed;
-uint8_t scale_turn;
-uint8_t scale_speed;
+int scale_speed;
 
 //		--- HALLEFFECT ---
 volatile long ticks_elapsed;
@@ -73,9 +71,9 @@ void pwm_init()
 	ICR1 = 40000;
 	//send out neutral mode
 	turn = natural;
-	speed = natural;
+	scale_speed = natural;
 	OCR1A = turn;
-	OCR1B = speed;
+	OCR1B = scale_speed;
 	 led_on();
 	_delay_ms(5000);
 	 led_off();
@@ -101,26 +99,28 @@ void lcd_init(){
 		LCDWriteString("STARTING");
 }
 void scale(){
-	if(scale_turn <= 180 && scale_turn >= 0)
+	if(data_in.angle <= 180 && data_in.angle >= 0)
 	{
-		turn = (int)((10 *scale_turn) + 2100);
+		turn = (int)((10 *data_in.angle) + 2100);
 	}
+	else if(data_in.angle == 90){ turn = natural;} 
 	else
 	{
-		turn = natural;
+		turn = turn;
 	}
 	//Uppdatera granser för hastighet,
 	//maxhastighet troligen innan speed = 40000
-	if(scale_speed <= 200 && scale_speed >= 101)
+	if(data_in.speed <= 200 && data_in.speed >= 101)
 	{
-		speed = (int)(3180 + (scale_speed - 100)*0.5);
+		scale_speed = (int)(3180 + (data_in.speed - 100)*0.5);
 	}
-	else if (scale_speed <= 99 && scale_speed >= 0)
+	else if (data_in.speed <= 99 && data_in.speed >= 0)
 	{	
-		speed = (int)(2820 + (scale_speed - 100)*0.5);
+		scale_speed = (int)(2720 + (data_in.speed - 100)*0.5);
 	}
+	else if (data_in.speed == 100){scale_speed = natural;}
 	else{
-		speed = natural;
+		scale_speed = scale_speed;
 	}
 	
 }
@@ -141,16 +141,12 @@ int main(void)
 
 		set_spi_data(data_out);
 		if (get_data_available()){
-		get_spi_data(&data_in);
-		scale_turn = data_in.angle;
-		scale_speed = data_in.speed;
-		scale();
+			get_spi_data(&data_in);
+			scale();
 		}
-		cli();
+		scale_speed = 2800;
 		OCR1A = turn;
-		OCR1B = speed;
-		sei();
-
+		OCR1B = scale_speed;
     }
 }
 
