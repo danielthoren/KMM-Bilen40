@@ -8,8 +8,7 @@ class Instruction:
     def __init__(self):
         self.W = False
         self.S = False
-        self.A = False
-        self.D = False
+        self.AD = 0
         self.start = False
         self.stop = False
         self.quit = False
@@ -25,31 +24,35 @@ class Instruction:
     def reset_wasd(self):
         self.W = False
         self.S = False
-        self.A = False
-        self.D = False
+        #self.AD = 0
 
     def printSelf(self):
         print("Forward:\t", self.W)
         print("Backward:\t", self.S)
-        print("Left:\t\t", self.A)
-        print("Right:\t\t", self.D)
+        print("AD =\t\t", self.AD)
         print("Start:\t\t", self.start)
         print("Stop:\t\t", self.stop)
         print("Quit:\t\t", self.quit)
-        print("pid-P =\t", self.p)
-        print("pid-D =\t", self.d)
+        print("pid-P =\t\t", self.p)
+        print("pid-D =\t\t", self.d)
 
-    def _w(self, W):
-        self.W = W
+    def _w(self):
+        self.W = not self.W
+        if self.S:
+            self.S = False
 
-    def _s(self, S):
-        self.S = S
+    def _s(self):
+        self.S = not self.S
+        if self.W:
+            self.W = False
 
-    def _a(self, A):
-        self.A = A
+    def _a(self):
+        if self.AD > -1:
+            self.AD -= 1
 
-    def _d(self, D):
-        self.D = D
+    def _d(self):
+        if self.AD < 1:
+            self.AD += 1
 
     def doStart(self, start):
         self.start = start
@@ -61,7 +64,13 @@ class Instruction:
         self.quit = quit
 
     def set_p(self, p):
-        self.p = float(p)
+        if not p:
+            self.p = float(0)
+        else:
+            self.p = float(p)
 
     def set_d(self, d):
-        self.d = float(d)
+        if not d:
+            self.d = float(0)
+        else:
+            self.d = float(d)

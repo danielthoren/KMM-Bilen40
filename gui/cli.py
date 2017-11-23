@@ -9,7 +9,7 @@ from appjar import gui
 
 if __name__ == "__main__":
 
-    HOST, PORT = "localhost", 10000
+    HOST, PORT = "192.168.1.10", 10000
     handler = Handler(HOST, PORT)
     # handler.queue.put("hej")
     # handler.queue.put("hopp")
