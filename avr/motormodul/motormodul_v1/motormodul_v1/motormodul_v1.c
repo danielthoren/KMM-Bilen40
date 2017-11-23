@@ -112,11 +112,11 @@ void scale(){
 	//maxhastighet troligen innan speed = 40000
 	if(data_in.speed <= 200 && data_in.speed >= 101)
 	{
-		scale_speed = (int)(3180 + (data_in.speed - 100)*0.5);
+		scale_speed = (int)(3180 + (data_in.speed - 100));
 	}
 	else if (data_in.speed <= 99 && data_in.speed >= 0)
 	{	
-		scale_speed = (int)(2720 + (data_in.speed - 100)*0.5);
+		scale_speed = (int)(2820 + (data_in.speed - 100));
 	}
 	else if (data_in.speed == 100){scale_speed = natural;}
 	else{
@@ -138,13 +138,11 @@ int main(void)
 	
     while(1)
     {
-
 		set_spi_data(data_out);
 		if (get_data_available()){
 			get_spi_data(&data_in);
 			scale();
 		}
-		scale_speed = 2800;
 		OCR1A = turn;
 		OCR1B = scale_speed;
     }
@@ -167,8 +165,7 @@ ISR(PCINT0_vect)
 	tot_overflow = 0;
 	TCNT3 = 0;
 	
-	rpm = (float) (1/(time_elapsed*4)) ;
-	new_rpm = 1;
+	rpm = (float) (1/(time_elapsed*4))/60 ;
 	}
 }
 
