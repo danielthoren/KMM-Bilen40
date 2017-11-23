@@ -22,10 +22,6 @@ motormodul_AP_data outgoing_data;
 unsigned char data_set = 0;
 unsigned char data_available;
 
-unsigned char get_data_available(){
-	return data_available;
-}
-
 //Calculates a simple XOR checksum for the incomming package
 unsigned char calc_checksum(volatile unsigned char data[], int size){
 		unsigned char checksum = 0;
@@ -55,9 +51,6 @@ void set_spi_data(motormodul_AP_data data){
 		//dismantling struct to outgoing data
 		memcpy((void*) &outgoing_data, (void*) &data, sizeof(data));
 		set_outgoing(&data);
-		
-		//signal pi that there is new data
-		PORTD |= 0b00000001;
 	}
 	else{
 		buffer = data;
@@ -65,10 +58,11 @@ void set_spi_data(motormodul_AP_data data){
 }
 
 void get_spi_data(motormodul_PA_data* data){
-	data_available = 0;
 	//building up struct from incomming data
-	if(calc_checksum(incomming, INCOMMING_PACKET_SIZE - 1) == incomming[INCOMMING_PACKET_SIZE - 1]){
+	if(calc_checksum(incomming, INCOMMING_PACKET_SIZE - 1) == incomming[INCOMMING_PACKET_SIZE - 1] &&
+	data_available == 1){
 		get_incomming(data);
+		data_available = 0;
 	}
 	memcpy((void*) incomming, 0, sizeof(incomming));
 }
@@ -76,9 +70,8 @@ void get_spi_data(motormodul_PA_data* data){
 // Initialize SPI Slave Device
 void spi_init (void)
 {
-	DDRB |= (1 << DDB6);			//Set MISO as output
+	DDRB |= (1 << DDB6);		//Set MISO as output
 	SPCR |= (1<<SPE)|(1<<SPIE);	//Enable SPI && interrupt enable bit
-	DDRD |= (1 << DDD0);			//Set pin 0 of PORTD as output, used to tell pi when new data is available
 	PORTD &= 0b11111110;		//Inits pin 0 of PORTD to 0
 	data_available = 0;
 	buffer.curr_rpm = 0xFF;
@@ -95,14 +88,11 @@ void spi_tranciever(){
 	tranciever_count >= OUTGOING_PACKET_SIZE){
 		//getting the last byte of the incomming package
 		incomming[tranciever_count-1] = SPDR;
-		PORTD &= 0b11111110;
 		data_available = 1;
 		tranciever_count = 0;
 		memcpy((void*) outgoing, 0, OUTGOING_PACKET_SIZE);
 		if(buffer.curr_rpm != 0xFF){
 			set_outgoing(&buffer);
-			//signal pi that there is new data
-			PORTD |= 0b00000001;
 			buffer.curr_rpm = 0xFF;
 		}
 		else{
