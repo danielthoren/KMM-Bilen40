@@ -7,20 +7,18 @@ def stop():
     syncMotor(speed, angle, pid)
 
 #Counts the rounds
-def countRounds(sensorValue):
+def countLaps(sensorValue):
         if(sensorValue[4]):
-            roundCount += 1
-        #Stops after three rounds
-        if roundCount == 3:
-            stop()
+            lapCount += 1
+        #returns true when roundCount equals GOAL_LAPS
+        if lapCount == GOAL_LAPS:
             return True
 
 #Checks hitbox
 def hitbox(sensorValue):
     #If the sensors say we are verry close to an obsticle we stop
-    for data in sensorValue[:-1]:
-        if data < 30:
-            stop()
+    for i in range(sensorValue.lenth - 1):
+        if sensorValue[i] < HITBOX[i]:
             return True
 
 #Regulates the speed depending on avrage value from lidar and the sonar values
