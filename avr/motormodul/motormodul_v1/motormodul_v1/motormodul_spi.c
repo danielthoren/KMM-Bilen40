@@ -91,14 +91,18 @@ void spi_init (void)
 //The data is saved in a buffer and set as outgoing data when SS goes high.
 //When new data is available PORTD0 goes high until the pi has read the data, then it goes low again.
 void spi_tranciever(){
-	tranciever_count++;
-	if (tranciever_count >= INCOMMING_PACKET_SIZE &&
+	//If SS line is low then message is still being trancieved. Else there might have been a lost bit or
+	//involentary reset of the other side, thus aborting current message and getting ready for a new one
+	if ((PINB & 0b00010000) == 0){
+		tranciever_count++;
+		if (tranciever_count >= INCOMMING_PACKET_SIZE &&
 		tranciever_count >= OUTGOING_PACKET_SIZE){
 			//getting the last byte of the incomming package
 			incomming[tranciever_count-1] = SPDR;
 			PORTD &= 0b11111110;
 			data_available = 1;
 			tranciever_count = 0;
+			memcpy((void*) outgoing, 0, OUTGOING_PACKET_SIZE);
 			if(buffer.curr_rpm != 0xFF){
 				set_outgoing(&buffer);
 				//signal pi that there is new data
@@ -108,16 +112,21 @@ void spi_tranciever(){
 			else{
 				set_outgoing(&outgoing_data);
 			}
-	}
-	else{
-		incomming[tranciever_count-1] = SPDR;
-		if(tranciever_count >= OUTGOING_PACKET_SIZE){
-			SPDR = 0xFF;
 		}
 		else{
-			SPDR = outgoing[tranciever_count];
+			incomming[tranciever_count-1] = SPDR;
+			if(tranciever_count >= OUTGOING_PACKET_SIZE){
+				SPDR = 0xFF;
+			}
+			else{
+				SPDR = outgoing[tranciever_count];
+			}
 		}
-		
+	}
+	else{
+		tranciever_count = 0;
+		memcpy((void*) outgoing, 0, OUTGOING_PACKET_SIZE);
+		memcpy((void*) incomming, 0, INCOMMING_PACKET_SIZE);
 	}
 }
 

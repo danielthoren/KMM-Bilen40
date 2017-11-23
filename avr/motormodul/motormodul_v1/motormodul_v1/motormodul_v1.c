@@ -8,7 +8,7 @@
 #define F_CPU 16000000
 
 #include <avr/io.h>
-#include <avr/delay.h>
+#include <util/delay.h>
 #include <avr/interrupt.h>
 #include "motormodul_spi.h"
 
