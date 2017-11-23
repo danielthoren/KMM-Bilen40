@@ -1,4 +1,4 @@
-from PyQt4 import QtGui
+from PyQt4 import QtGui, QtCore
 import sys
 import design
 import threading
@@ -11,66 +11,84 @@ class ExampleApp(QtGui.QMainWindow, design.Ui_MainWindow):
     def __init__(self, parent=None):
         super(ExampleApp, self).__init__(parent)
         self.setupUi(self)
+        self.setupTCP()
+        self.W.clicked.connect(lambda: self.forward())
+        self.S.clicked.connect(lambda: self.backward())
+        self.A.clicked.connect(lambda: self.doer(self.instr._a))
+        self.D.clicked.connect(lambda: self.doer(self.instr._d))
+        self.stop.clicked.connect(lambda: self.reset())
+        self.sendparam.clicked.connect(lambda: self.gettxt())
         #self.W.clicked.connect(lambda: print("hello"))
+
+    def keyPressEvent(self, event):
+        if event.key() == QtCore.Qt.Key_Escape:
+            self.close()
+
+        elif event.key() == QtCore.Qt.Key_W:
+            self.forward()
+        elif event.key() == QtCore.Qt.Key_A:
+            self.doer(self.instr._a)
+        elif event.key() == QtCore.Qt.Key_S:
+            self.backward()
+        elif event.key() == QtCore.Qt.Key_D:
+            self.doer(self.instr._d)
+        elif event.key() == QtCore.Qt.Key_R:
+            self.reset()
+
+    def setupTCP(self):
+        self.instr = Instruction()       
+        """
+        TCP
+        """
+        host, port = "192.168.1.10", 10000
+        self.handler = Handler(host, port)
+        
+        self.handler_thread = threading.Thread(target = self.handler.hantera)
+        self.handler_thread.daemon = True
+        self.handler_thread.start()
+
+    def send(self):
+        message = self.instr.encode()
+        self.handler.add(message)
+
+    def doer(self, func):
+        func()
+        #instr.printSelf()
+        self.send()
+
+    def forward(self):
+        #self.S.setChecked(False)
+        self.instr._w()
+        #instr.printSelf()
+        self.send()
+
+    def backward(self):
+        #self.W.setChecked(False)
+        self.instr._s()
+        #instr.printSelf()
+        self.send()
+
+    def reset(self):
+        self.instr.reset_wasd()
+        # self.S.setChecked(False)
+        # self.W.setChecked(False)
+        #instr.printSelf()
+        self.send()
+
+    def gettxt(self):
+        self.instr.set_p(self.pid_p.text())
+        self.instr.set_d(self.pid_d.text())
+        #instr.printSelf()
+        self.send()
+    
+    
+    
 
 
 def main():
-    instr = Instruction()
-    app = QtGui.QApplication(sys.argv)
+    app = QtGui.QApplication(sys.argv)    
     form = ExampleApp()
-    """
-    TCP
-    """
-    host, port = "localhost", 10000
-    handler = Handler(host, port)
-
-    handler_thread = threading.Thread(target = handler.hantera)
-    handler_thread.daemon = True
-    handler_thread.start()
-
-    def send():
-        message = instr.encode()
-        handler.add(message)
-
-    def doer(func):
-        func()
-        #instr.printSelf()
-        send()
-
-    def forward():
-        form.S.setChecked(False)
-        instr._w()
-        #instr.printSelf()
-        send()
-
-    def backward():
-        form.W.setChecked(False)
-        instr._s()
-        #instr.printSelf()
-        send()
-
-    def reset():
-        instr.reset_wasd()
-        form.S.setChecked(False)
-        form.W.setChecked(False)
-        #instr.printSelf()
-        send()
-
-    def gettxt():
-        instr.set_p(form.pid_p.text())
-        instr.set_d(form.pid_d.text())
-        #instr.printSelf()
-        send()
-    """
-    GUI
-    """
-
-    form.W.clicked.connect(lambda: forward())
-    form.S.clicked.connect(lambda: backward())
-    form.A.clicked.connect(lambda: doer(instr._a))
-    form.D.clicked.connect(lambda: doer(instr._d))
-    form.stop.clicked.connect(lambda: reset())
-    form.sendparam.clicked.connect(lambda: gettxt())
+    
     form.show()
     app.exec_()
 
