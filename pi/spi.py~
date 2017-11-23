@@ -64,24 +64,25 @@ def motorTransceiver(data):
 
     data.append(calcChecksum(data))
 
-    buff = bytes(data)
-    #check = calcChecksum([66,22])
-    #buff = bytes([66, 22, check])
+    buff = bytes([data[0], data[1], data[2]])
+
+    print("data: ", data)
     
     retlen, retdata = wiringpi.wiringPiSPIDataRW(0, buff)
-
-    print("length", retlen)
 
     motor_data = [retdata[0], retdata[1], retdata[2]]
 
     wiringpi.digitalWrite(SSM, HIGH)
 
-    #removes all reduntant elements in the list. When the incomming data is less big than the
-    #outgoing data there must be dummy elements because of the full duplex bus (dummy = 255).
+    '''
+    removes all reduntant elements in the list. 
+    When the incomming data is less big than the
+    outgoing data there must be dummy elements 
+    because of the full duplex bus (dummy = 255).
+    '''
     print("before cleanup: ", motor_data)
     for i in range(len(motor_data)):
         if motor_data[i] == 255:
-            print('removed elem: ', i, ' = ', motor_data[i])
             motor_data = motor_data[:i]
             break
 
@@ -102,8 +103,7 @@ def sensorTransceiver():
     wiringpi.digitalWrite(SSS, LOW)
     
     buff = bytes([0, 0, 0, 0, 0, 0])
-    retlen, retdata = wiringpi.wiringPiSPIDataRW(0, buff)
-    
+    retlen, retdata = wiringpi.wiringPiSPIDataRW(0, buff)    
     
     data = [retdata[0], retdata[1], retdata[2], retdata[3], retdata[4], retdata[5]]
     
@@ -113,16 +113,6 @@ def sensorTransceiver():
         return data[:-1]
     return None
 
-'''
-Creates a list with values for speed and angle
-'''
-def motorDataList():
-    speed = 10
-    angle = 40
-    data_list = [speed, angle]
-    return data_list
-
-'''
 Calculates checksum of data. 
 '''
 def calcChecksum(data):
@@ -140,7 +130,7 @@ The Testchamber
 if __name__ == "__main__":
 
     while True:
-        #print(wiringpi.digitalRead(6))
+        print(wiringpi.digitalRead(6))
         
         if hasNewData(NEWDATASENSOR):
 
@@ -149,12 +139,12 @@ if __name__ == "__main__":
                 print(sensor_data)
             else:
                 print("Invalid checksum.")
-
+        
         if hasNewData(NEWDATAMOTOR):
-             motor_data = motorTransceiver(motorDataList())
+            motor_data = motorTransceiver(motorDataList())
             
-             if motor_data:
-                 print("Motordata")
-                 print(motor_data)
-        #time.sleep(1)
+            if motor_data:
+                print("Motordata")
+                print(motor_data)
+        time.sleep(1)
 
