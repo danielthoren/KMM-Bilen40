@@ -45,6 +45,9 @@ incomming[0] = speed;	incomming[1] = angle;
 */
 void get_spi_data(motormodul_PA_data* data);
 
+//If data available, return 1, else 0
+unsigned char get_data_available();
+
 //initializes the spi
 void spi_init (void);
 

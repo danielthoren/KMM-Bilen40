@@ -138,11 +138,12 @@ int main(void)
 	
     while(1)
     {
+		data_out.curr_rpm = rpm;
 		set_spi_data(data_out);
-		if (get_data_available()){
+		if(get_data_available()){
 			get_spi_data(&data_in);
 			scale();
-		}
+			}
 		OCR1A = turn;
 		OCR1B = scale_speed;
     }
@@ -152,20 +153,20 @@ int main(void)
 ISR(PCINT0_vect)
 {
 	if( PINA & ((1 << PIND0) == 1)){
-	LCDClear();
-	if (led_is_on())
-	led_off();
-	else
-	led_on();
+
+		if (led_is_on())
+			led_off();
+		else
+			led_on();
 	
-	current_ticks = TCNT3;
-	ticks_elapsed = (tot_overflow * TIMER_TICKS) + current_ticks;
-	time_elapsed = (float) ticks_elapsed * seconds_per_tick;//seconds
+		current_ticks = TCNT3;
+		ticks_elapsed = (tot_overflow * TIMER_TICKS) + current_ticks;
+		time_elapsed = (float) ticks_elapsed * seconds_per_tick;//seconds
 	
-	tot_overflow = 0;
-	TCNT3 = 0;
+		tot_overflow = 0;
+		TCNT3 = 0;
 	
-	rpm = (float) (1/(time_elapsed*4))/60 ;
+		rpm = (float) (1/(time_elapsed*2))*60 ;
 	}
 }
 
