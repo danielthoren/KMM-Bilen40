@@ -11,7 +11,7 @@ The values are in the following order:
 '''
 HITBOX = [30, 30, 30, 30]
 
-CONES = ((18,342))
+CONES = ((18,342),(90,54),(306,270),(53,19),(341,307))
 
 speed = 100 # 0 <= speed <= 200, 100 is neutral
 angle = 90 # 0 <= angle <= 180, 90 is straight
@@ -20,9 +20,9 @@ angle = 90 # 0 <= angle <= 180, 90 is straight
 pid = True
 lapCount = 0 #Counts the amount of laps we have driven
 
-avarageDistance = [] #holds avarage distance for all cones
+averageDistance = [] #holds average distance for all cones
 
-currVal = 0 #Input, avrage distance from the walls
+currVal = 0 #Input, average distance from the walls
 pGain = 0.5 #Random value
 dGain = 0.1 #Random value
 old_dGain = 0 #Used in the pidloop
@@ -43,28 +43,30 @@ def syncMotor(speed, angle, pid):
     pid = True #Sets prop back to True in case it has been changed
     return motorTransciver(data)
 
-def calcAvarageCones(lidarData):
-    avrage = 0
+def calcaverageCones(lidarData):
+    average = 0
     valueCount = 0
-    for i in range(CONES.length()):
+    for interval in range(CONES.length()):
         #Lidarvalue is a list of tuples
         for data in lidarData:
             #data[0] is the angle of the meassurment, <18 and >342 is +- 18 degrees
             #from angle 0, i.e straight forward. (The cone forward)
             #data[2] > 0 is the quality of the meassurmetn, 0 is bad.
             if(data[0] <= interval[0] and data[0] >= interval[1] and data[2] > 0):
-                avrage += data[1]
+                average += data[1]
                 valueCount += 1
 
-        avarageDistance.append(avrage/valueCount)
-        
-    
+        averageDistance.append(average/valueCount)
+        valueCount = 0
+
+
 
 def main():
     while 1:
         sensorValue = syncSonar() #List of values, 0-3 is sonar, 4 is round count
         rpm = syncMotor(speed, angle) #syncMotor does not support pid argument yet
         lidarValue = syncLidar() #List of tuples
+        calcaverageCones()
 
         '''
         if the hitbox is hit or if amount of laps has been completed then
