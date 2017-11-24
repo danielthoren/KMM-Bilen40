@@ -4,7 +4,7 @@ from main import *
 def stop():
     speed = 100
     pid = False
-    syncMotor(speed, angle)
+    motorTranciever([speed, angle])
 
 #Counts the rounds
 def countLaps(sensorValue):
@@ -28,19 +28,19 @@ def regualteSpeed(lidarValue):
     #Free road ahed
     if(averageForwardDistance > 6000):
         speed = 200 #Full speed
-        syncMotor(speed, angle)
+        motorTranciever([speed, angle])
     #Free road ahead, but not for long
-elif averageForwardDistance > 3000:
+    elif averageForwardDistance > 3000:
         speed = 150
-        syncMotor(speed, angle)
+        motorTranciever([speed, angle])
     #To close to a obsticle
-elif averageForwardDistance < 300:
+    elif averageForwardDistance < 300:
         stop()
     #If we are at distance 1000 mm from an obsticle, drive slowley
-elif averageForwardDistance < 1000:
+    elif averageForwardDistance < 1000:
         speed = 110
-        syncMotor(speed, angle)
+        motorTranciever([speed, angle])
     #Keep constant speed inbetween 1000 and 3000
     else:
         speed = 120
-        syncMotor(speed, angle)
+        motorTranciever([speed, angle])

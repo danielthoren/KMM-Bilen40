@@ -1,5 +1,7 @@
 from pid import *
 from speed import *
+import memelidar
+import numpy as np
 
 GOAL_LAPS = 3 # Amount of laps that the robot should drive
 
@@ -29,20 +31,6 @@ old_dGain = 0 #Used in the pidloop
 setVal = 0 #This is the goal.
 currOutVal = angle #Output, the angle we want to turn
 
-#Returns a list of values, 0-3 is sonar, 4 i round count
-def syncSonar():
-    return sensorTransciver()
-
-#Returns a list of tuples
-def syncLidar():
-    return
-#Returns a int, sends two ints
-def syncMotor(speed, angle, pid):
-    #motorTransciver currently does not support a pid argument
-    data = [speed,angle]
-    pid = True #Sets prop back to True in case it has been changed
-    return motorTransciver(data)
-
 def calcaverageCones(lidarData):
     average = 0
     valueCount = 0
@@ -52,25 +40,31 @@ def calcaverageCones(lidarData):
             #data[0] is the angle of the meassurment, <18 and >342 is +- 18 degrees
             #from angle 0, i.e straight forward. (The cone forward)
             #data[2] > 0 is the quality of the meassurmetn, 0 is bad.
-            if(data[0] <= interval[0] and data[0] >= interval[1] and data[2] > 0):
-                average += data[1]
+            if(data[1] <= interval[0] and data[1] >= interval[1] and data[3] > 0):
+                average += data[2]
                 valueCount += 1
 
         averageDistance.append(average/valueCount)
         valueCount = 0
 
-
-
 def main():
+    lidar = memelidar.PyLidar()
+    lidar.setup_lidar()
+    lidar.start_motor()
+    lidar.start_scan()
+
     while 1:
-        sensorValue = syncSonar() #List of values, 0-3 is sonar, 4 is round count
-        rpm = syncMotor(speed, angle) #syncMotor does not support pid argument yet
-        lidarValue = syncLidar() #List of tuples
-        calcaverageCones()
+        sensorValue = sensorTransciver() #List of values, 0-3 is sonar, 4 is round count
+        rpm = motorTranciever([speed, angle])#syncMotor does not support pid argument yet
+        data = np.array(lidar.grabData())
+        calcaverageCones(data)
+        print("cone1: ", avarageDistance[0], " cone2: ", avarageDistance[1], " cone3: ", avarageDistance[2],
+        " cone4: ", avarageDistance[3], " cone5: ", avarageDistance[4], " cone6: ", avarageDistance[5])
 
         '''
         if the hitbox is hit or if amount of laps has been completed then
         stop the car and break
+        '''
         '''
         if hitbox(sensorValue) or countLaps(sensorValue):
             stop()
@@ -78,3 +72,4 @@ def main():
 
         regulateSpeed(lidarValue)
         regulateAngle(lidarValue, sensorValue)
+        '''
