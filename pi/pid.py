@@ -1,60 +1,37 @@
-from main import *
+from main import NEUTRALWHEELANGLE
 
-#Regulates the angle of the tires with the help of the pidLoop in pid.py
-#Uses the cones to the far right and left
-def regulateAngle(lidarValue, sensorValue):
+class PdHandler:
+    def __init__(self):
+        self.pGain = 0.5 #Random value
+        self.dGain = 0 #Random value
+        self._setVal = 0 #This is the goal.
 
-        averageDistanceLeft = averageDistance[1]
-        averageDistanceRight = averageDistance[2]
+        self._currOutVal = NEUTRALWHEELANGLE #Output, the angle we want to turn
+        self._dGainOld = 0 #Used in the pidloop
 
-        #Positive value means we are more to the right, negative value
-        #means we are more to the left.
-        currVal = averageDistanceRight - averageDistanceLeft
+        self.angle = NEUTRALWHEELANGLE
 
-        anglePid()
+    #Regulates the angle of the tires with the help of the pidLoop in pid.py
+    #Uses the cones to the far right and left
+    def regulateAngle(self, sensorValue, averageDistance):
+        tmpAngle = self._pidLoop(averageDistance[2] - averageDistance[1])
 
-        secondRegulateAngle()
+        #Incase the pidloop wnats to turn to much, in this case, lower the speed
+        if tmpAngle > 180:
+            tmpAngle = 180
+        elif tmpAngle < 0:
+            tmpAngle = 0
 
-#regulates the angle with the upper left and right cones.
-def secondRegulateAngle():
+        self._currOutVal = tmpAngle
 
-    averageDistanceUpperLeft = averageDistance[3]
-    averageDistanceUpperRight = averageDistance[4]
+    def _pidLoop(self, currVal):
+        pTerm = 0
+        dTerm = 0
 
-    #Positive value means we are more to the right, negative value
-    #means we are more to the left.
-    currVal = averageDistanceUpperRight - averageDistanceUpperLeft
+        errorVal = self._setVal - currVal
 
-    anglePid()
+        pTerm = self.pGain * errorVal
+        dTerm = self.dGain * (self._dGainOld - errorVal)
+        self._dGainOld = dTerm
 
-#Calls the pidLoop to change the angle
-def anglePid():
-    pidLoop()
-
-    #Incase the pidloop wnats to turn to much, in this case, lower the speed
-    if angle > 180:
-        angle = 180
-        speed = 110 #Slow
-
-    elif angle < 0:
-        angle = 0
-        speed = 110 #Slow
-
-    #Speed should be less when we turn more, find some good scale to caclulate
-    #The speed depending on the angle (Maybee)
-
-    syncMotor(speed, angle, pid)
-
-    currOutVal = angle
-
-def pidLoop():
-    pTerm = 0
-    dTerm = 0
-
-    errorVal = setVal - currVal
-
-    pTerm = pGain * errorVal
-    dTerm = dGain * (old_dGain - errorVal)
-    old_dGain = dTerm
-
-    angle = currOutVal - (pTerm + dTerm)
+        return self._currOutVal - (pTerm + dTerm)

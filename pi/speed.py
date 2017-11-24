@@ -44,3 +44,9 @@ def regualteSpeed(lidarValue):
     else:
         speed = 120
         motorTranciever([speed, angle])
+
+def speed(averageDistance, wheelAngle):
+    if averageDistance[0] > TURNTHRESHOLD:
+        speed =  MAXSPEED - abs((NEUTRALWHEELANGLE - wheelAngle))
+    else:
+        speed = (MAXSPEED) - abs((NEUTRALWHEELANGLE - wheelAngle))
