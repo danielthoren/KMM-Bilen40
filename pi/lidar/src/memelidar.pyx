@@ -14,6 +14,7 @@ cdef extern from "memeRPlidar.h" namespace "rp::standalone::rplidar":
     memeRPlidar() except +
     bool setup()
     vector[vector[float]] grabData()
+    vector[vector[float]] grabNonZeroData()
     void startMotor()
     void startScan()
     void stop()
@@ -31,6 +32,9 @@ cdef class PyLidar:
 
   def grab_data(self):
     return self.c_lidar.grabData()
+
+  def grab_nonzero_data(self):
+    return self.c_lidar.grabNonZeroData()
 
   def start_motor(self):
     self.c_lidar.startMotor()

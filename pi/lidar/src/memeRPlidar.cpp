@@ -145,6 +145,31 @@ namespace rp {namespace standalone { namespace rplidar {
     return tot;
   }
 
+  std::vector<std::vector<float> > memeRPlidar::grabNonZeroData() {
+    u_result     op_result;
+    std::vector<std::vector<float> > tot;
+    rplidar_response_measurement_node_t nodes[360*2];
+    size_t count = _countof(nodes);
+
+    op_result = drv->grabScanData(nodes, count);
+
+    if (IS_OK(op_result)) {
+      drv-> ascendScanData(nodes, count);
+      for (int pos = 0; pos < (int)count; pos++) {
+        std::vector<float> measurement;
+        measurement.push_back( (float) (nodes[pos].sync_quality & RPLIDAR_RESP_MEASUREMENT_SYNCBIT)); /*  ?"S ":"  " */
+        measurement.push_back( (float) ((nodes[pos].angle_q6_checkbit >> RPLIDAR_RESP_MEASUREMENT_ANGLE_SHIFT)/64.0f));
+        measurement.push_back( (float) (nodes[pos].distance_q2/4.0f));
+        measurement.push_back( (float) (nodes[pos].sync_quality >> RPLIDAR_RESP_MEASUREMENT_QUALITY_SHIFT));
+	if (measurement.at(3) > 0) {
+	  tot.push_back(measurement);
+	}
+        
+      }
+    }
+    return tot;
+  }
+
   void memeRPlidar::startMotor() {
     drv->startMotor();
   }
