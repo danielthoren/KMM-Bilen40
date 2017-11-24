@@ -59,7 +59,6 @@ def motorTransceiver(data):
     wiringpi.digitalWrite(SSM, LOW)
 
     data.append(calcChecksum(data))
-
     buff = bytes([data[0], data[1], data[2]])
 
     print("data: ", data)
@@ -76,7 +75,7 @@ def motorTransceiver(data):
     outgoing data there must be dummy elements 
     because of the full duplex bus (dummy = 255).
     '''
-    print("before cleanup: ", motor_data)
+    #print("before cleanup: ", motor_data)
     for i in range(len(motor_data)):
         if motor_data[i] == 255:
             motor_data = motor_data[:i]
