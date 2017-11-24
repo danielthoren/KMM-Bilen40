@@ -10,6 +10,8 @@
 /* --- TODO TODO TODO TODO TODO TODO ---
  * Fix data types when calculating RPM/RPS
  * Comment properly
+ * Merge with master
+ * Incorporate RPM into scale
  * Remove lcd compability (?)
  *
 */
