@@ -5,12 +5,6 @@
 # C-language ignores
 ###############
 
-# Alex lägger till:
-# Lib samt autogen. cpp för pythonmodulen.
-memelidar.cpp
-*.so
-
-
 # Prerequisites
 .d
 
