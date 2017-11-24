@@ -16,6 +16,7 @@ SCLK = 11
 SSS = 22
 SSM = 27
 NEWDATASENSOR = 5
+NEWDATAMOTOR = 6
 
 wiringpi.wiringPiSetup()
 wiringpi.wiringPiSetupGpio()
@@ -27,6 +28,8 @@ wiringpi.digitalWrite(SSS, HIGH)
 wiringpi.pinMode(SSM, OUTPUT)
 wiringpi.digitalWrite(SSM, HIGH)
 
+
+wiringpi.pinMode(NEWDATAMOTOR, INPUT)
 wiringpi.pinMode(NEWDATASENSOR, INPUT)
 
 wiringpi.pinMode(SSS, OUTPUT)
@@ -39,10 +42,11 @@ End Setup
 '''''''''''''''''
 
 '''
-Checks if there is data to receive from the 'sensormodul'
+Checks if there is data to receive.
+Has needs to be done before Trancieving data, to take load of the AVR.
 '''
-def hasNewDataSensor():
-    return wiringpi.digitalRead(NEWDATASENSOR)
+def hasNewData(pin):
+    return wiringpi.digitalRead(pin)
 
 
 '''
@@ -59,6 +63,7 @@ def motorTransceiver(data):
     wiringpi.digitalWrite(SSM, LOW)
 
     data.append(calcChecksum(data))
+
     buff = bytes([data[0], data[1], data[2]])
 
     print("data: ", data)
@@ -75,7 +80,7 @@ def motorTransceiver(data):
     outgoing data there must be dummy elements 
     because of the full duplex bus (dummy = 255).
     '''
-    #print("before cleanup: ", motor_data)
+    print("before cleanup: ", motor_data)
     for i in range(len(motor_data)):
         if motor_data[i] == 255:
             motor_data = motor_data[:i]
@@ -108,7 +113,6 @@ def sensorTransceiver():
         return data[:-1]
     return None
 
-'''
 Calculates checksum of data. 
 '''
 def calcChecksum(data):
@@ -117,4 +121,30 @@ def calcChecksum(data):
         chk ^= elem
 
     return chk
+
+        
+'''''''''''''''''
+The Testchamber
+
+'''''''''''''''''
+if __name__ == "__main__":
+
+    while True:
+        print(wiringpi.digitalRead(6))
+        
+        if hasNewData(NEWDATASENSOR):
+
+            sensor_data = sensorTransceiver()
+            if sensor_data:
+                print(sensor_data)
+            else:
+                print("Invalid checksum.")
+        
+        if hasNewData(NEWDATAMOTOR):
+            motor_data = motorTransceiver(motorDataList())
+            
+            if motor_data:
+                print("Motordata")
+                print(motor_data)
+        time.sleep(1)
 
