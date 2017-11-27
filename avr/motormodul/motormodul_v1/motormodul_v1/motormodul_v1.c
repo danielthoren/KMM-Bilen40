@@ -57,8 +57,6 @@ motormodul_PA_data data_in;
 //data sent from 'motormodul' (A = AVR) to rasberry pi (=P)
 motormodul_AP_data data_out;
 
-//      --- P algorithm ---
-double currVal ;
 
 
 
@@ -137,6 +135,20 @@ void scale(){
 	}
 	
 }
+//      --- P algorithm ---
+	float pGain = 0.0005;						//Random value
+	float currVal = 3000;						// latest input , current value
+
+	
+void p_loop()
+{	
+	float currOutVal = currVal;
+	float setVal = (float)scale_speed;		// the desired value of the controller
+	float errorVal = setVal - currVal;		// calculate proportional term
+	float pTerm = pGain * errorVal ;		// calculate the new output
+	currVal = currOutVal + pTerm ;
+}
+
 
 int main(void)
 {
@@ -152,14 +164,16 @@ int main(void)
 	//		--- Main loop, receive tasks from master ---
     while(1)
     {
+		
 		data_out.curr_rpm = rpm;
 		set_spi_data(data_out);
 		if(get_data_available()){
 			get_spi_data(&data_in);
 			scale();
 			}
+		p_loop();
 		OCR1A = turn;
-		OCR1B = scale_speed;
+		OCR1B = (int)currVal;
     }
 }
 
