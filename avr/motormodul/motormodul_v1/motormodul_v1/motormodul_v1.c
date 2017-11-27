@@ -43,18 +43,18 @@ int turn;						//Turn < natural => right, turn > natural => left
 int scale_speed;
 
 //		--- HALLEFFECT ---
-volatile long ticks_elapsed;	//ticks since last timer-intr
-volatile float time_elapsed;	//ticks converted into time
-volatile float rpm;				//revolutions per minute
-volatile int tot_overflow;
-uint32_t current_ticks;
-volatile long TIMER_TICKS = 65536;
-volatile float seconds_per_tick = 0.000016;
+volatile uint32_t ticks_elapsed;	//ticks since last timer-intr
+volatile uint32_t time_elapsed;	//ticks (ys) converted into time
+volatile uint8_t rpm;				//revolutions per minute
+volatile uint32_t tot_overflow = 0; //unset when ready
+volatile uint32_t current_ticks;
+volatile uint32_t TIMER_TICKS = 65536;
+volatile uint32_t micro_seconds_per_tick = 16;
 int new_rpm;
 
 motormodul_PA_data data_in;
  
-//data sent from 'motormodul' (A = AVR) to rasberry pi (=P)
+//data sent from 'motormodul' (A = AVR) to raspberry pi (=P)
 motormodul_AP_data data_out;
 
 
@@ -74,8 +74,8 @@ void pwm_init()
 {
 	//		--- PWM SETUP ---
 	//Pin set-up
-	DDRD |= _BV(5);				//Pinne 19, styrservot
-	DDRD |= _BV(4);				//Pinne 18, motorn
+	DDRD |= _BV(5);				//Pin 19, styrservot ()
+	DDRD |= _BV(4);				//Pin 18, motor
 	//timer set-up
 	TCCR1A |= _BV(1) | _BV(7) | _BV(5);
 	TCCR1B |= _BV(3)| _BV(4) | _BV(1);
@@ -181,7 +181,7 @@ int main(void)
 ISR(PCINT0_vect)
 {
 	//		--- Pin change interrupt for hall effect sensor ---
-	// Just messure on incomming magnet, not outgoing
+	// Just measure on incoming magnet, not outgoing
 	if( PINA & ((1 << PIND0) == 1)){
 		
 		// Debug LED
@@ -193,11 +193,11 @@ ISR(PCINT0_vect)
 		// RPM Calculations TODO: CHANGE DATA TYPES
 		current_ticks = TCNT3;
 		ticks_elapsed = (tot_overflow * TIMER_TICKS) + current_ticks;
-		time_elapsed = (float) ticks_elapsed * seconds_per_tick;//seconds
+		time_elapsed = ticks_elapsed * micro_seconds_per_tick;//seconds
 		tot_overflow = 0;		//Reset registered overflows and timer counter
 		TCNT3 = 0;
 	
-		rpm = (float) (1/(time_elapsed*4))*60 ;
+		rpm = (uint8_t) (60000000/(time_elapsed*4));//60*1.000.000 minute and scale microseconds
 	}
 }
 

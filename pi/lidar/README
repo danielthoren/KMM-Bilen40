@@ -12,17 +12,23 @@ sedan, i python:
 >>> import numpy as np
 
 >>> lidar = memelidar.PyLidar()
->>> lidar.setup_lidar()
 >>> lidar.start_motor()
 >>> lidar.start_scan()
 
->>> data = np.array(lidar.grabData())
+# Hämtar all data från ett helt varv.
+>>> data = np.array(lidar.grab_data())
+# Kan göras istället om man inte vill ha
+# mätdata som har kvalitet 0.
+>>> data = np.array(lidar.grab_nonzero_data())
 
 >>> lidar.stop()
 >>> lidar.stop_motor()
 >>> #Profit
 
-getData() ger 2D-array men mätningar för ett varv,
-där varje mätning ser ut såhär:
+# grab_data() (och grab_nonzero_data()) ger 2D-array men mätningar för
+# ett varv, där varje mätning ser ut såhär:
 [   0.        327.828125  714.         47.      ]
 [ bool(sista mätning på varvet?), vinkel, avst., kvalitet]
+
+# Observera att mätningen med bool = True kan utgå om grab_nonzero_data()
+# anropas.

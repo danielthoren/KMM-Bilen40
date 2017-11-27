@@ -25,6 +25,7 @@ namespace rp {namespace standalone {namespace rplidar {
     memeRPlidar();
     ~memeRPlidar();
     bool setup();
+    std::vector<std::vector<float> > grabNonZeroData();
     std::vector<std::vector<float> > grabData();
     void startMotor();
     void startScan();
