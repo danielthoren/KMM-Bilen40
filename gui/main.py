@@ -40,7 +40,7 @@ class ExampleApp(QtGui.QMainWindow, design.Ui_MainWindow):
         """
         TCP
         """
-        host, port = "192.168.1.10", 10000
+        host, port = "localhost", 10000
         self.handler = Handler(host, port)
         
         self.handler_thread = threading.Thread(target = self.handler.hantera)
