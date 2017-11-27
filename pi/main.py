@@ -54,7 +54,7 @@ def calcaverageCones(lidarData):
 
     return averageDistance
 
-def main():
+3def main():
     speed = 110 # 0 <= speed <= 200, 100 is neutral
     pd = PdHandler()
 
