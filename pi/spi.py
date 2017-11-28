@@ -60,8 +60,6 @@ def motorTransceiver(data):
 
     data.append(calcChecksum(data))
     buff = bytes([data[0], data[1], data[2]])
-
-    print("data: ", data)
     
     retlen, retdata = wiringpi.wiringPiSPIDataRW(0, buff)
 
@@ -75,7 +73,6 @@ def motorTransceiver(data):
     outgoing data there must be dummy elements 
     because of the full duplex bus (dummy = 255).
     '''
-    #print("before cleanup: ", motor_data)
     for i in range(len(motor_data)):
         if motor_data[i] == 255:
             motor_data = motor_data[:i]
@@ -83,8 +80,8 @@ def motorTransceiver(data):
 
     if len(motor_data) > 1 and calcChecksum(motor_data[:-1]) == motor_data[-1]:
         return motor_data[:-1]
-    else:
-         print("Invalid checksum, data: ", motor_data)
+    #else:
+         #print("Invalid checksum, data: ", motor_data)
     return None
 
 '''

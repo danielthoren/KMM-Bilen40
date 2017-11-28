@@ -46,7 +46,7 @@ def calcaverageCones(lidarData):
         if i == 0:
             pass
         elif(average != 0 and valueCount != 0):
-            averageDistance[i - 1] = (average/valueCount)
+            averageDistance[i - 1] = int((average/valueCount)/10)
             valueCount = 0
             average = 0
         else:
@@ -54,8 +54,8 @@ def calcaverageCones(lidarData):
 
     return averageDistance
 
-3def main():
-    speed = 110 # 0 <= speed <= 200, 100 is neutral
+def main():
+    speed = 120 # 0 <= speed <= 200, 100 is neutral
     pd = PdHandler()
 
     #Pid == true => use pid in motormodul, if false, dont use pid.
