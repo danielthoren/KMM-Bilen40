@@ -3,6 +3,8 @@ from speed import *
 from lidar import memelidar
 import numpy as np
 from spi import *
+import sys
+import time
 
 GOAL_LAPS = 3 # Amount of laps that the robot should drive
 
@@ -17,7 +19,7 @@ TURNTHRESHOLD = 40  #Defines the threshold for when in a curve or not
 #Defines between wich degrees each cone is. Two first cones are handles as special
 #case since they represent one cone in actuality
 CONES = ((18,0),(360,342),(90,54),(306,270),(53,19),(341,307))
-NEUTRALWHEELANGLE = 90
+NEUTRALWHEELANGLE = 80
 PRODUCTSPEEDSTRAIGHT = 0.5
 PRODUCTSPEEDTURN = 0.2
 MAXSPEED = 200
@@ -55,7 +57,7 @@ def calcaverageCones(lidarData):
     return averageDistance
 
 def main():
-    speed = 120 # 0 <= speed <= 200, 100 is neutral
+    speed = 140 # 0 <= speed <= 200, 100 is neutral
     pd = PdHandler()
 
     #Pid == true => use pid in motormodul, if false, dont use pid.
@@ -70,12 +72,16 @@ def main():
     lidar.start_scan()
 
     while 1:
-        try:
+        try:    
             sensorValue = [10,10,10,10,0]
             #sensorValue = sensorTransciver() #List of values, 0-3 is sonar, 4 is round count
+            print("angle :", pd.currOutAngle)
             rpm = motorTransceiver([speed, pd.currOutAngle])
+            sys.stdout.flush()
             data = np.array(lidar.grab_data())
             averageDistance = calcaverageCones(data)
+            for i in range(len(averageDistance)):
+                print("cone", i , "distance :", averageDistance[i])
 
             '''
             print("cone1: ", averageDistance[0], " cone2: ", averageDistance[1], " cone3: ", averageDistance[2],

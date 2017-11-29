@@ -6,15 +6,16 @@ import matplotlib.pyplot as plt
 import os
 import time
 
-PLOT = True
+PLOT = False
 
 if PLOT:
-    plt.axis([0, 5000, -200, 200])
+    plt.axis([0, 100, -201, 201])
     plt.ion()
 
 class PdHandler:
     def __init__(self):
-        self.pGain = 1.5 #Random value
+        self._timeSinceStart = time.time()
+        self.pGain = 2 #Random value
         self.dGain = 0 #Random value
         self.iGain = 0
         self._iAccumulated = 0
@@ -22,8 +23,7 @@ class PdHandler:
         self._time = time.time()
 
         self.currOutAngle = NEUTRALWHEELANGLE #Output, the angle we want to turn
-        self._dGainOld = 0 #Used in the pidloop
-
+        self._preError = 0 #Used in the pidloop
 
     #Regulates the angle of the tires with the help of the pidLoop in pid.py
     #Uses the cones to the far right and left
@@ -38,20 +38,23 @@ class PdHandler:
             
         tmpAngle = int(self._pidLoop(distanceVal, time.time() - self._time))
         
-        #os.system('clear')
+#        os.system('clear')
 
-        #print("tmpAngle :", tmpAngle)
+#        print("tmpAngle :", tmpAngle, "currVal:", distanceVal)
 
         #Incase the pidloop wnats to turn to much, in this case, lower the speed
-        if tmpAngle > 180:
-            tmpAngle = 180
-        elif tmpAngle < 0:
-            tmpAngle = 0
+        if tmpAngle > 140:
+            tmpAngle = 140
+        elif tmpAngle < 20:
+            tmpAngle = 20
 
         if PLOT:
-            plt.plot(distanceVal, 'bo', marksize=1)
-            plt.plot(tmpAngle, 'ro', markersize=1)
-            plt.pause(0.00000000000000000001)
+            timestamp = time.time() - self._timeSinceStart
+            os.system('clear')
+            print(timestamp)
+            plt.plot(timestamp, distanceVal, 'ro', markersize=2)
+            plt.plot(timestamp, tmpAngle, 'bo', markersize=2)
+            plt.pause(0.000000000000000000000000000000000001)
 
         self.currOutAngle = tmpAngle
         self._time = time.time()
@@ -61,16 +64,16 @@ class PdHandler:
         dTerm = 0
         iTerm = 0
 
-        os.system('clear')
+        
         errorVal = self._setVal - currVal
 
-        print("currval: ", currVal)
+       #print("currval: ", currVal)
 
         pTerm = self.pGain * errorVal
-        dTerm = self.dGain * (errorVal - self._dGainOld) / timeSince
+        dTerm = self.dGain * ((errorVal - self._preError) / timeSince)
         self._iAccumulated += errorVal * timeSince
         iTerm = self._iAccumulated * self.iGain
         
-        self._dGainOld = dTerm
+        self._preError = errorVal
 
-        return self.currOutAngle - (pTerm + dTerm + iTerm)
+        return NEUTRALWHEELANGLE - (pTerm + dTerm + iTerm)

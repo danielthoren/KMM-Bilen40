@@ -81,7 +81,7 @@ def motorTransceiver(data):
     if len(motor_data) > 1 and calcChecksum(motor_data[:-1]) == motor_data[-1]:
         return motor_data[:-1]
     #else:
-         #print("Invalid checksum, data: ", motor_data)
+    #     print("Invalid checksum, data: ", motor_data)
     return None
 
 '''
