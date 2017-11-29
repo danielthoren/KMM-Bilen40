@@ -20,14 +20,14 @@ def regulateSpeed(averageForwardDistance, rightVal, leftVal):
 
     #Free road ahed
     if(averageForwardDistance > 130 and rightVal > 50 and leftVal > 50):
-        return 150 #Full speed
+        return 170 #Full speed
  
     if (70 < averageForwardDistance <= 130 and rightVal > 50 and leftVal > 50):
-        return 130
+        return 140
     
     #Free road ahead, but not for long
-    if 50 < averageForwardDistance <= 70 or (rightVal < 50) or (leftVal < 50):
-        return 110
+    if 50 < averageForwardDistance <= 70 or rightVal <= 50 or leftVal <= 50:
+        return 120
     #To close to a obsticle
     if averageForwardDistance <= 50:
         return 100 #stops car

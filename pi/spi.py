@@ -59,11 +59,11 @@ def motorTransceiver(data):
     wiringpi.digitalWrite(SSM, LOW)
 
     data.append(calcChecksum(data))
-    buff = bytes([data[0], data[1], data[2]])
+    buff = bytes([data[0], data[1], data[2], data[3]])
     
     retlen, retdata = wiringpi.wiringPiSPIDataRW(0, buff)
 
-    motor_data = [retdata[0], retdata[1], retdata[2]]
+    motor_data = [retdata[0], retdata[1], retdata[2], retdata[3]]
 
     wiringpi.digitalWrite(SSM, HIGH)
 

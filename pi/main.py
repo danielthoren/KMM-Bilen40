@@ -1,5 +1,3 @@
-
-
 from pid import *
 from speed import *
 from lidar import memelidar
@@ -9,6 +7,7 @@ import sys
 import time
 
 GOAL_LAPS = 3 # Amount of laps that the robot should drive
+SPEEDPGAIN = 10
 
 '''
 Defines the hitbox derived from the sonar sensors
@@ -50,6 +49,8 @@ def calcaverageCones(lidarData):
         if i == 0:
             pass
         elif(average != 0 and valueCount != 0):
+            if average == 0:
+                average = 1000;
             averageDistance.append(int((average/valueCount)/10))
             valueCount = 0
             average = 0
@@ -59,7 +60,7 @@ def calcaverageCones(lidarData):
     return averageDistance
 
 def main():
-    speed = 160 # 0 <= speed <= 200, 100 is neutral
+    speed = 200 # 0 <= speed <= 200, 100 is neutral
     pd = PdHandler()
 
     #Pid == true => use pid in motormodul, if false, dont use pid.
@@ -100,18 +101,18 @@ def main():
             pd.regulateAngle(sensorValue, averageDistance)
             print("speed: ", regulateSpeed(averageDistance[0], averageDistance[5], averageDistance[6]))
 
-            rpm = motorTransceiver([regulateSpeed(averageDistance[0], averageDistance[5], averageDistance[6]), pd.currOutAngle])
+            rpm = motorTransceiver([regulateSpeed(averageDistance[0], averageDistance[5], averageDistance[6]), pd.currOutAngle, SPEEDPGAIN])
             
            
         except KeyboardInterrupt:
-            motorTransceiver([NEUTRALSPEED, NEUTRALWHEELANGLE])
+            motorTransceiver([NEUTRALSPEED, NEUTRALWHEELANGLE, SPEEDPGAIN])
             lidar.stop()
             lidar.stop_motor()
             break
 
         except Exception as e:
             print(e)
-            motorTransceiver([NEUTRALSPEED, NEUTRALWHEELANGLE])
+            motorTransceiver([NEUTRALSPEED, NEUTRALWHEELANGLE, SPEEDPGAIN])
             lidar.stop()
             lidar.stop_motor()
             break

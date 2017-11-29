@@ -23,7 +23,8 @@ class PdHandler:
     #Uses the cones to the far right and left
     def regulateAngle(self, sensorValue, averageDistance):
 
-        distanceVal = ((averageDistance[2] - averageDistance[1]) + (averageDistance[4] - averageDistance[3]))/2
+        distanceVal = ((averageDistance[2] - averageDistance[1]) +
+                       (averageDistance[4] - averageDistance[3]))/2
         
         if distanceVal > 200:
             distanceVal = 200
