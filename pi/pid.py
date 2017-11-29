@@ -1,7 +1,16 @@
 from main import NEUTRALWHEELANGLE
 
+import numpy as np
+import matplotlib.pyplot as plt
+
 import os
 import time
+
+PLOT = True
+
+if PLOT:
+    plt.axis([0, 5000, -200, 200])
+    plt.ion()
 
 class PdHandler:
     def __init__(self):
@@ -28,6 +37,7 @@ class PdHandler:
             distanceVal = -200
             
         tmpAngle = int(self._pidLoop(distanceVal, time.time() - self._time))
+        
         #os.system('clear')
 
         #print("tmpAngle :", tmpAngle)
@@ -37,6 +47,11 @@ class PdHandler:
             tmpAngle = 180
         elif tmpAngle < 0:
             tmpAngle = 0
+
+        if PLOT:
+            plt.plot(distanceVal, 'bo', marksize=1)
+            plt.plot(tmpAngle, 'ro', markersize=1)
+            plt.pause(0.00000000000000000001)
 
         self.currOutAngle = tmpAngle
         self._time = time.time()
