@@ -6,18 +6,12 @@ import matplotlib.pyplot as plt
 import os
 import time
 
-PLOT = False
-
-if PLOT:
-    plt.axis([0, 100, -201, 201])
-    plt.ion()
-
 class PdHandler:
     def __init__(self):
         self._timeSinceStart = time.time()
-        self.pGain = 2 #Random value
-        self.dGain = 0 #Random value
-        self.iGain = 0
+        self.pGain = 0.6 #Random value
+        self.dGain = 0.15 #Random value
+        self.iGain = 0.08
         self._iAccumulated = 0
         self._setVal = 0 #This is the goal.
         self._time = time.time()
@@ -48,14 +42,6 @@ class PdHandler:
         elif tmpAngle < 20:
             tmpAngle = 20
 
-        if PLOT:
-            timestamp = time.time() - self._timeSinceStart
-            os.system('clear')
-            print(timestamp)
-            plt.plot(timestamp, distanceVal, 'ro', markersize=2)
-            plt.plot(timestamp, tmpAngle, 'bo', markersize=2)
-            plt.pause(0.000000000000000000000000000000000001)
-
         self.currOutAngle = tmpAngle
         self._time = time.time()
 
@@ -66,8 +52,6 @@ class PdHandler:
 
         
         errorVal = self._setVal - currVal
-
-       #print("currval: ", currVal)
 
         pTerm = self.pGain * errorVal
         dTerm = self.dGain * ((errorVal - self._preError) / timeSince)

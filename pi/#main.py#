@@ -1,4 +1,4 @@
-
+p
 
 from pid import *
 from speed import *
@@ -59,7 +59,7 @@ def calcaverageCones(lidarData):
     return averageDistance
 
 def main():
-    speed = 160 # 0 <= speed <= 200, 100 is neutral
+    speed = 130 # 0 <= speed <= 200, 100 is neutral
     pd = PdHandler()
 
     #Pid == true => use pid in motormodul, if false, dont use pid.
@@ -100,7 +100,7 @@ def main():
             pd.regulateAngle(sensorValue, averageDistance)
             print("speed: ", regulateSpeed(averageDistance[0], averageDistance[5], averageDistance[6]))
 
-            rpm = motorTransceiver([regulateSpeed(averageDistance[0], averageDistance[5], averageDistance[6]), pd.currOutAngle])
+            rpm = motorTransceiver(speed, pd.currOutAngle)
             
            
         except KeyboardInterrupt:

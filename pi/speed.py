@@ -1,11 +1,5 @@
 from main import *
 
-#Stops the car
-def stop():
-    speed = 100
-    pid = False
-    motorTranciever([speed, angle])
-
 #Counts the rounds
 def countLaps(sensorValue):
         if(sensorValue[4]):
@@ -22,31 +16,20 @@ def hitbox(sensorValue):
             return True
 
 #Regulates the speed depending on average value from lidar and the sonar values
-def regualteSpeed(lidarValue):
+def regulateSpeed(averageForwardDistance, rightVal, leftVal):
 
-    averageForwardDistance = averageDistance[0]
     #Free road ahed
-    if(averageForwardDistance > 6000):
-        speed = 200 #Full speed
-        motorTranciever([speed, angle])
+    if(averageForwardDistance > 130 and rightVal > 50 and leftVal > 50):
+        return 150 #Full speed
+ 
+    if (70 < averageForwardDistance <= 130 and rightVal > 50 and leftVal > 50):
+        return 130
+    
     #Free road ahead, but not for long
-    elif averageForwardDistance > 3000:
-        speed = 150
-        motorTranciever([speed, angle])
+    if 50 < averageForwardDistance <= 70 or (rightVal < 50) or (leftVal < 50):
+        return 110
     #To close to a obsticle
-    elif averageForwardDistance < 300:
-        stop()
-    #If we are at distance 1000 mm from an obsticle, drive slowley
-    elif averageForwardDistance < 1000:
-        speed = 110
-        motorTranciever([speed, angle])
-    #Keep constant speed inbetween 1000 and 3000
+    if averageForwardDistance <= 50:
+        return 100 #stops car
     else:
-        speed = 120
-        motorTranciever([speed, angle])
-
-def speed(averageDistance, wheelAngle):
-    if averageDistance[0] > TURNTHRESHOLD:
-        speed =  MAXSPEED - abs((NEUTRALWHEELANGLE - wheelAngle))
-    else:
-        speed = (MAXSPEED) - abs((NEUTRALWHEELANGLE - wheelAngle))
+        print("in else")
