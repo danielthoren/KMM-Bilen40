@@ -57,10 +57,6 @@ motormodul_PA_data data_in;
 //data sent from 'motormodul' (A = AVR) to raspberry pi (=P)
 motormodul_AP_data data_out;
 
-
-
-
-
 void timer3_init()
 {
 	//		--- TIMER FOR HALL EFFECT SENSOR SETUP ---
@@ -136,10 +132,10 @@ void scale(){
 	
 }
 //      --- P algorithm ---
-	float pGain = 0.0005;						//Random value
+	float pGain = 0.001;						//Default value
 	float currVal = 3000;						// latest input , current value
 
-	
+
 void p_loop()
 {	
 	float currOutVal = currVal;
@@ -169,6 +165,7 @@ int main(void)
 		set_spi_data(data_out);
 		if(get_data_available()){
 			get_spi_data(&data_in);
+			pGain = data_in.pGain;
 			scale();
 			}
 		p_loop();

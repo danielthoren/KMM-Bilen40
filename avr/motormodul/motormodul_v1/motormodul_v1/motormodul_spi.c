@@ -12,7 +12,7 @@
 #include "motormodul_spi.h"
 
 #define OUTGOING_PACKET_SIZE 2
-#define INCOMMING_PACKET_SIZE 3
+#define INCOMMING_PACKET_SIZE 4
 
 volatile unsigned char outgoing[OUTGOING_PACKET_SIZE] = {0};
 volatile unsigned char incomming[INCOMMING_PACKET_SIZE] = {0};
