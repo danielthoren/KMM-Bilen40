@@ -48,6 +48,7 @@ void set_outgoing(motormodul_AP_data* data){
 void get_incomming(motormodul_PA_data* data){
 	data->speed = incomming[0];
 	data->angle = incomming[1];
+	data->pGain = incomming[2];
 }
 
 void set_spi_data(motormodul_AP_data data){

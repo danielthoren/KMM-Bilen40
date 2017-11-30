@@ -117,7 +117,7 @@ void scale(){
 	}
 	//Update speed limits,
 	//Probable max speed = 40000
-	if(data_in.speed <= 200 && data_in.speed >= 101)
+	if(data_in.speed <= 300 && data_in.speed >= 101)
 	{
 		scale_speed = (int)(3180 + (data_in.speed - 100));
 	}
@@ -165,7 +165,7 @@ int main(void)
 		set_spi_data(data_out);
 		if(get_data_available()){
 			get_spi_data(&data_in);
-			pGain = data_in.pGain;
+			pGain = ((float)data_in.pGain)/1000;
 			scale();
 			}
 		p_loop();
