@@ -13,7 +13,7 @@ class PdHandler:
         self.dGain = 0.15 #Random value
         self.iGain = 0.08
         self._iAccumulated = 0
-        self._setVal = 0 #This is the goal.
+        self.setVal = 0 #This is the goal.
         self._time = time.time()
 
         self.currOutAngle = NEUTRALWHEELANGLE #Output, the angle we want to turn
@@ -52,7 +52,7 @@ class PdHandler:
         iTerm = 0
 
         
-        errorVal = self._setVal - currVal
+        errorVal = self.setVal - currVal
 
         pTerm = self.pGain * errorVal
         dTerm = self.dGain * ((errorVal - self._preError) / timeSince)

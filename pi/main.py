@@ -5,6 +5,7 @@ import numpy as np
 from spi import *
 import sys
 import time
+from obs_detect import *
 
 GOAL_LAPS = 3 # Amount of laps that the robot should drive
 SPEEDPGAIN = 10
@@ -97,7 +98,7 @@ def main():
                 stop()
                 break
             ''' 
-
+            pd.setVal = obsDetect(data)
             pd.regulateAngle(sensorValue, averageDistance)
             print("speed: ", regulateSpeed(averageDistance[0], averageDistance[5], averageDistance[6]))
 
