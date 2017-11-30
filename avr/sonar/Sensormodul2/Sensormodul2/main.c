@@ -37,26 +37,28 @@ void sensor_init();
 int main(void)
 {
 	//Init spi
-	spi_init();
-	
+	//spi_init();
+	pulse++;
 	//Init sensormodule
-	sensor_init();
+	//sensor_init();
 	
 	//Enable globel interrupt
-	sei();
+	//sei();
 	
-	
+
 	while(1 == 1)
 	{
-		_delay_ms(10);
+		_delay_ms(10000);
+		pulse++;
 		//One sensor is triggerd at a time 
-		switch (mode){
+		/*switch (mode){
 			case sonar1:
-				mode = sensor_active;
+				//mode = sensor_active;
 				//Triggerpin is high for 15uS
 				PORTA|=_BV(1);
 				_delay_us(15);
 				PORTA &= ~_BV(1);
+				//TCCR3B |= _BV(0);
 				break;
 			case sonar2:
 				mode = sensor_active;
@@ -64,6 +66,7 @@ int main(void)
 				PORTB|=_BV(1);
 				_delay_us(15);
 				PORTB &= ~_BV(1);
+				TCCR3B |= _BV(0);;
 				break;
 			case sonar3:
 				mode = sensor_active;
@@ -71,6 +74,7 @@ int main(void)
 				PORTC|=_BV(1);
 				_delay_us(15);
 				PORTC &= ~_BV(1);
+				TCCR3B |= _BV(0);;
 				break;
 			case sonar4:
 				mode = sensor_active;
@@ -78,15 +82,16 @@ int main(void)
 				PORTD|=_BV(1);
 				_delay_us(15);
 				PORTD &= ~_BV(1);
+				TCCR3B |= _BV(0);;
 				break;
 			case sensor_active:
 				break;
 			case send_data:
 				ready_to_send_spi();
 				break;
-		}
-		
-		}
+		}*/
+		pulse++;
+	}
 }
 
 //Collectad data sent to spi module
@@ -124,9 +129,9 @@ void sensor_init(){
 	PCMSK3 |= _BV(2);
 
 	//Timer interrupt enable when timer hits 50000
-	TIMSK1 |= _BV(1);	OCR1A = 50000;
+	TIMSK3 |= _BV(0);	TCCR3B |= _BV(3);	TCCR3B &= ~_BV(0);	OCR3A = 50000;
 	//Timer stopped
-	TCCR1B = 0;
+	TCCR1B &= ~_BV(0);
 }
 
 
@@ -139,12 +144,13 @@ void sonar_timer_interrupt(int sonar){
 		{
 			// Raknare=0
 			TCNT1=0;
-			TCCR1B = (0 << CS12) | (0 << CS11) | (1 << CS10);
+			TCCR1B |= _BV(0);
 		}
 		//HIGh -> LOW
 		else{
 			//Stops conter
-			TCCR1B = (0 << CS12) | (0 << CS11) | (0 << CS10);
+			TCCR1B &= ~_BV(0);
+			TCCR3B &= ~_BV(0);
 			pulse=TCNT1;
 			calc_sonar_data(sonar, pulse);
 			mode = sonar2;
@@ -155,12 +161,13 @@ void sonar_timer_interrupt(int sonar){
 		{
 			// Raknare=0
 			TCNT1=0;
-			TCCR1B = (0 << CS12) | (0 << CS11) | (1 << CS10);
+			TCCR1B |= _BV(0);
 		}
 		//HIGh -> LOW
 		else{
 			//Stops conter
-			TCCR1B = (0 << CS12) | (0 << CS11) | (0 << CS10);
+			TCCR1B &= ~_BV(0);
+			TCCR3B &= ~_BV(0);
 			pulse=TCNT1;
 			calc_sonar_data(sonar, pulse);
 			mode = sonar3;
@@ -171,12 +178,13 @@ void sonar_timer_interrupt(int sonar){
 		{
 			// Raknare=0
 			TCNT1=0;
-			TCCR1B = (0 << CS12) | (0 << CS11) | (1 << CS10);
+			TCCR1B |= _BV(0);
 		}
 		//HIGh -> LOW
 		else{
 			//Stops conter
-			TCCR1B = (0 << CS12) | (0 << CS11) | (0 << CS10);
+			TCCR1B &= ~_BV(0);
+			TCCR3B &= ~_BV(0);
 			pulse=TCNT1;
 			calc_sonar_data(sonar, pulse);
 			mode = sonar4;
@@ -187,12 +195,13 @@ void sonar_timer_interrupt(int sonar){
 		{
 			// Raknare=0
 			TCNT1=0;
-			TCCR1B = (0 << CS12) | (0 << CS11) | (1 << CS10);
+			TCCR1B |= _BV(0);
 		}
 		//HIGh -> LOW
 		else{
 			//Stops conter
-			TCCR1B = (0 << CS12) | (0 << CS11) | (0 << CS10);
+			TCCR1B &= ~_BV(0);
+			TCCR3B &= ~_BV(0);
 			pulse=TCNT1;
 			calc_sonar_data(sonar, pulse);
 			mode = send_data;
@@ -226,12 +235,33 @@ ISR(PCINT3_vect){sonar_timer_interrupt(3);}
 
 
 //Take too long time too get data, reset
-ISR (TIMER1_COMPA_vect)
+ISR (TIMER3_COMPA_vect)
 {
 	//Stops counter
-	TCCR1B=0;
+	TCCR1B &= ~_BV(0);
+	TCCR3B &= ~_BV(0);
 	//Take next sensor
-	mode = mode + 1;
+	if (mode > 3){
+		mode = sonar1;
+		}
+	else{mode = mode + 1;
+		}
+	
+}
+
+ISR (TIMER3_OVF_vect)
+{
+	//Stops counter
+	TCCR1B &= ~_BV(0);
+	TCCR3B &= ~_BV(0);
+	TCNT3=0;
+	//Take next sensor
+	if (mode > 3){
+		mode = sonar1;
+	}
+	else{mode = mode + 1;
+	}
+	
 }
 
 //Send data to master

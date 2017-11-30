@@ -3,31 +3,31 @@ Sensormodul2.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000000  00800100  00800100  000006fa  2**0
+  0 .data         00000000  00800100  00800100  0000072a  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         00000686  00000000  00000000  00000074  2**1
+  1 .text         000006b6  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .bss          00000020  00800100  00800100  000006fa  2**0
+  2 .bss          00000020  00800100  00800100  0000072a  2**0
                   ALLOC
-  3 .comment      00000030  00000000  00000000  000006fa  2**0
+  3 .comment      00000030  00000000  00000000  0000072a  2**0
                   CONTENTS, READONLY
-  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  0000072c  2**2
+  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  0000075c  2**2
                   CONTENTS, READONLY
-  5 .debug_aranges 000000b0  00000000  00000000  0000076c  2**0
+  5 .debug_aranges 000000b0  00000000  00000000  0000079c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   00000f7b  00000000  00000000  0000081c  2**0
+  6 .debug_info   00000f65  00000000  00000000  0000084c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 00000aa5  00000000  00000000  00001797  2**0
+  7 .debug_abbrev 00000aa5  00000000  00000000  000017b1  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   00000714  00000000  00000000  0000223c  2**0
+  8 .debug_line   00000720  00000000  00000000  00002256  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  000002d8  00000000  00000000  00002950  2**2
+  9 .debug_frame  000002e4  00000000  00000000  00002978  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    000005d3  00000000  00000000  00002c28  2**0
+ 10 .debug_str    000005d3  00000000  00000000  00002c5c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    000008b9  00000000  00000000  000031fb  2**0
+ 11 .debug_loc    000008d3  00000000  00000000  0000322f  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000090  00000000  00000000  00003ab4  2**0
+ 12 .debug_ranges 00000090  00000000  00000000  00003b02  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -41,13 +41,13 @@ Disassembly of section .text:
    a:	00 00       	nop
    c:	5c c0       	rjmp	.+184    	; 0xc6 <__bad_interrupt>
    e:	00 00       	nop
-  10:	91 c1       	rjmp	.+802    	; 0x334 <__vector_4>
+  10:	a5 c1       	rjmp	.+842    	; 0x35c <__vector_4>
   12:	00 00       	nop
-  14:	b8 c1       	rjmp	.+880    	; 0x386 <__vector_5>
+  14:	cc c1       	rjmp	.+920    	; 0x3ae <__vector_5>
   16:	00 00       	nop
-  18:	df c1       	rjmp	.+958    	; 0x3d8 <__vector_6>
+  18:	f3 c1       	rjmp	.+998    	; 0x400 <__vector_6>
   1a:	00 00       	nop
-  1c:	06 c2       	rjmp	.+1036   	; 0x42a <__vector_7>
+  1c:	1a c2       	rjmp	.+1076   	; 0x452 <__vector_7>
   1e:	00 00       	nop
   20:	52 c0       	rjmp	.+164    	; 0xc6 <__bad_interrupt>
   22:	00 00       	nop
@@ -59,7 +59,7 @@ Disassembly of section .text:
   2e:	00 00       	nop
   30:	4a c0       	rjmp	.+148    	; 0xc6 <__bad_interrupt>
   32:	00 00       	nop
-  34:	23 c2       	rjmp	.+1094   	; 0x47c <__vector_13>
+  34:	48 c0       	rjmp	.+144    	; 0xc6 <__bad_interrupt>
   36:	00 00       	nop
   38:	46 c0       	rjmp	.+140    	; 0xc6 <__bad_interrupt>
   3a:	00 00       	nop
@@ -71,7 +71,7 @@ Disassembly of section .text:
   46:	00 00       	nop
   48:	3e c0       	rjmp	.+124    	; 0xc6 <__bad_interrupt>
   4a:	00 00       	nop
-  4c:	2a c2       	rjmp	.+1108   	; 0x4a2 <__vector_19>
+  4c:	4d c2       	rjmp	.+1178   	; 0x4e8 <__vector_19>
   4e:	00 00       	nop
   50:	3a c0       	rjmp	.+116    	; 0xc6 <__bad_interrupt>
   52:	00 00       	nop
@@ -97,7 +97,7 @@ Disassembly of section .text:
   7a:	00 00       	nop
   7c:	24 c0       	rjmp	.+72     	; 0xc6 <__bad_interrupt>
   7e:	00 00       	nop
-  80:	22 c0       	rjmp	.+68     	; 0xc6 <__bad_interrupt>
+  80:	11 c2       	rjmp	.+1058   	; 0x4a4 <__vector_32>
   82:	00 00       	nop
   84:	20 c0       	rjmp	.+64     	; 0xc6 <__bad_interrupt>
   86:	00 00       	nop
@@ -116,7 +116,7 @@ Disassembly of section .text:
   98:	11 e0       	ldi	r17, 0x01	; 1
   9a:	a0 e0       	ldi	r26, 0x00	; 0
   9c:	b1 e0       	ldi	r27, 0x01	; 1
-  9e:	e6 e8       	ldi	r30, 0x86	; 134
+  9e:	e6 eb       	ldi	r30, 0xB6	; 182
   a0:	f6 e0       	ldi	r31, 0x06	; 6
   a2:	00 e0       	ldi	r16, 0x00	; 0
   a4:	0b bf       	out	0x3b, r16	; 59
@@ -140,17 +140,17 @@ Disassembly of section .text:
   bc:	a0 32       	cpi	r26, 0x20	; 32
   be:	b2 07       	cpc	r27, r18
   c0:	e1 f7       	brne	.-8      	; 0xba <.do_clear_bss_loop>
-  c2:	58 d0       	rcall	.+176    	; 0x174 <main>
-  c4:	de c2       	rjmp	.+1468   	; 0x682 <_exit>
+  c2:	5f d0       	rcall	.+190    	; 0x182 <main>
+  c4:	f6 c2       	rjmp	.+1516   	; 0x6b2 <_exit>
 
 000000c6 <__bad_interrupt>:
   c6:	9c cf       	rjmp	.-200    	; 0x0 <__vectors>
 
 000000c8 <ready_to_send_spi>:
-		
 		}
 }
 
+//Collectad data sent to spi module
 void ready_to_send_spi(){
 	if (mode == send_data){
   c8:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__data_end>
@@ -171,7 +171,7 @@ void ready_to_send_spi(){
   f6:	60 91 13 01 	lds	r22, 0x0113	; 0x800113 <data+0x2>
   fa:	70 91 14 01 	lds	r23, 0x0114	; 0x800114 <data+0x3>
   fe:	80 91 15 01 	lds	r24, 0x0115	; 0x800115 <data+0x4>
- 102:	72 d2       	rcall	.+1252   	; 0x5e8 <set_outgoing_data>
+ 102:	8a d2       	rcall	.+1300   	; 0x618 <set_outgoing_data>
 		//start over
 		mode = sonar1;
  104:	10 92 00 01 	sts	0x0100, r1	; 0x800100 <__data_end>
@@ -182,7 +182,7 @@ void ready_to_send_spi(){
 
 void sensor_init(){
 	
-	//Pins is now an output and input
+	//Pins is now an output
 	DDRA |= 0b00000010;
  10a:	09 9a       	sbi	0x01, 1	; 1
 	DDRB |= 0b00000010;
@@ -191,7 +191,7 @@ void sensor_init(){
  10e:	39 9a       	sbi	0x07, 1	; 7
 	DDRD |= 0b00000010;
  110:	51 9a       	sbi	0x0a, 1	; 10
-	
+	//Pins is now an input
 	DDRA &= 0b11111110;
  112:	08 98       	cbi	0x01, 0	; 1
 	DDRB &= 0b11111110;
@@ -249,875 +249,893 @@ void sensor_init(){
  154:	84 60       	ori	r24, 0x04	; 4
  156:	80 83       	st	Z, r24
 
+	//Timer interrupt enable when timer hits 50000
 	TIMSK1 |= _BV(1);
  158:	ef e6       	ldi	r30, 0x6F	; 111
  15a:	f0 e0       	ldi	r31, 0x00	; 0
  15c:	80 81       	ld	r24, Z
  15e:	82 60       	ori	r24, 0x02	; 2
  160:	80 83       	st	Z, r24
-	OCR1A = 50000;
- 162:	80 e5       	ldi	r24, 0x50	; 80
- 164:	93 ec       	ldi	r25, 0xC3	; 195
- 166:	90 93 89 00 	sts	0x0089, r25	; 0x800089 <__TEXT_REGION_LENGTH__+0x7e0089>
- 16a:	80 93 88 00 	sts	0x0088, r24	; 0x800088 <__TEXT_REGION_LENGTH__+0x7e0088>
+	TCCR3B |= (1 << WGM32);
+ 162:	e1 e9       	ldi	r30, 0x91	; 145
+ 164:	f0 e0       	ldi	r31, 0x00	; 0
+ 166:	80 81       	ld	r24, Z
+ 168:	88 60       	ori	r24, 0x08	; 8
+ 16a:	80 83       	st	Z, r24
+	OCR3A = 50000;
+ 16c:	80 e5       	ldi	r24, 0x50	; 80
+ 16e:	93 ec       	ldi	r25, 0xC3	; 195
+ 170:	90 93 99 00 	sts	0x0099, r25	; 0x800099 <__TEXT_REGION_LENGTH__+0x7e0099>
+ 174:	80 93 98 00 	sts	0x0098, r24	; 0x800098 <__TEXT_REGION_LENGTH__+0x7e0098>
 
-	TCCR1B = 0;
- 16e:	10 92 81 00 	sts	0x0081, r1	; 0x800081 <__TEXT_REGION_LENGTH__+0x7e0081>
- 172:	08 95       	ret
+	//Timer stopped
+	TCCR1B |= (0 << CS10);
+ 178:	e1 e8       	ldi	r30, 0x81	; 129
+ 17a:	f0 e0       	ldi	r31, 0x00	; 0
+ 17c:	80 81       	ld	r24, Z
+ 17e:	80 83       	st	Z, r24
+ 180:	08 95       	ret
 
-00000174 <main>:
-//Init for sensormodul
-void sensor_init();
-
-int main(void)
+00000182 <main>:
 {
-	spi_init();
- 174:	c8 d1       	rcall	.+912    	; 0x506 <spi_init>
+	//Init spi
+	//spi_init();
+	
+	//Init sensormodule
 	sensor_init();
- 176:	c9 df       	rcall	.-110    	; 0x10a <sensor_init>
- 178:	78 94       	sei
+ 182:	c3 df       	rcall	.-122    	; 0x10a <sensor_init>
 	
 	//Enable globel interrupt
 	sei();
- 17a:	c4 e0       	ldi	r28, 0x04	; 4
+ 184:	78 94       	sei
 				PORTC|=_BV(1);
 				_delay_us(15);
 				PORTC &= ~_BV(1);
 				break;
 			case sonar4:
 				mode = sensor_active;
- 17c:	8f e3       	ldi	r24, 0x3F	; 63
- 17e:	9c e9       	ldi	r25, 0x9C	; 156
- 180:	01 97       	sbiw	r24, 0x01	; 1
- 182:	f1 f7       	brne	.-4      	; 0x180 <main+0xc>
- 184:	00 c0       	rjmp	.+0      	; 0x186 <main+0x12>
- 186:	00 00       	nop
- 188:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__data_end>
-	
+ 186:	c4 e0       	ldi	r28, 0x04	; 4
+ 188:	8f e3       	ldi	r24, 0x3F	; 63
+ 18a:	9c e9       	ldi	r25, 0x9C	; 156
+ 18c:	01 97       	sbiw	r24, 0x01	; 1
+ 18e:	f1 f7       	brne	.-4      	; 0x18c <main+0xa>
+ 190:	00 c0       	rjmp	.+0      	; 0x192 <main+0x10>
+ 192:	00 00       	nop
 	
 	while(1 == 1)
 	{
 		_delay_ms(10);
+		//One sensor is triggerd at a time 
 		switch (mode){
- 18c:	82 30       	cpi	r24, 0x02	; 2
- 18e:	d9 f0       	breq	.+54     	; 0x1c6 <main+0x52>
- 190:	28 f4       	brcc	.+10     	; 0x19c <main+0x28>
- 192:	88 23       	and	r24, r24
- 194:	41 f0       	breq	.+16     	; 0x1a6 <main+0x32>
- 196:	81 30       	cpi	r24, 0x01	; 1
- 198:	71 f0       	breq	.+28     	; 0x1b6 <main+0x42>
- 19a:	f0 cf       	rjmp	.-32     	; 0x17c <main+0x8>
- 19c:	83 30       	cpi	r24, 0x03	; 3
- 19e:	d9 f0       	breq	.+54     	; 0x1d6 <main+0x62>
- 1a0:	85 30       	cpi	r24, 0x05	; 5
- 1a2:	09 f1       	breq	.+66     	; 0x1e6 <main+0x72>
- 1a4:	eb cf       	rjmp	.-42     	; 0x17c <main+0x8>
- 1a6:	c0 93 00 01 	sts	0x0100, r28	; 0x800100 <__data_end>
+ 194:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__data_end>
+ 198:	82 30       	cpi	r24, 0x02	; 2
+ 19a:	d9 f0       	breq	.+54     	; 0x1d2 <main+0x50>
+ 19c:	28 f4       	brcc	.+10     	; 0x1a8 <main+0x26>
+ 19e:	88 23       	and	r24, r24
+ 1a0:	41 f0       	breq	.+16     	; 0x1b2 <main+0x30>
+ 1a2:	81 30       	cpi	r24, 0x01	; 1
+ 1a4:	71 f0       	breq	.+28     	; 0x1c2 <main+0x40>
+ 1a6:	f0 cf       	rjmp	.-32     	; 0x188 <main+0x6>
+ 1a8:	83 30       	cpi	r24, 0x03	; 3
+ 1aa:	d9 f0       	breq	.+54     	; 0x1e2 <main+0x60>
+ 1ac:	85 30       	cpi	r24, 0x05	; 5
+ 1ae:	09 f1       	breq	.+66     	; 0x1f2 <main+0x70>
+ 1b0:	eb cf       	rjmp	.-42     	; 0x188 <main+0x6>
 			case sonar1:
 				mode = sensor_active;
- 1aa:	11 9a       	sbi	0x02, 1	; 2
+ 1b2:	c0 93 00 01 	sts	0x0100, r28	; 0x800100 <__data_end>
 				//Triggerpin is high for 15uS
 				PORTA|=_BV(1);
- 1ac:	90 e5       	ldi	r25, 0x50	; 80
+ 1b6:	11 9a       	sbi	0x02, 1	; 2
 	#else
 		//round up by default
 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
 	#endif
 
 	__builtin_avr_delay_cycles(__ticks_dc);
- 1ae:	9a 95       	dec	r25
- 1b0:	f1 f7       	brne	.-4      	; 0x1ae <main+0x3a>
- 1b2:	11 98       	cbi	0x02, 1	; 2
+ 1b8:	90 e5       	ldi	r25, 0x50	; 80
+ 1ba:	9a 95       	dec	r25
+ 1bc:	f1 f7       	brne	.-4      	; 0x1ba <main+0x38>
 				_delay_us(15);
 				PORTA &= ~_BV(1);
- 1b4:	e3 cf       	rjmp	.-58     	; 0x17c <main+0x8>
+ 1be:	11 98       	cbi	0x02, 1	; 2
 				break;
- 1b6:	c0 93 00 01 	sts	0x0100, r28	; 0x800100 <__data_end>
+ 1c0:	e3 cf       	rjmp	.-58     	; 0x188 <main+0x6>
 			case sonar2:
 				mode = sensor_active;
- 1ba:	29 9a       	sbi	0x05, 1	; 5
+ 1c2:	c0 93 00 01 	sts	0x0100, r28	; 0x800100 <__data_end>
 				//Triggerpin is high for 15uS
 				PORTB|=_BV(1);
- 1bc:	80 e5       	ldi	r24, 0x50	; 80
- 1be:	8a 95       	dec	r24
- 1c0:	f1 f7       	brne	.-4      	; 0x1be <main+0x4a>
- 1c2:	29 98       	cbi	0x05, 1	; 5
+ 1c6:	29 9a       	sbi	0x05, 1	; 5
+ 1c8:	80 e5       	ldi	r24, 0x50	; 80
+ 1ca:	8a 95       	dec	r24
+ 1cc:	f1 f7       	brne	.-4      	; 0x1ca <main+0x48>
 				_delay_us(15);
 				PORTB &= ~_BV(1);
- 1c4:	db cf       	rjmp	.-74     	; 0x17c <main+0x8>
+ 1ce:	29 98       	cbi	0x05, 1	; 5
 				break;
- 1c6:	c0 93 00 01 	sts	0x0100, r28	; 0x800100 <__data_end>
+ 1d0:	db cf       	rjmp	.-74     	; 0x188 <main+0x6>
 			case sonar3:
 				mode = sensor_active;
- 1ca:	41 9a       	sbi	0x08, 1	; 8
+ 1d2:	c0 93 00 01 	sts	0x0100, r28	; 0x800100 <__data_end>
 				//Triggerpin is high for 15uS
 				PORTC|=_BV(1);
- 1cc:	90 e5       	ldi	r25, 0x50	; 80
- 1ce:	9a 95       	dec	r25
- 1d0:	f1 f7       	brne	.-4      	; 0x1ce <main+0x5a>
- 1d2:	41 98       	cbi	0x08, 1	; 8
+ 1d6:	41 9a       	sbi	0x08, 1	; 8
+ 1d8:	90 e5       	ldi	r25, 0x50	; 80
+ 1da:	9a 95       	dec	r25
+ 1dc:	f1 f7       	brne	.-4      	; 0x1da <main+0x58>
 				_delay_us(15);
 				PORTC &= ~_BV(1);
- 1d4:	d3 cf       	rjmp	.-90     	; 0x17c <main+0x8>
+ 1de:	41 98       	cbi	0x08, 1	; 8
 				break;
- 1d6:	c0 93 00 01 	sts	0x0100, r28	; 0x800100 <__data_end>
+ 1e0:	d3 cf       	rjmp	.-90     	; 0x188 <main+0x6>
 			case sonar4:
 				mode = sensor_active;
- 1da:	59 9a       	sbi	0x0b, 1	; 11
+ 1e2:	c0 93 00 01 	sts	0x0100, r28	; 0x800100 <__data_end>
 				//Triggerpin is high for 15uS
 				PORTD|=_BV(1);
- 1dc:	80 e5       	ldi	r24, 0x50	; 80
- 1de:	8a 95       	dec	r24
- 1e0:	f1 f7       	brne	.-4      	; 0x1de <main+0x6a>
- 1e2:	59 98       	cbi	0x0b, 1	; 11
+ 1e6:	59 9a       	sbi	0x0b, 1	; 11
+ 1e8:	80 e5       	ldi	r24, 0x50	; 80
+ 1ea:	8a 95       	dec	r24
+ 1ec:	f1 f7       	brne	.-4      	; 0x1ea <main+0x68>
 				_delay_us(15);
 				PORTD &= ~_BV(1);
+ 1ee:	59 98       	cbi	0x0b, 1	; 11
 				break;
- 1e4:	cb cf       	rjmp	.-106    	; 0x17c <main+0x8>
 			case sensor_active:
 				break;
 			case send_data:
 				ready_to_send_spi();
- 1e6:	70 df       	rcall	.-288    	; 0xc8 <ready_to_send_spi>
- 1e8:	c9 cf       	rjmp	.-110    	; 0x17c <main+0x8>
-
-000001ea <calc_sonar_data>:
+ 1f0:	cb cf       	rjmp	.-106    	; 0x188 <main+0x6>
+ 1f2:	6a df       	rcall	.-300    	; 0xc8 <ready_to_send_spi>
 				break;
- 1ea:	cf 93       	push	r28
+ 1f4:	c9 cf       	rjmp	.-110    	; 0x188 <main+0x6>
+
+000001f6 <calc_sonar_data>:
 			mode = send_data;
 		}break;
 		}
 }
-
+//Calculate distance with timer value and speed of sound
 void calc_sonar_data(int sonar, uint32_t pulse){
- 1ec:	df 93       	push	r29
- 1ee:	ec 01       	movw	r28, r24
+ 1f6:	cf 93       	push	r28
+ 1f8:	df 93       	push	r29
+ 1fa:	ec 01       	movw	r28, r24
+	//Longer then 86 cm, invalide value
 	if (pulse > 50000){
- 1f0:	41 35       	cpi	r20, 0x51	; 81
- 1f2:	83 ec       	ldi	r24, 0xC3	; 195
- 1f4:	58 07       	cpc	r21, r24
- 1f6:	61 05       	cpc	r22, r1
- 1f8:	71 05       	cpc	r23, r1
- 1fa:	28 f0       	brcs	.+10     	; 0x206 <calc_sonar_data+0x1c>
+ 1fc:	41 35       	cpi	r20, 0x51	; 81
+ 1fe:	83 ec       	ldi	r24, 0xC3	; 195
+ 200:	58 07       	cpc	r21, r24
+ 202:	61 05       	cpc	r22, r1
+ 204:	71 05       	cpc	r23, r1
+ 206:	28 f0       	brcs	.+10     	; 0x212 <calc_sonar_data+0x1c>
 		sonar_data[sonar] = 0xFF;
- 1fc:	c3 5f       	subi	r28, 0xF3	; 243
- 1fe:	de 4f       	sbci	r29, 0xFE	; 254
- 200:	8f ef       	ldi	r24, 0xFF	; 255
- 202:	88 83       	st	Y, r24
- 204:	0a c0       	rjmp	.+20     	; 0x21a <calc_sonar_data+0x30>
+ 208:	c3 5f       	subi	r28, 0xF3	; 243
+ 20a:	de 4f       	sbci	r29, 0xFE	; 254
+ 20c:	8f ef       	ldi	r24, 0xFF	; 255
+ 20e:	88 83       	st	Y, r24
+ 210:	0a c0       	rjmp	.+20     	; 0x226 <calc_sonar_data+0x30>
 	}
 	else{
 	uint32_t cm;
 	cm = (pulse/580);
 	sonar_data[sonar] = cm;}
- 206:	cb 01       	movw	r24, r22
- 208:	ba 01       	movw	r22, r20
- 20a:	24 e4       	ldi	r18, 0x44	; 68
- 20c:	32 e0       	ldi	r19, 0x02	; 2
- 20e:	40 e0       	ldi	r20, 0x00	; 0
- 210:	50 e0       	ldi	r21, 0x00	; 0
- 212:	15 d2       	rcall	.+1066   	; 0x63e <__udivmodsi4>
- 214:	c3 5f       	subi	r28, 0xF3	; 243
- 216:	de 4f       	sbci	r29, 0xFE	; 254
- 218:	28 83       	st	Y, r18
+ 212:	cb 01       	movw	r24, r22
+ 214:	ba 01       	movw	r22, r20
+ 216:	24 e4       	ldi	r18, 0x44	; 68
+ 218:	32 e0       	ldi	r19, 0x02	; 2
+ 21a:	40 e0       	ldi	r20, 0x00	; 0
+ 21c:	50 e0       	ldi	r21, 0x00	; 0
+ 21e:	27 d2       	rcall	.+1102   	; 0x66e <__udivmodsi4>
+ 220:	c3 5f       	subi	r28, 0xF3	; 243
+ 222:	de 4f       	sbci	r29, 0xFE	; 254
+ 224:	28 83       	st	Y, r18
 }
- 21a:	df 91       	pop	r29
- 21c:	cf 91       	pop	r28
- 21e:	08 95       	ret
+ 226:	df 91       	pop	r29
+ 228:	cf 91       	pop	r28
+ 22a:	08 95       	ret
 
-00000220 <sonar_timer_interrupt>:
+0000022c <sonar_timer_interrupt>:
 }
 
 
 void sonar_timer_interrupt(int sonar){
-	
+	//Echo pin interrupt
 	switch (sonar)
- 220:	81 30       	cpi	r24, 0x01	; 1
- 222:	91 05       	cpc	r25, r1
- 224:	69 f1       	breq	.+90     	; 0x280 <sonar_timer_interrupt+0x60>
- 226:	1c f4       	brge	.+6      	; 0x22e <sonar_timer_interrupt+0xe>
- 228:	89 2b       	or	r24, r25
- 22a:	49 f0       	breq	.+18     	; 0x23e <sonar_timer_interrupt+0x1e>
- 22c:	08 95       	ret
- 22e:	82 30       	cpi	r24, 0x02	; 2
- 230:	91 05       	cpc	r25, r1
- 232:	09 f4       	brne	.+2      	; 0x236 <sonar_timer_interrupt+0x16>
- 234:	46 c0       	rjmp	.+140    	; 0x2c2 <sonar_timer_interrupt+0xa2>
- 236:	03 97       	sbiw	r24, 0x03	; 3
- 238:	09 f4       	brne	.+2      	; 0x23c <sonar_timer_interrupt+0x1c>
- 23a:	64 c0       	rjmp	.+200    	; 0x304 <sonar_timer_interrupt+0xe4>
- 23c:	08 95       	ret
+ 22c:	81 30       	cpi	r24, 0x01	; 1
+ 22e:	91 05       	cpc	r25, r1
+ 230:	89 f1       	breq	.+98     	; 0x294 <sonar_timer_interrupt+0x68>
+ 232:	1c f4       	brge	.+6      	; 0x23a <sonar_timer_interrupt+0xe>
+ 234:	89 2b       	or	r24, r25
+ 236:	49 f0       	breq	.+18     	; 0x24a <sonar_timer_interrupt+0x1e>
+ 238:	08 95       	ret
+ 23a:	82 30       	cpi	r24, 0x02	; 2
+ 23c:	91 05       	cpc	r25, r1
+ 23e:	09 f4       	brne	.+2      	; 0x242 <sonar_timer_interrupt+0x16>
+ 240:	4e c0       	rjmp	.+156    	; 0x2de <sonar_timer_interrupt+0xb2>
+ 242:	03 97       	sbiw	r24, 0x03	; 3
+ 244:	09 f4       	brne	.+2      	; 0x248 <sonar_timer_interrupt+0x1c>
+ 246:	70 c0       	rjmp	.+224    	; 0x328 <sonar_timer_interrupt+0xfc>
+ 248:	08 95       	ret
 	{	case 0:
 		//LOW -> HIGH
 		if( (PINA & (1 << PINA0)) == 1)
- 23e:	00 9b       	sbis	0x00, 0	; 0
- 240:	08 c0       	rjmp	.+16     	; 0x252 <sonar_timer_interrupt+0x32>
+ 24a:	00 9b       	sbis	0x00, 0	; 0
+ 24c:	0a c0       	rjmp	.+20     	; 0x262 <sonar_timer_interrupt+0x36>
 		{
 			// Raknare=0
 			TCNT1=0;
- 242:	10 92 85 00 	sts	0x0085, r1	; 0x800085 <__TEXT_REGION_LENGTH__+0x7e0085>
- 246:	10 92 84 00 	sts	0x0084, r1	; 0x800084 <__TEXT_REGION_LENGTH__+0x7e0084>
-			TCCR1B = (0 << CS12) | (0 << CS11) | (1 << CS10);
- 24a:	81 e0       	ldi	r24, 0x01	; 1
- 24c:	80 93 81 00 	sts	0x0081, r24	; 0x800081 <__TEXT_REGION_LENGTH__+0x7e0081>
- 250:	08 95       	ret
+ 24e:	10 92 85 00 	sts	0x0085, r1	; 0x800085 <__TEXT_REGION_LENGTH__+0x7e0085>
+ 252:	10 92 84 00 	sts	0x0084, r1	; 0x800084 <__TEXT_REGION_LENGTH__+0x7e0084>
+			TCCR1B |= (1 << CS10);
+ 256:	e1 e8       	ldi	r30, 0x81	; 129
+ 258:	f0 e0       	ldi	r31, 0x00	; 0
+ 25a:	80 81       	ld	r24, Z
+ 25c:	81 60       	ori	r24, 0x01	; 1
+ 25e:	80 83       	st	Z, r24
+ 260:	08 95       	ret
 		}
 		//HIGh -> LOW
 		else{
 			//Stops conter
-			TCCR1B = (0 << CS12) | (0 << CS11) | (0 << CS10);
- 252:	10 92 81 00 	sts	0x0081, r1	; 0x800081 <__TEXT_REGION_LENGTH__+0x7e0081>
+			TCCR1B |= (0 << CS10);
+ 262:	e1 e8       	ldi	r30, 0x81	; 129
+ 264:	f0 e0       	ldi	r31, 0x00	; 0
+ 266:	80 81       	ld	r24, Z
+ 268:	80 83       	st	Z, r24
 			pulse=TCNT1;
- 256:	40 91 84 00 	lds	r20, 0x0084	; 0x800084 <__TEXT_REGION_LENGTH__+0x7e0084>
- 25a:	50 91 85 00 	lds	r21, 0x0085	; 0x800085 <__TEXT_REGION_LENGTH__+0x7e0085>
- 25e:	60 e0       	ldi	r22, 0x00	; 0
- 260:	70 e0       	ldi	r23, 0x00	; 0
- 262:	40 93 01 01 	sts	0x0101, r20	; 0x800101 <pulse>
- 266:	50 93 02 01 	sts	0x0102, r21	; 0x800102 <pulse+0x1>
- 26a:	60 93 03 01 	sts	0x0103, r22	; 0x800103 <pulse+0x2>
- 26e:	70 93 04 01 	sts	0x0104, r23	; 0x800104 <pulse+0x3>
+ 26a:	40 91 84 00 	lds	r20, 0x0084	; 0x800084 <__TEXT_REGION_LENGTH__+0x7e0084>
+ 26e:	50 91 85 00 	lds	r21, 0x0085	; 0x800085 <__TEXT_REGION_LENGTH__+0x7e0085>
+ 272:	60 e0       	ldi	r22, 0x00	; 0
+ 274:	70 e0       	ldi	r23, 0x00	; 0
+ 276:	40 93 01 01 	sts	0x0101, r20	; 0x800101 <pulse>
+ 27a:	50 93 02 01 	sts	0x0102, r21	; 0x800102 <pulse+0x1>
+ 27e:	60 93 03 01 	sts	0x0103, r22	; 0x800103 <pulse+0x2>
+ 282:	70 93 04 01 	sts	0x0104, r23	; 0x800104 <pulse+0x3>
 			calc_sonar_data(sonar, pulse);
- 272:	80 e0       	ldi	r24, 0x00	; 0
- 274:	90 e0       	ldi	r25, 0x00	; 0
- 276:	b9 df       	rcall	.-142    	; 0x1ea <calc_sonar_data>
+ 286:	80 e0       	ldi	r24, 0x00	; 0
+ 288:	90 e0       	ldi	r25, 0x00	; 0
+ 28a:	b5 df       	rcall	.-150    	; 0x1f6 <calc_sonar_data>
 			mode = sonar2;
- 278:	81 e0       	ldi	r24, 0x01	; 1
- 27a:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__data_end>
- 27e:	08 95       	ret
+ 28c:	81 e0       	ldi	r24, 0x01	; 1
+ 28e:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__data_end>
+ 292:	08 95       	ret
 		}break;
 		case 1:
 		//LOW -> HIGH
 		if( (PINB & (1 << PINB0)) == 1)
- 280:	18 9b       	sbis	0x03, 0	; 3
- 282:	08 c0       	rjmp	.+16     	; 0x294 <sonar_timer_interrupt+0x74>
+ 294:	18 9b       	sbis	0x03, 0	; 3
+ 296:	0a c0       	rjmp	.+20     	; 0x2ac <sonar_timer_interrupt+0x80>
 		{
 			// Raknare=0
 			TCNT1=0;
- 284:	10 92 85 00 	sts	0x0085, r1	; 0x800085 <__TEXT_REGION_LENGTH__+0x7e0085>
- 288:	10 92 84 00 	sts	0x0084, r1	; 0x800084 <__TEXT_REGION_LENGTH__+0x7e0084>
-			TCCR1B = (0 << CS12) | (0 << CS11) | (1 << CS10);
- 28c:	81 e0       	ldi	r24, 0x01	; 1
- 28e:	80 93 81 00 	sts	0x0081, r24	; 0x800081 <__TEXT_REGION_LENGTH__+0x7e0081>
- 292:	08 95       	ret
+ 298:	10 92 85 00 	sts	0x0085, r1	; 0x800085 <__TEXT_REGION_LENGTH__+0x7e0085>
+ 29c:	10 92 84 00 	sts	0x0084, r1	; 0x800084 <__TEXT_REGION_LENGTH__+0x7e0084>
+			TCCR1B |= (1 << CS10);
+ 2a0:	e1 e8       	ldi	r30, 0x81	; 129
+ 2a2:	f0 e0       	ldi	r31, 0x00	; 0
+ 2a4:	80 81       	ld	r24, Z
+ 2a6:	81 60       	ori	r24, 0x01	; 1
+ 2a8:	80 83       	st	Z, r24
+ 2aa:	08 95       	ret
 		}
 		//HIGh -> LOW
 		else{
 			//Stops conter
-			TCCR1B = (0 << CS12) | (0 << CS11) | (0 << CS10);
- 294:	10 92 81 00 	sts	0x0081, r1	; 0x800081 <__TEXT_REGION_LENGTH__+0x7e0081>
+			TCCR1B |= (0 << CS10);
+ 2ac:	e1 e8       	ldi	r30, 0x81	; 129
+ 2ae:	f0 e0       	ldi	r31, 0x00	; 0
+ 2b0:	80 81       	ld	r24, Z
+ 2b2:	80 83       	st	Z, r24
 			pulse=TCNT1;
- 298:	40 91 84 00 	lds	r20, 0x0084	; 0x800084 <__TEXT_REGION_LENGTH__+0x7e0084>
- 29c:	50 91 85 00 	lds	r21, 0x0085	; 0x800085 <__TEXT_REGION_LENGTH__+0x7e0085>
- 2a0:	60 e0       	ldi	r22, 0x00	; 0
- 2a2:	70 e0       	ldi	r23, 0x00	; 0
- 2a4:	40 93 01 01 	sts	0x0101, r20	; 0x800101 <pulse>
- 2a8:	50 93 02 01 	sts	0x0102, r21	; 0x800102 <pulse+0x1>
- 2ac:	60 93 03 01 	sts	0x0103, r22	; 0x800103 <pulse+0x2>
- 2b0:	70 93 04 01 	sts	0x0104, r23	; 0x800104 <pulse+0x3>
+ 2b4:	40 91 84 00 	lds	r20, 0x0084	; 0x800084 <__TEXT_REGION_LENGTH__+0x7e0084>
+ 2b8:	50 91 85 00 	lds	r21, 0x0085	; 0x800085 <__TEXT_REGION_LENGTH__+0x7e0085>
+ 2bc:	60 e0       	ldi	r22, 0x00	; 0
+ 2be:	70 e0       	ldi	r23, 0x00	; 0
+ 2c0:	40 93 01 01 	sts	0x0101, r20	; 0x800101 <pulse>
+ 2c4:	50 93 02 01 	sts	0x0102, r21	; 0x800102 <pulse+0x1>
+ 2c8:	60 93 03 01 	sts	0x0103, r22	; 0x800103 <pulse+0x2>
+ 2cc:	70 93 04 01 	sts	0x0104, r23	; 0x800104 <pulse+0x3>
 			calc_sonar_data(sonar, pulse);
- 2b4:	81 e0       	ldi	r24, 0x01	; 1
- 2b6:	90 e0       	ldi	r25, 0x00	; 0
- 2b8:	98 df       	rcall	.-208    	; 0x1ea <calc_sonar_data>
+ 2d0:	81 e0       	ldi	r24, 0x01	; 1
+ 2d2:	90 e0       	ldi	r25, 0x00	; 0
+ 2d4:	90 df       	rcall	.-224    	; 0x1f6 <calc_sonar_data>
 			mode = sonar3;
- 2ba:	82 e0       	ldi	r24, 0x02	; 2
- 2bc:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__data_end>
- 2c0:	08 95       	ret
+ 2d6:	82 e0       	ldi	r24, 0x02	; 2
+ 2d8:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__data_end>
+ 2dc:	08 95       	ret
 		}break;
 		case 2:
 		//LOW -> HIGH
 		if( (PINC & (1 << PINC0)) == 1)
- 2c2:	30 9b       	sbis	0x06, 0	; 6
- 2c4:	08 c0       	rjmp	.+16     	; 0x2d6 <sonar_timer_interrupt+0xb6>
+ 2de:	30 9b       	sbis	0x06, 0	; 6
+ 2e0:	0a c0       	rjmp	.+20     	; 0x2f6 <sonar_timer_interrupt+0xca>
 		{
 			// Raknare=0
 			TCNT1=0;
- 2c6:	10 92 85 00 	sts	0x0085, r1	; 0x800085 <__TEXT_REGION_LENGTH__+0x7e0085>
- 2ca:	10 92 84 00 	sts	0x0084, r1	; 0x800084 <__TEXT_REGION_LENGTH__+0x7e0084>
-			TCCR1B = (0 << CS12) | (0 << CS11) | (1 << CS10);
- 2ce:	81 e0       	ldi	r24, 0x01	; 1
- 2d0:	80 93 81 00 	sts	0x0081, r24	; 0x800081 <__TEXT_REGION_LENGTH__+0x7e0081>
- 2d4:	08 95       	ret
+ 2e2:	10 92 85 00 	sts	0x0085, r1	; 0x800085 <__TEXT_REGION_LENGTH__+0x7e0085>
+ 2e6:	10 92 84 00 	sts	0x0084, r1	; 0x800084 <__TEXT_REGION_LENGTH__+0x7e0084>
+			TCCR1B |= (1 << CS10);
+ 2ea:	e1 e8       	ldi	r30, 0x81	; 129
+ 2ec:	f0 e0       	ldi	r31, 0x00	; 0
+ 2ee:	80 81       	ld	r24, Z
+ 2f0:	81 60       	ori	r24, 0x01	; 1
+ 2f2:	80 83       	st	Z, r24
+ 2f4:	08 95       	ret
 		}
 		//HIGh -> LOW
 		else{
 			//Stops conter
-			TCCR1B = (0 << CS12) | (0 << CS11) | (0 << CS10);
- 2d6:	10 92 81 00 	sts	0x0081, r1	; 0x800081 <__TEXT_REGION_LENGTH__+0x7e0081>
+			TCCR1B |= (0 << CS10);
+ 2f6:	e1 e8       	ldi	r30, 0x81	; 129
+ 2f8:	f0 e0       	ldi	r31, 0x00	; 0
+ 2fa:	80 81       	ld	r24, Z
+ 2fc:	80 83       	st	Z, r24
 			pulse=TCNT1;
- 2da:	40 91 84 00 	lds	r20, 0x0084	; 0x800084 <__TEXT_REGION_LENGTH__+0x7e0084>
- 2de:	50 91 85 00 	lds	r21, 0x0085	; 0x800085 <__TEXT_REGION_LENGTH__+0x7e0085>
- 2e2:	60 e0       	ldi	r22, 0x00	; 0
- 2e4:	70 e0       	ldi	r23, 0x00	; 0
- 2e6:	40 93 01 01 	sts	0x0101, r20	; 0x800101 <pulse>
- 2ea:	50 93 02 01 	sts	0x0102, r21	; 0x800102 <pulse+0x1>
- 2ee:	60 93 03 01 	sts	0x0103, r22	; 0x800103 <pulse+0x2>
- 2f2:	70 93 04 01 	sts	0x0104, r23	; 0x800104 <pulse+0x3>
+ 2fe:	40 91 84 00 	lds	r20, 0x0084	; 0x800084 <__TEXT_REGION_LENGTH__+0x7e0084>
+ 302:	50 91 85 00 	lds	r21, 0x0085	; 0x800085 <__TEXT_REGION_LENGTH__+0x7e0085>
+ 306:	60 e0       	ldi	r22, 0x00	; 0
+ 308:	70 e0       	ldi	r23, 0x00	; 0
+ 30a:	40 93 01 01 	sts	0x0101, r20	; 0x800101 <pulse>
+ 30e:	50 93 02 01 	sts	0x0102, r21	; 0x800102 <pulse+0x1>
+ 312:	60 93 03 01 	sts	0x0103, r22	; 0x800103 <pulse+0x2>
+ 316:	70 93 04 01 	sts	0x0104, r23	; 0x800104 <pulse+0x3>
 			calc_sonar_data(sonar, pulse);
- 2f6:	82 e0       	ldi	r24, 0x02	; 2
- 2f8:	90 e0       	ldi	r25, 0x00	; 0
- 2fa:	77 df       	rcall	.-274    	; 0x1ea <calc_sonar_data>
+ 31a:	82 e0       	ldi	r24, 0x02	; 2
+ 31c:	90 e0       	ldi	r25, 0x00	; 0
+ 31e:	6b df       	rcall	.-298    	; 0x1f6 <calc_sonar_data>
 			mode = sonar4;
- 2fc:	83 e0       	ldi	r24, 0x03	; 3
- 2fe:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__data_end>
- 302:	08 95       	ret
+ 320:	83 e0       	ldi	r24, 0x03	; 3
+ 322:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__data_end>
+ 326:	08 95       	ret
 		}break;
 		case 3:
 		//LOW -> HIGH
 		if( (PIND & (1 << PIND2)) == 1)
- 304:	89 b1       	in	r24, 0x09	; 9
-			TCCR1B = (0 << CS12) | (0 << CS11) | (1 << CS10);
+ 328:	89 b1       	in	r24, 0x09	; 9
+			TCCR1B |= (1 << CS10);
 		}
 		//HIGh -> LOW
 		else{
 			//Stops conter
-			TCCR1B = (0 << CS12) | (0 << CS11) | (0 << CS10);
- 306:	10 92 81 00 	sts	0x0081, r1	; 0x800081 <__TEXT_REGION_LENGTH__+0x7e0081>
+			TCCR1B |= (0 << CS10);
+ 32a:	e1 e8       	ldi	r30, 0x81	; 129
+ 32c:	f0 e0       	ldi	r31, 0x00	; 0
+ 32e:	80 81       	ld	r24, Z
+ 330:	80 83       	st	Z, r24
 			pulse=TCNT1;
- 30a:	40 91 84 00 	lds	r20, 0x0084	; 0x800084 <__TEXT_REGION_LENGTH__+0x7e0084>
- 30e:	50 91 85 00 	lds	r21, 0x0085	; 0x800085 <__TEXT_REGION_LENGTH__+0x7e0085>
- 312:	60 e0       	ldi	r22, 0x00	; 0
- 314:	70 e0       	ldi	r23, 0x00	; 0
- 316:	40 93 01 01 	sts	0x0101, r20	; 0x800101 <pulse>
- 31a:	50 93 02 01 	sts	0x0102, r21	; 0x800102 <pulse+0x1>
- 31e:	60 93 03 01 	sts	0x0103, r22	; 0x800103 <pulse+0x2>
- 322:	70 93 04 01 	sts	0x0104, r23	; 0x800104 <pulse+0x3>
+ 332:	40 91 84 00 	lds	r20, 0x0084	; 0x800084 <__TEXT_REGION_LENGTH__+0x7e0084>
+ 336:	50 91 85 00 	lds	r21, 0x0085	; 0x800085 <__TEXT_REGION_LENGTH__+0x7e0085>
+ 33a:	60 e0       	ldi	r22, 0x00	; 0
+ 33c:	70 e0       	ldi	r23, 0x00	; 0
+ 33e:	40 93 01 01 	sts	0x0101, r20	; 0x800101 <pulse>
+ 342:	50 93 02 01 	sts	0x0102, r21	; 0x800102 <pulse+0x1>
+ 346:	60 93 03 01 	sts	0x0103, r22	; 0x800103 <pulse+0x2>
+ 34a:	70 93 04 01 	sts	0x0104, r23	; 0x800104 <pulse+0x3>
 			calc_sonar_data(sonar, pulse);
- 326:	83 e0       	ldi	r24, 0x03	; 3
- 328:	90 e0       	ldi	r25, 0x00	; 0
- 32a:	5f df       	rcall	.-322    	; 0x1ea <calc_sonar_data>
+ 34e:	83 e0       	ldi	r24, 0x03	; 3
+ 350:	90 e0       	ldi	r25, 0x00	; 0
+ 352:	51 df       	rcall	.-350    	; 0x1f6 <calc_sonar_data>
 			mode = send_data;
- 32c:	85 e0       	ldi	r24, 0x05	; 5
- 32e:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__data_end>
- 332:	08 95       	ret
+ 354:	85 e0       	ldi	r24, 0x05	; 5
+ 356:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__data_end>
+ 35a:	08 95       	ret
 
-00000334 <__vector_4>:
+0000035c <__vector_4>:
 	cm = (pulse/580);
 	sonar_data[sonar] = cm;}
 }
 
-
+//Sonar 1 interrupt
 ISR(PCINT0_vect){sonar_timer_interrupt(0);}
- 334:	1f 92       	push	r1
- 336:	0f 92       	push	r0
- 338:	0f b6       	in	r0, 0x3f	; 63
- 33a:	0f 92       	push	r0
- 33c:	11 24       	eor	r1, r1
- 33e:	0b b6       	in	r0, 0x3b	; 59
- 340:	0f 92       	push	r0
- 342:	2f 93       	push	r18
- 344:	3f 93       	push	r19
- 346:	4f 93       	push	r20
- 348:	5f 93       	push	r21
- 34a:	6f 93       	push	r22
- 34c:	7f 93       	push	r23
- 34e:	8f 93       	push	r24
- 350:	9f 93       	push	r25
- 352:	af 93       	push	r26
- 354:	bf 93       	push	r27
- 356:	ef 93       	push	r30
- 358:	ff 93       	push	r31
- 35a:	80 e0       	ldi	r24, 0x00	; 0
- 35c:	90 e0       	ldi	r25, 0x00	; 0
- 35e:	60 df       	rcall	.-320    	; 0x220 <sonar_timer_interrupt>
- 360:	ff 91       	pop	r31
- 362:	ef 91       	pop	r30
- 364:	bf 91       	pop	r27
- 366:	af 91       	pop	r26
- 368:	9f 91       	pop	r25
- 36a:	8f 91       	pop	r24
- 36c:	7f 91       	pop	r23
- 36e:	6f 91       	pop	r22
- 370:	5f 91       	pop	r21
- 372:	4f 91       	pop	r20
- 374:	3f 91       	pop	r19
- 376:	2f 91       	pop	r18
- 378:	0f 90       	pop	r0
- 37a:	0b be       	out	0x3b, r0	; 59
- 37c:	0f 90       	pop	r0
- 37e:	0f be       	out	0x3f, r0	; 63
- 380:	0f 90       	pop	r0
- 382:	1f 90       	pop	r1
- 384:	18 95       	reti
+ 35c:	1f 92       	push	r1
+ 35e:	0f 92       	push	r0
+ 360:	0f b6       	in	r0, 0x3f	; 63
+ 362:	0f 92       	push	r0
+ 364:	11 24       	eor	r1, r1
+ 366:	0b b6       	in	r0, 0x3b	; 59
+ 368:	0f 92       	push	r0
+ 36a:	2f 93       	push	r18
+ 36c:	3f 93       	push	r19
+ 36e:	4f 93       	push	r20
+ 370:	5f 93       	push	r21
+ 372:	6f 93       	push	r22
+ 374:	7f 93       	push	r23
+ 376:	8f 93       	push	r24
+ 378:	9f 93       	push	r25
+ 37a:	af 93       	push	r26
+ 37c:	bf 93       	push	r27
+ 37e:	ef 93       	push	r30
+ 380:	ff 93       	push	r31
+ 382:	80 e0       	ldi	r24, 0x00	; 0
+ 384:	90 e0       	ldi	r25, 0x00	; 0
+ 386:	52 df       	rcall	.-348    	; 0x22c <sonar_timer_interrupt>
+ 388:	ff 91       	pop	r31
+ 38a:	ef 91       	pop	r30
+ 38c:	bf 91       	pop	r27
+ 38e:	af 91       	pop	r26
+ 390:	9f 91       	pop	r25
+ 392:	8f 91       	pop	r24
+ 394:	7f 91       	pop	r23
+ 396:	6f 91       	pop	r22
+ 398:	5f 91       	pop	r21
+ 39a:	4f 91       	pop	r20
+ 39c:	3f 91       	pop	r19
+ 39e:	2f 91       	pop	r18
+ 3a0:	0f 90       	pop	r0
+ 3a2:	0b be       	out	0x3b, r0	; 59
+ 3a4:	0f 90       	pop	r0
+ 3a6:	0f be       	out	0x3f, r0	; 63
+ 3a8:	0f 90       	pop	r0
+ 3aa:	1f 90       	pop	r1
+ 3ac:	18 95       	reti
 
-00000386 <__vector_5>:
+000003ae <__vector_5>:
 
-
+//Sonar 2 interrupt
 ISR(PCINT1_vect){sonar_timer_interrupt(1);}
- 386:	1f 92       	push	r1
- 388:	0f 92       	push	r0
- 38a:	0f b6       	in	r0, 0x3f	; 63
- 38c:	0f 92       	push	r0
- 38e:	11 24       	eor	r1, r1
- 390:	0b b6       	in	r0, 0x3b	; 59
- 392:	0f 92       	push	r0
- 394:	2f 93       	push	r18
- 396:	3f 93       	push	r19
- 398:	4f 93       	push	r20
- 39a:	5f 93       	push	r21
- 39c:	6f 93       	push	r22
- 39e:	7f 93       	push	r23
- 3a0:	8f 93       	push	r24
- 3a2:	9f 93       	push	r25
- 3a4:	af 93       	push	r26
- 3a6:	bf 93       	push	r27
- 3a8:	ef 93       	push	r30
- 3aa:	ff 93       	push	r31
- 3ac:	81 e0       	ldi	r24, 0x01	; 1
- 3ae:	90 e0       	ldi	r25, 0x00	; 0
- 3b0:	37 df       	rcall	.-402    	; 0x220 <sonar_timer_interrupt>
- 3b2:	ff 91       	pop	r31
- 3b4:	ef 91       	pop	r30
- 3b6:	bf 91       	pop	r27
- 3b8:	af 91       	pop	r26
- 3ba:	9f 91       	pop	r25
- 3bc:	8f 91       	pop	r24
- 3be:	7f 91       	pop	r23
- 3c0:	6f 91       	pop	r22
- 3c2:	5f 91       	pop	r21
- 3c4:	4f 91       	pop	r20
- 3c6:	3f 91       	pop	r19
- 3c8:	2f 91       	pop	r18
- 3ca:	0f 90       	pop	r0
- 3cc:	0b be       	out	0x3b, r0	; 59
- 3ce:	0f 90       	pop	r0
- 3d0:	0f be       	out	0x3f, r0	; 63
- 3d2:	0f 90       	pop	r0
- 3d4:	1f 90       	pop	r1
- 3d6:	18 95       	reti
+ 3ae:	1f 92       	push	r1
+ 3b0:	0f 92       	push	r0
+ 3b2:	0f b6       	in	r0, 0x3f	; 63
+ 3b4:	0f 92       	push	r0
+ 3b6:	11 24       	eor	r1, r1
+ 3b8:	0b b6       	in	r0, 0x3b	; 59
+ 3ba:	0f 92       	push	r0
+ 3bc:	2f 93       	push	r18
+ 3be:	3f 93       	push	r19
+ 3c0:	4f 93       	push	r20
+ 3c2:	5f 93       	push	r21
+ 3c4:	6f 93       	push	r22
+ 3c6:	7f 93       	push	r23
+ 3c8:	8f 93       	push	r24
+ 3ca:	9f 93       	push	r25
+ 3cc:	af 93       	push	r26
+ 3ce:	bf 93       	push	r27
+ 3d0:	ef 93       	push	r30
+ 3d2:	ff 93       	push	r31
+ 3d4:	81 e0       	ldi	r24, 0x01	; 1
+ 3d6:	90 e0       	ldi	r25, 0x00	; 0
+ 3d8:	29 df       	rcall	.-430    	; 0x22c <sonar_timer_interrupt>
+ 3da:	ff 91       	pop	r31
+ 3dc:	ef 91       	pop	r30
+ 3de:	bf 91       	pop	r27
+ 3e0:	af 91       	pop	r26
+ 3e2:	9f 91       	pop	r25
+ 3e4:	8f 91       	pop	r24
+ 3e6:	7f 91       	pop	r23
+ 3e8:	6f 91       	pop	r22
+ 3ea:	5f 91       	pop	r21
+ 3ec:	4f 91       	pop	r20
+ 3ee:	3f 91       	pop	r19
+ 3f0:	2f 91       	pop	r18
+ 3f2:	0f 90       	pop	r0
+ 3f4:	0b be       	out	0x3b, r0	; 59
+ 3f6:	0f 90       	pop	r0
+ 3f8:	0f be       	out	0x3f, r0	; 63
+ 3fa:	0f 90       	pop	r0
+ 3fc:	1f 90       	pop	r1
+ 3fe:	18 95       	reti
 
-000003d8 <__vector_6>:
+00000400 <__vector_6>:
 
-
+//Sonar 3 interrupt
 ISR(PCINT2_vect){sonar_timer_interrupt(2);}
- 3d8:	1f 92       	push	r1
- 3da:	0f 92       	push	r0
- 3dc:	0f b6       	in	r0, 0x3f	; 63
- 3de:	0f 92       	push	r0
- 3e0:	11 24       	eor	r1, r1
- 3e2:	0b b6       	in	r0, 0x3b	; 59
- 3e4:	0f 92       	push	r0
- 3e6:	2f 93       	push	r18
- 3e8:	3f 93       	push	r19
- 3ea:	4f 93       	push	r20
- 3ec:	5f 93       	push	r21
- 3ee:	6f 93       	push	r22
- 3f0:	7f 93       	push	r23
- 3f2:	8f 93       	push	r24
- 3f4:	9f 93       	push	r25
- 3f6:	af 93       	push	r26
- 3f8:	bf 93       	push	r27
- 3fa:	ef 93       	push	r30
- 3fc:	ff 93       	push	r31
- 3fe:	82 e0       	ldi	r24, 0x02	; 2
- 400:	90 e0       	ldi	r25, 0x00	; 0
- 402:	0e df       	rcall	.-484    	; 0x220 <sonar_timer_interrupt>
- 404:	ff 91       	pop	r31
- 406:	ef 91       	pop	r30
- 408:	bf 91       	pop	r27
- 40a:	af 91       	pop	r26
- 40c:	9f 91       	pop	r25
- 40e:	8f 91       	pop	r24
- 410:	7f 91       	pop	r23
- 412:	6f 91       	pop	r22
- 414:	5f 91       	pop	r21
- 416:	4f 91       	pop	r20
- 418:	3f 91       	pop	r19
- 41a:	2f 91       	pop	r18
- 41c:	0f 90       	pop	r0
- 41e:	0b be       	out	0x3b, r0	; 59
- 420:	0f 90       	pop	r0
- 422:	0f be       	out	0x3f, r0	; 63
- 424:	0f 90       	pop	r0
- 426:	1f 90       	pop	r1
- 428:	18 95       	reti
+ 400:	1f 92       	push	r1
+ 402:	0f 92       	push	r0
+ 404:	0f b6       	in	r0, 0x3f	; 63
+ 406:	0f 92       	push	r0
+ 408:	11 24       	eor	r1, r1
+ 40a:	0b b6       	in	r0, 0x3b	; 59
+ 40c:	0f 92       	push	r0
+ 40e:	2f 93       	push	r18
+ 410:	3f 93       	push	r19
+ 412:	4f 93       	push	r20
+ 414:	5f 93       	push	r21
+ 416:	6f 93       	push	r22
+ 418:	7f 93       	push	r23
+ 41a:	8f 93       	push	r24
+ 41c:	9f 93       	push	r25
+ 41e:	af 93       	push	r26
+ 420:	bf 93       	push	r27
+ 422:	ef 93       	push	r30
+ 424:	ff 93       	push	r31
+ 426:	82 e0       	ldi	r24, 0x02	; 2
+ 428:	90 e0       	ldi	r25, 0x00	; 0
+ 42a:	00 df       	rcall	.-512    	; 0x22c <sonar_timer_interrupt>
+ 42c:	ff 91       	pop	r31
+ 42e:	ef 91       	pop	r30
+ 430:	bf 91       	pop	r27
+ 432:	af 91       	pop	r26
+ 434:	9f 91       	pop	r25
+ 436:	8f 91       	pop	r24
+ 438:	7f 91       	pop	r23
+ 43a:	6f 91       	pop	r22
+ 43c:	5f 91       	pop	r21
+ 43e:	4f 91       	pop	r20
+ 440:	3f 91       	pop	r19
+ 442:	2f 91       	pop	r18
+ 444:	0f 90       	pop	r0
+ 446:	0b be       	out	0x3b, r0	; 59
+ 448:	0f 90       	pop	r0
+ 44a:	0f be       	out	0x3f, r0	; 63
+ 44c:	0f 90       	pop	r0
+ 44e:	1f 90       	pop	r1
+ 450:	18 95       	reti
 
-0000042a <__vector_7>:
+00000452 <__vector_7>:
 
-
+//Sonar 4 interrupt
 ISR(PCINT3_vect){sonar_timer_interrupt(3);}
- 42a:	1f 92       	push	r1
- 42c:	0f 92       	push	r0
- 42e:	0f b6       	in	r0, 0x3f	; 63
- 430:	0f 92       	push	r0
- 432:	11 24       	eor	r1, r1
- 434:	0b b6       	in	r0, 0x3b	; 59
- 436:	0f 92       	push	r0
- 438:	2f 93       	push	r18
- 43a:	3f 93       	push	r19
- 43c:	4f 93       	push	r20
- 43e:	5f 93       	push	r21
- 440:	6f 93       	push	r22
- 442:	7f 93       	push	r23
- 444:	8f 93       	push	r24
- 446:	9f 93       	push	r25
- 448:	af 93       	push	r26
- 44a:	bf 93       	push	r27
- 44c:	ef 93       	push	r30
- 44e:	ff 93       	push	r31
- 450:	83 e0       	ldi	r24, 0x03	; 3
- 452:	90 e0       	ldi	r25, 0x00	; 0
- 454:	e5 de       	rcall	.-566    	; 0x220 <sonar_timer_interrupt>
- 456:	ff 91       	pop	r31
- 458:	ef 91       	pop	r30
- 45a:	bf 91       	pop	r27
- 45c:	af 91       	pop	r26
- 45e:	9f 91       	pop	r25
- 460:	8f 91       	pop	r24
- 462:	7f 91       	pop	r23
- 464:	6f 91       	pop	r22
- 466:	5f 91       	pop	r21
- 468:	4f 91       	pop	r20
- 46a:	3f 91       	pop	r19
- 46c:	2f 91       	pop	r18
- 46e:	0f 90       	pop	r0
- 470:	0b be       	out	0x3b, r0	; 59
- 472:	0f 90       	pop	r0
- 474:	0f be       	out	0x3f, r0	; 63
- 476:	0f 90       	pop	r0
- 478:	1f 90       	pop	r1
- 47a:	18 95       	reti
+ 452:	1f 92       	push	r1
+ 454:	0f 92       	push	r0
+ 456:	0f b6       	in	r0, 0x3f	; 63
+ 458:	0f 92       	push	r0
+ 45a:	11 24       	eor	r1, r1
+ 45c:	0b b6       	in	r0, 0x3b	; 59
+ 45e:	0f 92       	push	r0
+ 460:	2f 93       	push	r18
+ 462:	3f 93       	push	r19
+ 464:	4f 93       	push	r20
+ 466:	5f 93       	push	r21
+ 468:	6f 93       	push	r22
+ 46a:	7f 93       	push	r23
+ 46c:	8f 93       	push	r24
+ 46e:	9f 93       	push	r25
+ 470:	af 93       	push	r26
+ 472:	bf 93       	push	r27
+ 474:	ef 93       	push	r30
+ 476:	ff 93       	push	r31
+ 478:	83 e0       	ldi	r24, 0x03	; 3
+ 47a:	90 e0       	ldi	r25, 0x00	; 0
+ 47c:	d7 de       	rcall	.-594    	; 0x22c <sonar_timer_interrupt>
+ 47e:	ff 91       	pop	r31
+ 480:	ef 91       	pop	r30
+ 482:	bf 91       	pop	r27
+ 484:	af 91       	pop	r26
+ 486:	9f 91       	pop	r25
+ 488:	8f 91       	pop	r24
+ 48a:	7f 91       	pop	r23
+ 48c:	6f 91       	pop	r22
+ 48e:	5f 91       	pop	r21
+ 490:	4f 91       	pop	r20
+ 492:	3f 91       	pop	r19
+ 494:	2f 91       	pop	r18
+ 496:	0f 90       	pop	r0
+ 498:	0b be       	out	0x3b, r0	; 59
+ 49a:	0f 90       	pop	r0
+ 49c:	0f be       	out	0x3f, r0	; 63
+ 49e:	0f 90       	pop	r0
+ 4a0:	1f 90       	pop	r1
+ 4a2:	18 95       	reti
 
-0000047c <__vector_13>:
+000004a4 <__vector_32>:
 
 
 
 //Take too long time too get data, reset
-ISR (TIMER1_COMPA_vect)
+ISR (TIMER3_COMPA_vect)
 {
- 47c:	1f 92       	push	r1
- 47e:	0f 92       	push	r0
- 480:	0f b6       	in	r0, 0x3f	; 63
- 482:	0f 92       	push	r0
- 484:	11 24       	eor	r1, r1
- 486:	8f 93       	push	r24
+ 4a4:	1f 92       	push	r1
+ 4a6:	0f 92       	push	r0
+ 4a8:	0f b6       	in	r0, 0x3f	; 63
+ 4aa:	0f 92       	push	r0
+ 4ac:	11 24       	eor	r1, r1
+ 4ae:	0b b6       	in	r0, 0x3b	; 59
+ 4b0:	0f 92       	push	r0
+ 4b2:	8f 93       	push	r24
+ 4b4:	ef 93       	push	r30
+ 4b6:	ff 93       	push	r31
 	//Stops counter
-	TCCR1B=0;
- 488:	10 92 81 00 	sts	0x0081, r1	; 0x800081 <__TEXT_REGION_LENGTH__+0x7e0081>
-	mode = mode + 1;
- 48c:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__data_end>
- 490:	8f 5f       	subi	r24, 0xFF	; 255
- 492:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__data_end>
+	TCCR3B |= (0 << CS10);
+ 4b8:	e1 e9       	ldi	r30, 0x91	; 145
+ 4ba:	f0 e0       	ldi	r31, 0x00	; 0
+ 4bc:	80 81       	ld	r24, Z
+ 4be:	80 83       	st	Z, r24
+	//Take next sensor
+	if (mode > 3){
+ 4c0:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__data_end>
+ 4c4:	84 30       	cpi	r24, 0x04	; 4
+ 4c6:	18 f0       	brcs	.+6      	; 0x4ce <__vector_32+0x2a>
+		mode = sonar1;
+ 4c8:	10 92 00 01 	sts	0x0100, r1	; 0x800100 <__data_end>
+ 4cc:	03 c0       	rjmp	.+6      	; 0x4d4 <__vector_32+0x30>
+		}
+	else{mode = mode + 1;
+ 4ce:	8f 5f       	subi	r24, 0xFF	; 255
+ 4d0:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__data_end>
+		}
+	
 }
- 496:	8f 91       	pop	r24
- 498:	0f 90       	pop	r0
- 49a:	0f be       	out	0x3f, r0	; 63
- 49c:	0f 90       	pop	r0
- 49e:	1f 90       	pop	r1
- 4a0:	18 95       	reti
-
-000004a2 <__vector_19>:
-
-ISR(SPI_STC_vect){
- 4a2:	1f 92       	push	r1
- 4a4:	0f 92       	push	r0
- 4a6:	0f b6       	in	r0, 0x3f	; 63
- 4a8:	0f 92       	push	r0
- 4aa:	11 24       	eor	r1, r1
- 4ac:	0b b6       	in	r0, 0x3b	; 59
- 4ae:	0f 92       	push	r0
- 4b0:	2f 93       	push	r18
- 4b2:	3f 93       	push	r19
- 4b4:	4f 93       	push	r20
- 4b6:	5f 93       	push	r21
- 4b8:	6f 93       	push	r22
- 4ba:	7f 93       	push	r23
- 4bc:	8f 93       	push	r24
- 4be:	9f 93       	push	r25
- 4c0:	af 93       	push	r26
- 4c2:	bf 93       	push	r27
- 4c4:	ef 93       	push	r30
- 4c6:	ff 93       	push	r31
-	spi_tranciever();
- 4c8:	29 d0       	rcall	.+82     	; 0x51c <spi_tranciever>
- 4ca:	ff 91       	pop	r31
- 4cc:	ef 91       	pop	r30
- 4ce:	bf 91       	pop	r27
- 4d0:	af 91       	pop	r26
- 4d2:	9f 91       	pop	r25
- 4d4:	8f 91       	pop	r24
- 4d6:	7f 91       	pop	r23
- 4d8:	6f 91       	pop	r22
- 4da:	5f 91       	pop	r21
- 4dc:	4f 91       	pop	r20
- 4de:	3f 91       	pop	r19
- 4e0:	2f 91       	pop	r18
+ 4d4:	ff 91       	pop	r31
+ 4d6:	ef 91       	pop	r30
+ 4d8:	8f 91       	pop	r24
+ 4da:	0f 90       	pop	r0
+ 4dc:	0b be       	out	0x3b, r0	; 59
+ 4de:	0f 90       	pop	r0
+ 4e0:	0f be       	out	0x3f, r0	; 63
  4e2:	0f 90       	pop	r0
- 4e4:	0b be       	out	0x3b, r0	; 59
- 4e6:	0f 90       	pop	r0
- 4e8:	0f be       	out	0x3f, r0	; 63
- 4ea:	0f 90       	pop	r0
- 4ec:	1f 90       	pop	r1
- 4ee:	18 95       	reti
+ 4e4:	1f 90       	pop	r1
+ 4e6:	18 95       	reti
 
-000004f0 <calc_outgoing_checksum>:
-volatile short int tranciever_count=0;
-sensormodul_AP_data outgoing_data;
-sensormodul_AP_data buffer;
+000004e8 <__vector_19>:
 
-//Calculates a simple XOR checksum for the outgoing package
-unsigned char calc_outgoing_checksum(volatile unsigned char data[OUTGOING_PACKET_SIZE - 1]){
- 4f0:	fc 01       	movw	r30, r24
- 4f2:	9c 01       	movw	r18, r24
- 4f4:	2b 5f       	subi	r18, 0xFB	; 251
- 4f6:	3f 4f       	sbci	r19, 0xFF	; 255
-	unsigned char checksum = 0;
- 4f8:	80 e0       	ldi	r24, 0x00	; 0
-	for (int i = 0; i < (OUTGOING_PACKET_SIZE - 1); i++){
-		checksum = checksum ^ data[i];
- 4fa:	91 91       	ld	r25, Z+
- 4fc:	89 27       	eor	r24, r25
-sensormodul_AP_data buffer;
+//Send data to master
+ISR(SPI_STC_vect){
+ 4e8:	1f 92       	push	r1
+ 4ea:	0f 92       	push	r0
+ 4ec:	0f b6       	in	r0, 0x3f	; 63
+ 4ee:	0f 92       	push	r0
+ 4f0:	11 24       	eor	r1, r1
+ 4f2:	0b b6       	in	r0, 0x3b	; 59
+ 4f4:	0f 92       	push	r0
+ 4f6:	2f 93       	push	r18
+ 4f8:	3f 93       	push	r19
+ 4fa:	4f 93       	push	r20
+ 4fc:	5f 93       	push	r21
+ 4fe:	6f 93       	push	r22
+ 500:	7f 93       	push	r23
+ 502:	8f 93       	push	r24
+ 504:	9f 93       	push	r25
+ 506:	af 93       	push	r26
+ 508:	bf 93       	push	r27
+ 50a:	ef 93       	push	r30
+ 50c:	ff 93       	push	r31
+	spi_tranciever();
+ 50e:	1e d0       	rcall	.+60     	; 0x54c <spi_tranciever>
+ 510:	ff 91       	pop	r31
+ 512:	ef 91       	pop	r30
+ 514:	bf 91       	pop	r27
+ 516:	af 91       	pop	r26
+ 518:	9f 91       	pop	r25
+ 51a:	8f 91       	pop	r24
+ 51c:	7f 91       	pop	r23
+ 51e:	6f 91       	pop	r22
+ 520:	5f 91       	pop	r21
+ 522:	4f 91       	pop	r20
+ 524:	3f 91       	pop	r19
+ 526:	2f 91       	pop	r18
+ 528:	0f 90       	pop	r0
+ 52a:	0b be       	out	0x3b, r0	; 59
+ 52c:	0f 90       	pop	r0
+ 52e:	0f be       	out	0x3f, r0	; 63
+ 530:	0f 90       	pop	r0
+ 532:	1f 90       	pop	r1
+ 534:	18 95       	reti
 
-//Calculates a simple XOR checksum for the outgoing package
-unsigned char calc_outgoing_checksum(volatile unsigned char data[OUTGOING_PACKET_SIZE - 1]){
-	unsigned char checksum = 0;
-	for (int i = 0; i < (OUTGOING_PACKET_SIZE - 1); i++){
- 4fe:	e2 17       	cp	r30, r18
- 500:	f3 07       	cpc	r31, r19
- 502:	d9 f7       	brne	.-10     	; 0x4fa <calc_outgoing_checksum+0xa>
-		checksum = checksum ^ data[i];
-	}
-	return checksum;
-}
- 504:	08 95       	ret
-
-00000506 <spi_init>:
-}
-
+00000536 <calc_outgoing_checksum>:
 // Initialize SPI Slave Device
 void spi_init (void)
 {
 	DDRB = (1 << DDB6);			//Set MISO as output
- 506:	80 e4       	ldi	r24, 0x40	; 64
- 508:	84 b9       	out	0x04, r24	; 4
 	DDRD = (1 << DDD0);			//Set pin 0 of PORTD as output, used to tell pi when new data is available
- 50a:	81 e0       	ldi	r24, 0x01	; 1
- 50c:	8a b9       	out	0x0a, r24	; 10
 	PORTD &= 0b11111110;		//Inits pin 0 of PORTD to 0
- 50e:	58 98       	cbi	0x0b, 0	; 11
-	SPCR=(1<<SPE)|(1<<SPIE);	//Enable SPI && interrupt enable bit
- 510:	80 ec       	ldi	r24, 0xC0	; 192
- 512:	8c bd       	out	0x2c, r24	; 44
-	buffer.lapsensor = 0xFF;
- 514:	8f ef       	ldi	r24, 0xFF	; 255
- 516:	80 93 1a 01 	sts	0x011A, r24	; 0x80011a <buffer+0x4>
- 51a:	08 95       	ret
+ 536:	fc 01       	movw	r30, r24
+ 538:	9c 01       	movw	r18, r24
+ 53a:	2b 5f       	subi	r18, 0xFB	; 251
+ 53c:	3f 4f       	sbci	r19, 0xFF	; 255
+ 53e:	80 e0       	ldi	r24, 0x00	; 0
+ 540:	91 91       	ld	r25, Z+
+ 542:	89 27       	eor	r24, r25
+ 544:	e2 17       	cp	r30, r18
+ 546:	f3 07       	cpc	r31, r19
+ 548:	d9 f7       	brne	.-10     	; 0x540 <calc_outgoing_checksum+0xa>
+ 54a:	08 95       	ret
 
-0000051c <spi_tranciever>:
+0000054c <spi_tranciever>:
+	SPCR=(1<<SPE)|(1<<SPIE);	//Enable SPI && interrupt enable bit
+	buffer.lapsensor = 0xFF;
 }
 
 //Checks if this is the end of the message, else sends next byte
+ 54c:	80 91 05 01 	lds	r24, 0x0105	; 0x800105 <tranciever_count>
+ 550:	90 91 06 01 	lds	r25, 0x0106	; 0x800106 <tranciever_count+0x1>
+ 554:	06 97       	sbiw	r24, 0x06	; 6
+ 556:	21 f5       	brne	.+72     	; 0x5a0 <spi_tranciever+0x54>
 void spi_tranciever(){
+ 558:	10 92 06 01 	sts	0x0106, r1	; 0x800106 <tranciever_count+0x1>
+ 55c:	10 92 05 01 	sts	0x0105, r1	; 0x800105 <tranciever_count>
 	if (tranciever_count == OUTGOING_PACKET_SIZE){
- 51c:	80 91 05 01 	lds	r24, 0x0105	; 0x800105 <tranciever_count>
- 520:	90 91 06 01 	lds	r25, 0x0106	; 0x800106 <tranciever_count+0x1>
- 524:	06 97       	sbiw	r24, 0x06	; 6
- 526:	21 f5       	brne	.+72     	; 0x570 <spi_tranciever+0x54>
+ 560:	58 98       	cbi	0x0b, 0	; 11
 		tranciever_count = 0;
- 528:	10 92 06 01 	sts	0x0106, r1	; 0x800106 <tranciever_count+0x1>
- 52c:	10 92 05 01 	sts	0x0105, r1	; 0x800105 <tranciever_count>
+ 562:	80 91 1a 01 	lds	r24, 0x011A	; 0x80011a <buffer+0x4>
+ 566:	8f 3f       	cpi	r24, 0xFF	; 255
+ 568:	79 f0       	breq	.+30     	; 0x588 <spi_tranciever+0x3c>
 		PORTD &= 0b11111110;
- 530:	58 98       	cbi	0x0b, 0	; 11
+ 56a:	40 91 16 01 	lds	r20, 0x0116	; 0x800116 <buffer>
+ 56e:	50 91 17 01 	lds	r21, 0x0117	; 0x800117 <buffer+0x1>
+ 572:	60 91 18 01 	lds	r22, 0x0118	; 0x800118 <buffer+0x2>
+ 576:	70 91 19 01 	lds	r23, 0x0119	; 0x800119 <buffer+0x3>
+ 57a:	80 91 1a 01 	lds	r24, 0x011A	; 0x80011a <buffer+0x4>
+ 57e:	4c d0       	rcall	.+152    	; 0x618 <set_outgoing_data>
 		if (buffer.lapsensor != 0xFF){
- 532:	80 91 1a 01 	lds	r24, 0x011A	; 0x80011a <buffer+0x4>
- 536:	8f 3f       	cpi	r24, 0xFF	; 255
- 538:	79 f0       	breq	.+30     	; 0x558 <spi_tranciever+0x3c>
 			set_outgoing_data(buffer);
- 53a:	40 91 16 01 	lds	r20, 0x0116	; 0x800116 <buffer>
- 53e:	50 91 17 01 	lds	r21, 0x0117	; 0x800117 <buffer+0x1>
- 542:	60 91 18 01 	lds	r22, 0x0118	; 0x800118 <buffer+0x2>
- 546:	70 91 19 01 	lds	r23, 0x0119	; 0x800119 <buffer+0x3>
- 54a:	80 91 1a 01 	lds	r24, 0x011A	; 0x80011a <buffer+0x4>
- 54e:	4c d0       	rcall	.+152    	; 0x5e8 <set_outgoing_data>
-			
+ 580:	8f ef       	ldi	r24, 0xFF	; 255
+ 582:	80 93 1a 01 	sts	0x011A, r24	; 0x80011a <buffer+0x4>
+ 586:	08 95       	ret
 			buffer.lapsensor = 0xFF;
- 550:	8f ef       	ldi	r24, 0xFF	; 255
- 552:	80 93 1a 01 	sts	0x011A, r24	; 0x80011a <buffer+0x4>
- 556:	08 95       	ret
 		}
 		else{
+ 588:	40 91 1b 01 	lds	r20, 0x011B	; 0x80011b <outgoing_data>
+ 58c:	50 91 1c 01 	lds	r21, 0x011C	; 0x80011c <outgoing_data+0x1>
+ 590:	60 91 1d 01 	lds	r22, 0x011D	; 0x80011d <outgoing_data+0x2>
+ 594:	70 91 1e 01 	lds	r23, 0x011E	; 0x80011e <outgoing_data+0x3>
+ 598:	80 91 1f 01 	lds	r24, 0x011F	; 0x80011f <outgoing_data+0x4>
+ 59c:	13 c0       	rjmp	.+38     	; 0x5c4 <set_outgoing>
+ 59e:	08 95       	ret
 			set_outgoing(outgoing_data);
- 558:	40 91 1b 01 	lds	r20, 0x011B	; 0x80011b <outgoing_data>
- 55c:	50 91 1c 01 	lds	r21, 0x011C	; 0x80011c <outgoing_data+0x1>
- 560:	60 91 1d 01 	lds	r22, 0x011D	; 0x80011d <outgoing_data+0x2>
- 564:	70 91 1e 01 	lds	r23, 0x011E	; 0x80011e <outgoing_data+0x3>
- 568:	80 91 1f 01 	lds	r24, 0x011F	; 0x80011f <outgoing_data+0x4>
- 56c:	13 c0       	rjmp	.+38     	; 0x594 <set_outgoing>
- 56e:	08 95       	ret
 		}
 	}
 	else{
+ 5a0:	e0 91 05 01 	lds	r30, 0x0105	; 0x800105 <tranciever_count>
+ 5a4:	f0 91 06 01 	lds	r31, 0x0106	; 0x800106 <tranciever_count+0x1>
+ 5a8:	e9 5f       	subi	r30, 0xF9	; 249
+ 5aa:	fe 4f       	sbci	r31, 0xFE	; 254
+ 5ac:	80 81       	ld	r24, Z
+ 5ae:	8e bd       	out	0x2e, r24	; 46
 		SPDR = outgoing[tranciever_count];
- 570:	e0 91 05 01 	lds	r30, 0x0105	; 0x800105 <tranciever_count>
- 574:	f0 91 06 01 	lds	r31, 0x0106	; 0x800106 <tranciever_count+0x1>
- 578:	e9 5f       	subi	r30, 0xF9	; 249
- 57a:	fe 4f       	sbci	r31, 0xFE	; 254
- 57c:	80 81       	ld	r24, Z
- 57e:	8e bd       	out	0x2e, r24	; 46
-		tranciever_count++;
- 580:	80 91 05 01 	lds	r24, 0x0105	; 0x800105 <tranciever_count>
- 584:	90 91 06 01 	lds	r25, 0x0106	; 0x800106 <tranciever_count+0x1>
- 588:	01 96       	adiw	r24, 0x01	; 1
- 58a:	90 93 06 01 	sts	0x0106, r25	; 0x800106 <tranciever_count+0x1>
- 58e:	80 93 05 01 	sts	0x0105, r24	; 0x800105 <tranciever_count>
- 592:	08 95       	ret
+ 5b0:	80 91 05 01 	lds	r24, 0x0105	; 0x800105 <tranciever_count>
+ 5b4:	90 91 06 01 	lds	r25, 0x0106	; 0x800106 <tranciever_count+0x1>
+ 5b8:	01 96       	adiw	r24, 0x01	; 1
+ 5ba:	90 93 06 01 	sts	0x0106, r25	; 0x800106 <tranciever_count+0x1>
+ 5be:	80 93 05 01 	sts	0x0105, r24	; 0x800105 <tranciever_count>
+ 5c2:	08 95       	ret
 
-00000594 <set_outgoing>:
+000005c4 <set_outgoing>:
+	for (int i = 0; i < (OUTGOING_PACKET_SIZE - 1); i++){
+		checksum = checksum ^ data[i];
 	}
 	return checksum;
 }
 
+ 5c4:	0f 93       	push	r16
+ 5c6:	1f 93       	push	r17
+ 5c8:	cf 93       	push	r28
+ 5ca:	df 93       	push	r29
+ 5cc:	00 d0       	rcall	.+0      	; 0x5ce <set_outgoing+0xa>
+ 5ce:	00 d0       	rcall	.+0      	; 0x5d0 <set_outgoing+0xc>
+ 5d0:	1f 92       	push	r1
+ 5d2:	cd b7       	in	r28, 0x3d	; 61
+ 5d4:	de b7       	in	r29, 0x3e	; 62
+ 5d6:	49 83       	std	Y+1, r20	; 0x01
+ 5d8:	5a 83       	std	Y+2, r21	; 0x02
+ 5da:	6b 83       	std	Y+3, r22	; 0x03
+ 5dc:	7c 83       	std	Y+4, r23	; 0x04
+ 5de:	8d 83       	std	Y+5, r24	; 0x05
 //converts the data of the incomming 'sensormodul_AP_data' to the 'outgoing' char array
+ 5e0:	07 e0       	ldi	r16, 0x07	; 7
+ 5e2:	11 e0       	ldi	r17, 0x01	; 1
+ 5e4:	89 81       	ldd	r24, Y+1	; 0x01
+ 5e6:	9a 81       	ldd	r25, Y+2	; 0x02
+ 5e8:	ab 81       	ldd	r26, Y+3	; 0x03
+ 5ea:	bc 81       	ldd	r27, Y+4	; 0x04
+ 5ec:	f8 01       	movw	r30, r16
+ 5ee:	80 83       	st	Z, r24
+ 5f0:	91 83       	std	Z+1, r25	; 0x01
+ 5f2:	a2 83       	std	Z+2, r26	; 0x02
+ 5f4:	b3 83       	std	Z+3, r27	; 0x03
 void set_outgoing(sensormodul_AP_data data){
- 594:	0f 93       	push	r16
- 596:	1f 93       	push	r17
- 598:	cf 93       	push	r28
- 59a:	df 93       	push	r29
- 59c:	00 d0       	rcall	.+0      	; 0x59e <set_outgoing+0xa>
- 59e:	00 d0       	rcall	.+0      	; 0x5a0 <set_outgoing+0xc>
- 5a0:	1f 92       	push	r1
- 5a2:	cd b7       	in	r28, 0x3d	; 61
- 5a4:	de b7       	in	r29, 0x3e	; 62
- 5a6:	49 83       	std	Y+1, r20	; 0x01
- 5a8:	5a 83       	std	Y+2, r21	; 0x02
- 5aa:	6b 83       	std	Y+3, r22	; 0x03
- 5ac:	7c 83       	std	Y+4, r23	; 0x04
- 5ae:	8d 83       	std	Y+5, r24	; 0x05
+ 5f6:	8d 81       	ldd	r24, Y+5	; 0x05
+ 5f8:	84 83       	std	Z+4, r24	; 0x04
 	memcpy((void*) outgoing, (void*) data.sonar_data, 4);
- 5b0:	07 e0       	ldi	r16, 0x07	; 7
- 5b2:	11 e0       	ldi	r17, 0x01	; 1
- 5b4:	89 81       	ldd	r24, Y+1	; 0x01
- 5b6:	9a 81       	ldd	r25, Y+2	; 0x02
- 5b8:	ab 81       	ldd	r26, Y+3	; 0x03
- 5ba:	bc 81       	ldd	r27, Y+4	; 0x04
- 5bc:	f8 01       	movw	r30, r16
- 5be:	80 83       	st	Z, r24
- 5c0:	91 83       	std	Z+1, r25	; 0x01
- 5c2:	a2 83       	std	Z+2, r26	; 0x02
- 5c4:	b3 83       	std	Z+3, r27	; 0x03
 	outgoing[4] = data.lapsensor;
- 5c6:	8d 81       	ldd	r24, Y+5	; 0x05
- 5c8:	84 83       	std	Z+4, r24	; 0x04
+ 5fa:	c8 01       	movw	r24, r16
+ 5fc:	9c df       	rcall	.-200    	; 0x536 <calc_outgoing_checksum>
+ 5fe:	f8 01       	movw	r30, r16
+ 600:	85 83       	std	Z+5, r24	; 0x05
 			
 	outgoing[5] = calc_outgoing_checksum(outgoing);
- 5ca:	c8 01       	movw	r24, r16
- 5cc:	91 df       	rcall	.-222    	; 0x4f0 <calc_outgoing_checksum>
- 5ce:	f8 01       	movw	r30, r16
- 5d0:	85 83       	std	Z+5, r24	; 0x05
+ 602:	a4 df       	rcall	.-184    	; 0x54c <spi_tranciever>
+ 604:	0f 90       	pop	r0
 	
+ 606:	0f 90       	pop	r0
+ 608:	0f 90       	pop	r0
+ 60a:	0f 90       	pop	r0
+ 60c:	0f 90       	pop	r0
+ 60e:	df 91       	pop	r29
+ 610:	cf 91       	pop	r28
+ 612:	1f 91       	pop	r17
+ 614:	0f 91       	pop	r16
+ 616:	08 95       	ret
+
+00000618 <set_outgoing_data>:
+ 618:	cf 93       	push	r28
 	spi_tranciever();
- 5d2:	a4 df       	rcall	.-184    	; 0x51c <spi_tranciever>
- 5d4:	0f 90       	pop	r0
 }
- 5d6:	0f 90       	pop	r0
- 5d8:	0f 90       	pop	r0
- 5da:	0f 90       	pop	r0
- 5dc:	0f 90       	pop	r0
- 5de:	df 91       	pop	r29
- 5e0:	cf 91       	pop	r28
- 5e2:	1f 91       	pop	r17
- 5e4:	0f 91       	pop	r16
- 5e6:	08 95       	ret
+ 61a:	df 93       	push	r29
+ 61c:	00 d0       	rcall	.+0      	; 0x61e <set_outgoing_data+0x6>
+ 61e:	00 d0       	rcall	.+0      	; 0x620 <set_outgoing_data+0x8>
+ 620:	1f 92       	push	r1
+ 622:	cd b7       	in	r28, 0x3d	; 61
+ 624:	de b7       	in	r29, 0x3e	; 62
+ 626:	49 83       	std	Y+1, r20	; 0x01
+ 628:	5a 83       	std	Y+2, r21	; 0x02
+ 62a:	6b 83       	std	Y+3, r22	; 0x03
+ 62c:	7c 83       	std	Y+4, r23	; 0x04
+ 62e:	8d 83       	std	Y+5, r24	; 0x05
 
-000005e8 <set_outgoing_data>:
- 5e8:	cf 93       	push	r28
-
+ 630:	1c 9b       	sbis	0x03, 4	; 3
+ 632:	0c c0       	rjmp	.+24     	; 0x64c <set_outgoing_data+0x34>
 void set_outgoing_data(sensormodul_AP_data data){
- 5ea:	df 93       	push	r29
- 5ec:	00 d0       	rcall	.+0      	; 0x5ee <set_outgoing_data+0x6>
- 5ee:	00 d0       	rcall	.+0      	; 0x5f0 <set_outgoing_data+0x8>
- 5f0:	1f 92       	push	r1
- 5f2:	cd b7       	in	r28, 0x3d	; 61
- 5f4:	de b7       	in	r29, 0x3e	; 62
- 5f6:	49 83       	std	Y+1, r20	; 0x01
- 5f8:	5a 83       	std	Y+2, r21	; 0x02
- 5fa:	6b 83       	std	Y+3, r22	; 0x03
- 5fc:	7c 83       	std	Y+4, r23	; 0x04
- 5fe:	8d 83       	std	Y+5, r24	; 0x05
+ 634:	c7 df       	rcall	.-114    	; 0x5c4 <set_outgoing>
 	if ((PINB & 0b00010000) != 0){
- 600:	1c 9b       	sbis	0x03, 4	; 3
- 602:	0c c0       	rjmp	.+24     	; 0x61c <set_outgoing_data+0x34>
+ 636:	85 e0       	ldi	r24, 0x05	; 5
+ 638:	fe 01       	movw	r30, r28
+ 63a:	31 96       	adiw	r30, 0x01	; 1
+ 63c:	ab e1       	ldi	r26, 0x1B	; 27
+ 63e:	b1 e0       	ldi	r27, 0x01	; 1
+ 640:	01 90       	ld	r0, Z+
+ 642:	0d 92       	st	X+, r0
+ 644:	8a 95       	dec	r24
+ 646:	e1 f7       	brne	.-8      	; 0x640 <set_outgoing_data+0x28>
 		set_outgoing(data);
- 604:	c7 df       	rcall	.-114    	; 0x594 <set_outgoing>
 		outgoing_data = data;
- 606:	85 e0       	ldi	r24, 0x05	; 5
- 608:	fe 01       	movw	r30, r28
- 60a:	31 96       	adiw	r30, 0x01	; 1
- 60c:	ab e1       	ldi	r26, 0x1B	; 27
- 60e:	b1 e0       	ldi	r27, 0x01	; 1
- 610:	01 90       	ld	r0, Z+
- 612:	0d 92       	st	X+, r0
- 614:	8a 95       	dec	r24
- 616:	e1 f7       	brne	.-8      	; 0x610 <set_outgoing_data+0x28>
+ 648:	58 9a       	sbi	0x0b, 0	; 11
+ 64a:	09 c0       	rjmp	.+18     	; 0x65e <set_outgoing_data+0x46>
 		
 		PORTD |= 0b00000001;
- 618:	58 9a       	sbi	0x0b, 0	; 11
- 61a:	09 c0       	rjmp	.+18     	; 0x62e <set_outgoing_data+0x46>
 	}
+ 64c:	85 e0       	ldi	r24, 0x05	; 5
+ 64e:	fe 01       	movw	r30, r28
+ 650:	31 96       	adiw	r30, 0x01	; 1
+ 652:	a6 e1       	ldi	r26, 0x16	; 22
+ 654:	b1 e0       	ldi	r27, 0x01	; 1
+ 656:	01 90       	ld	r0, Z+
+ 658:	0d 92       	st	X+, r0
+ 65a:	8a 95       	dec	r24
+ 65c:	e1 f7       	brne	.-8      	; 0x656 <set_outgoing_data+0x3e>
 	else{
 		buffer = data;
- 61c:	85 e0       	ldi	r24, 0x05	; 5
- 61e:	fe 01       	movw	r30, r28
- 620:	31 96       	adiw	r30, 0x01	; 1
- 622:	a6 e1       	ldi	r26, 0x16	; 22
- 624:	b1 e0       	ldi	r27, 0x01	; 1
- 626:	01 90       	ld	r0, Z+
- 628:	0d 92       	st	X+, r0
- 62a:	8a 95       	dec	r24
- 62c:	e1 f7       	brne	.-8      	; 0x626 <set_outgoing_data+0x3e>
-	}
-}
- 62e:	0f 90       	pop	r0
- 630:	0f 90       	pop	r0
- 632:	0f 90       	pop	r0
- 634:	0f 90       	pop	r0
- 636:	0f 90       	pop	r0
- 638:	df 91       	pop	r29
- 63a:	cf 91       	pop	r28
- 63c:	08 95       	ret
+ 65e:	0f 90       	pop	r0
+ 660:	0f 90       	pop	r0
+ 662:	0f 90       	pop	r0
+ 664:	0f 90       	pop	r0
+ 666:	0f 90       	pop	r0
+ 668:	df 91       	pop	r29
+ 66a:	cf 91       	pop	r28
+ 66c:	08 95       	ret
 
-0000063e <__udivmodsi4>:
- 63e:	a1 e2       	ldi	r26, 0x21	; 33
- 640:	1a 2e       	mov	r1, r26
- 642:	aa 1b       	sub	r26, r26
- 644:	bb 1b       	sub	r27, r27
- 646:	fd 01       	movw	r30, r26
- 648:	0d c0       	rjmp	.+26     	; 0x664 <__udivmodsi4_ep>
+0000066e <__udivmodsi4>:
+ 66e:	a1 e2       	ldi	r26, 0x21	; 33
+ 670:	1a 2e       	mov	r1, r26
+ 672:	aa 1b       	sub	r26, r26
+ 674:	bb 1b       	sub	r27, r27
+ 676:	fd 01       	movw	r30, r26
+ 678:	0d c0       	rjmp	.+26     	; 0x694 <__udivmodsi4_ep>
 
-0000064a <__udivmodsi4_loop>:
- 64a:	aa 1f       	adc	r26, r26
- 64c:	bb 1f       	adc	r27, r27
- 64e:	ee 1f       	adc	r30, r30
- 650:	ff 1f       	adc	r31, r31
- 652:	a2 17       	cp	r26, r18
- 654:	b3 07       	cpc	r27, r19
- 656:	e4 07       	cpc	r30, r20
- 658:	f5 07       	cpc	r31, r21
- 65a:	20 f0       	brcs	.+8      	; 0x664 <__udivmodsi4_ep>
- 65c:	a2 1b       	sub	r26, r18
- 65e:	b3 0b       	sbc	r27, r19
- 660:	e4 0b       	sbc	r30, r20
- 662:	f5 0b       	sbc	r31, r21
+0000067a <__udivmodsi4_loop>:
+ 67a:	aa 1f       	adc	r26, r26
+ 67c:	bb 1f       	adc	r27, r27
+ 67e:	ee 1f       	adc	r30, r30
+ 680:	ff 1f       	adc	r31, r31
+ 682:	a2 17       	cp	r26, r18
+ 684:	b3 07       	cpc	r27, r19
+ 686:	e4 07       	cpc	r30, r20
+ 688:	f5 07       	cpc	r31, r21
+ 68a:	20 f0       	brcs	.+8      	; 0x694 <__udivmodsi4_ep>
+ 68c:	a2 1b       	sub	r26, r18
+ 68e:	b3 0b       	sbc	r27, r19
+ 690:	e4 0b       	sbc	r30, r20
+ 692:	f5 0b       	sbc	r31, r21
 
-00000664 <__udivmodsi4_ep>:
- 664:	66 1f       	adc	r22, r22
- 666:	77 1f       	adc	r23, r23
- 668:	88 1f       	adc	r24, r24
- 66a:	99 1f       	adc	r25, r25
- 66c:	1a 94       	dec	r1
- 66e:	69 f7       	brne	.-38     	; 0x64a <__udivmodsi4_loop>
- 670:	60 95       	com	r22
- 672:	70 95       	com	r23
- 674:	80 95       	com	r24
- 676:	90 95       	com	r25
- 678:	9b 01       	movw	r18, r22
- 67a:	ac 01       	movw	r20, r24
- 67c:	bd 01       	movw	r22, r26
- 67e:	cf 01       	movw	r24, r30
- 680:	08 95       	ret
+00000694 <__udivmodsi4_ep>:
+ 694:	66 1f       	adc	r22, r22
+ 696:	77 1f       	adc	r23, r23
+ 698:	88 1f       	adc	r24, r24
+ 69a:	99 1f       	adc	r25, r25
+ 69c:	1a 94       	dec	r1
+ 69e:	69 f7       	brne	.-38     	; 0x67a <__udivmodsi4_loop>
+ 6a0:	60 95       	com	r22
+ 6a2:	70 95       	com	r23
+ 6a4:	80 95       	com	r24
+ 6a6:	90 95       	com	r25
+ 6a8:	9b 01       	movw	r18, r22
+ 6aa:	ac 01       	movw	r20, r24
+ 6ac:	bd 01       	movw	r22, r26
+ 6ae:	cf 01       	movw	r24, r30
+ 6b0:	08 95       	ret
 
-00000682 <_exit>:
- 682:	f8 94       	cli
+000006b2 <_exit>:
+ 6b2:	f8 94       	cli
 
-00000684 <__stop_program>:
- 684:	ff cf       	rjmp	.-2      	; 0x684 <__stop_program>
+000006b4 <__stop_program>:
+ 6b4:	ff cf       	rjmp	.-2      	; 0x6b4 <__stop_program>
