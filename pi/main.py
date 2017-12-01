@@ -50,9 +50,9 @@ def calcaverageCones(lidarData):
         if i == 0:
             pass
         elif(average != 0 and valueCount != 0):
-            if average == 0:
-                average = 1000;
             averageDistance.append(int((average/valueCount)/10))
+            if averageDistance[0] < 10:
+                averageDistance[0] = 100
             valueCount = 0
             average = 0
         else:
@@ -99,6 +99,7 @@ def main():
                 break
             ''' 
             pd.setVal = obsDetect(data)
+            print(pd.setVal)
             pd.regulateAngle(sensorValue, averageDistance)
             print("speed: ", regulateSpeed(averageDistance[0], averageDistance[5], averageDistance[6]))
 

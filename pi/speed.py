@@ -24,12 +24,11 @@ def regulateSpeed(averageForwardDistance, rightVal, leftVal):
  
     if (70 < averageForwardDistance <= 130 and rightVal > 50 and leftVal > 50):
         return 140
-    
+    #To close to a obsticle
+    if averageForwardDistance <= 50:
+         return 100 #stops car
     #Free road ahead, but not for long
     if 50 < averageForwardDistance <= 70 or rightVal <= 50 or leftVal <= 50:
         return 120
-    #To close to a obsticle
-    if averageForwardDistance <= 50:
-        return 100 #stops car
     else:
         print("in else")

@@ -53,7 +53,7 @@ class PdHandler:
 
         
         errorVal = self.setVal - currVal
-
+        print('setVal: ', self.setVal)
         pTerm = self.pGain * errorVal
         dTerm = self.dGain * ((errorVal - self._preError) / timeSince)
         self._iAccumulated += errorVal * timeSince

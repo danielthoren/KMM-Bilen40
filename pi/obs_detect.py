@@ -32,22 +32,22 @@ def obsDetect(data):
     for point in data:   
         #probileft, probiright = obdetect(point,img,probileft, probiright)
         if HITBOX[0][1]<point[1]<HITBOX[0][0] and point[3] != 0:
-            if point[2] < 800:
+            if point[2] < 1000:
                 #x5, y5 = polar2cart(point[2], point[1]-90)
                 #cv2.circle(img,((x5+offset),(y5+offset)), 2, (23,200,20), 80)
                 critprobiright += 1
         elif HITBOX[1][1]<point[1]<HITBOX[1][0] and point[3] != 0:
-            if point[2] < 800:
+            if point[2] < 1000:
                 #x5, y5 = polar2cart(point[2], point[1]-90)
                 #cv2.circle(img,((x5+offset),(y5+offset)), 2, (23,200,20), 80)
                 critprobileft += 1
         elif HITBOX[2][1]<point[1]<HITBOX[2][0] and point[3] != 0:
-            if point[2] < 800:
+            if point[2] < 1000:
                 x5, y5 = polar2cart(point[2], point[1]-90)
                 #cv2.circle(img,((x5+offset),(y5+offset)), 2, (23,200,255), 80)
                 probiright += 1
         elif HITBOX[3][1]<point[1]<HITBOX[3][0] and point[3] != 0:
-            if point[2] < 800:
+            if point[2] < 1000:
                 #x5, y5 = polar2cart(point[2], point[1]-90)
                 #cv2.circle(img,((x5+offset),(y5+offset)), 2, (23,200,255), 80)
                 probileft += 1
@@ -56,20 +56,20 @@ def obsDetect(data):
         #cv2.circle(img,((x+offset),(y+offset)), 2, (0,0,255), 50)
     if critprobileft > 5:
         print("Critical hinder left ", critprobileft)
-        setVal += 2
+        setVal += 80
     if critprobiright > 5:
         print("critical hinder right ", critprobiright)
-        setVal += -2
+        setVal += -80
     if probileft > 5:
         print("Hinder left ", probileft)
-        setVal += 1
+        setVal += 50
     if probiright > 5:
         print("Hinder right ", probiright)
-        setVal += -1
-    if setVal > 20:
-        setVal = 20
-    if setVal < -20:
-        setval = -20
+        setVal += -50
+    if setVal > 100:
+        setVal = 100
+    if setVal < -100:
+        setval = -100
     return setVal
 
 
