@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 from threadTCPServer import *
 import threading
 import socketserver
