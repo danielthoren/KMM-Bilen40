@@ -63,6 +63,7 @@ def calcaverageCones(lidarData):
 def main():
     speed = 200 # 0 <= speed <= 200, 100 is neutral
     pd = PdHandler()
+    obs = obsFunc()
 
     #Pid == true => use pid in motormodul, if false, dont use pid.
     pid = True
@@ -84,9 +85,9 @@ def main():
             data = np.array(lidar.grab_data())
             averageDistance.clear()
             averageDistance = calcaverageCones(data)
-            os.system('clear')
-            for i in range(len(averageDistance)):
-                print("cone", i , "distance :", averageDistance[i])
+            #os.system('clear')
+            #for i in range(len(averageDistance)):
+                #print("cone", i , "distance :", averageDistance[i])
 
             '''
             if the hitbox is hit or if amount of laps has been completed then
@@ -98,7 +99,7 @@ def main():
                 stop()
                 break
             ''' 
-            pd.setVal = obsDetect(data, averageDistance)
+            pd.setVal = obs.obsDetect(data)
             print(pd.setVal)
             pd.regulateAngle(sensorValue, averageDistance)
             print("speed: ", regulateSpeed(averageDistance[0], averageDistance[5], averageDistance[6]))

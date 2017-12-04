@@ -19,16 +19,16 @@ def hitbox(sensorValue):
 def regulateSpeed(averageForwardDistance, rightVal, leftVal):
 
     #Free road ahed
-    if(averageForwardDistance > 160 and rightVal > 50 and leftVal > 50):
-        return 170 #Full speed
+    if(averageForwardDistance > 160 and rightVal > 80 and leftVal > 80):
+        return 160 #Full speed
  
-    if (70 < averageForwardDistance <= 160 and rightVal > 50 and leftVal > 50):
+    if (50 < averageForwardDistance <= 160 and rightVal > 80 and leftVal > 80):
         return 120
     #To close to a obsticle
     if averageForwardDistance <= 50:
          return 100 #stops car
     #Free road ahead, but not for long
-    if 50 < averageForwardDistance <= 70 or rightVal <= 50 or leftVal <= 50:
+    if 50 < averageForwardDistance <= 160 or rightVal <= 80 or leftVal <= 80:
         return 120
     else:
         print("in else")

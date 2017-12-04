@@ -6,209 +6,137 @@ from enum import Enum
 #Defines between wich degrees each cone is. Two first cones are handles as special
 #case since they represent one cone in actuality
 CONES = ((90,54),(306,270),(53,19),(341,307))
-HITBOX = ((10,0),(360,350),(20,10),(350,340))
-minLineLength = 100
-maxLineGap = 10
-state = obs.noObs
-obsBool = false
+#HITBOX = ((15,0),(360,345),(40,16),(344,320))
+HITBOX = ((40,0),(360,320))
 
 class obs(Enum):
     noObs = 0
     obsRig = 1
     obsLef = 2
     obsStr = 3
-        
-        
 
-img_size = (5000,5000,3)
-offset = 2500
-        
-# polar to cartesian
-def polar2cart(r, theta):
-    temp = np.radians(theta)
-    x = r * np.cos(temp)
-    y = r * np.sin(temp)
-    x = int(x)
-    y = int(y)
-    return x, y
+class obsFunc():
+    def __init__(self):
+        self.probileft = 0
+        self.probiright = 0
+        self.critprobiright = 0
+        self.critprobileft = 0
+        self.r_setVal = 0
+        self.l_setVal = 0
+        self.setVal = 0
+        self.obsBool = False
+        self.checkDist = 1100
+        self.state = obs.noObs
 
-
-def obsDetect(data, averageDistance):
-    probileft = 0
-    probiright = 0
-    critprobiright = 0
-    critprobileft = 0
-    stra = 0
-    setVal = 0
-    checkDis = 1000
-    obsBool = false
-    for point in data:   
-        #probileft, probiright = obdetect(point,img,probileft, probiright)
-        if HITBOX[0][1]<point[1]<HITBOX[0][0] and point[3] != 0:
-            if point[2] < checkDis:
-                #x5, y5 = polar2cart(point[2], point[1]-90)
-                #cv2.circle(img,((x5+offset),(y5+offset)), 2, (23,200,20), 80)
-                critprobiright += 1
-                stra += 1
-        elif HITBOX[1][1]<point[1]<HITBOX[1][0] and point[3] != 0:
-            if point[2] < checkDis:
-                #x5, y5 = polar2cart(point[2], point[1]-90)
-                #cv2.circle(img,((x5+offset),(y5+offset)), 2, (23,200,20), 80)
-                critprobileft += 1
-                stra += 1
-        elif HITBOX[2][1]<point[1]<HITBOX[2][0] and point[3] != 0:
-            if point[2] < checkDis:
-                x5, y5 = polar2cart(point[2], point[1]-90)
-                #cv2.circle(img,((x5+offset),(y5+offset)), 2, (23,200,255), 80)
-                probiright += 1
-        elif HITBOX[3][1]<point[1]<HITBOX[3][0] and point[3] != 0:
-            if point[2] < checkDis:
-                #x5, y5 = polar2cart(point[2], point[1]-90)
-                #cv2.circle(img,((x5+offset),(y5+offset)), 2, (23,200,255), 80)
-                probileft += 1
-        
-        x, y = polar2cart(point[2], point[1]-90)
-        #cv2.circle(img,((x+offset),(y+offset)), 2, (0,0,255), 50
-
-
-    if state == noObs:
-        if critprobileft > 5 and critprobiright > 5 and stra > 12:
-            if critprobileft > critprobiright:
-                print("Hinder forward, going left")
-                setVal += 100
-                state = obs.obsStr
-                checkDist = 400
-            else:
-                print("Hinder forward, going right")
-                setVal -= 100
-                state = obs.obsStr
-                checkDist = 400
-            obsBool = True
-        else:
+    def calcHitboxes(self, data):
+        self.probileft = 0
+        self.probiright = 0
+        self.critprobiright = 0
+        self.critprobileft = 0
+        for point in data:
             
-            if critprobileft > 3:
-                print("Critical hinder left ", critprobileft)
-                setVal += 80
-                state = obs.criObsLef
-                checkDist = 600
-            if critprobiright > 3:
-                print("critical hinder right ", critprobiright)
-                setVal += -80
-                state = obs.criObsRig
-                checkDist = 600
-            if probileft > 3:
-                print("Hinder left ", probileft)
-                setVal += 50
-                state = obs.obsLef
-                checkDist = 600
-            if probiright > 3:
-                print("Hinder right ", probiright)
-                setVal += -50
-                state = obs.obsRig
-                checkDist = 600
-    elif state == obs.obsLef or state == obs.obsRig:
-        if critprobileft > 8 and critprobiright > 8 and stra > 12:
-            if critprobileft > critprobiright:
-                print("Hinder forward, going left")
-                setVal += 100
-                state = obs.obsStr
-                checkDist = 400
+            if HITBOX[0][1]<=point[1]<=HITBOX[0][0] and point[3] != 0:
+                if point[2] < self.checkDist:
+                    if point[2] < self.checkDist - point[1]*10:
+                        self.critprobileft += 1
+                    self.probileft += 1
+            if HITBOX[1][1]<=point[1]<=HITBOX[1][0] and point[3] != 0:
+                if point[2] < self.checkDist:
+                    if point[2] < self.checkDist - (360-point[1])*10:
+                        self.critprobiright += 1
+                    self.probiright += 1
+
+                
+            '''
+            #probileft, probiright = obdetect(point,img,probileft, probiright)
+            if HITBOX[0][1]<=point[1]<=HITBOX[0][0] and point[3] != 0:
+                if point[2] < self.checkDist - (point[1]*10):
+                    self.critprobiright += 1
+            if HITBOX[1][1]<=point[1]<=HITBOX[1][0] and point[3] != 0:
+                if point[2] < self.checkDist - (360 - point[1])*10: 
+                    self.critprobileft += 1
+            if HITBOX[2][1]<=point[1]<=HITBOX[2][0] and point[3] != 0:
+                if point[2] < self.checkDist:
+                    if point[2] < 800:
+                        self.critprobileft += 1
+                    self.probiright += 1
+            if HITBOX[3][1]<=point[1]<=HITBOX[3][0] and point[3] != 0:
+                if point[2] < self.checkDist:
+                    if point[2] < 800:
+                        self.critprobileft += 1
+                    self.probileft += 1
+            '''
+    def calcSetVal(self):
+        self.obsBool = False
+        probicount = 2
+        self.l_setVal = -(self.probileft*5 + self.critprobileft*20)
+        self.r_setVal = self.probiright*5 + self.critprobiright*20
+        self.setVal = 0
+
+        if self.l_setVal == -(self.r_setVal) and self.l_setVal > 0:
+            self.setVal = self.l_setVal
+        elif self.setVal == 0:
+            self.setVal = self.l_setVal + self.r_setVal
+        
+        if self.critprobiright > 10 and self.critprobileft > 10:
+            if self.probileft > self.probiright:
+                self.setVal = -100
             else:
-                print("Hinder forward, going right")
-                setVal -= 100
-                state = obs.obsStr
-                checkDist = 400
-        else:
-            if critprobileft > 5:
-                print("Critical hinder left ", critprobileft)
-                setVal += 80
-                state = obs.criObsLef
-                checkDist = 600
-            if critprobiright > 5:
-                print("critical hinder right ", critprobiright)
-                setVal += -80
-                state = obs.criObsRig
-                checkDist = 600
-            if probileft > 5:
-                print("Hinder left ", probileft)
-                setVal += 50
-                state = obs.obsLef
-                checkDist = 600
-            if probiright > 5:
-                print("Hinder right ", probiright)
-                setVal += -50
-                state = obs.obsRig
-                checkDist = 600
-    elif state == obs.obsStr:
-        if critprobileft > 8 and critprobiright > 8 and stra > 12:
-            if critprobileft > critprobiright:
-                print("Hinder forward, going left")
-                setVal += 100
-                state = obs.obsStr
-                checkDist = 400
+                self.setVal = 100
+        '''
+        if True:
+            if self.critprobileft > probicount:
+                print("Critical hinder")
+                #if self.probileft >= self.probiright:
+                self.l_setVal += 100
+                self.state = obs.obsLef
+                self.obsBool = True
+                #else:
+                #self.setVal += +80
+                 #   self.state = obs.obsRig
+            if self.critprobiright > probicount:
+                print("Critical hinder")
+                #if self.probileft >= self.probiright:
+                self.r_setVal -= 100
+                self.state = obs.obsRig
+                self.obsBool = True
+
+            if self.probileft > probicount:
+                print("Hinder left ", self.probileft)
+                self.l_setVal += 50
+                self.obsBool = True
+            if self.probiright > probicount:
+                print("Hinder right ", self.probiright)
+                self.r_setVal -= 50
+                self.obsBool = True
+        elif self.state == obs.obsLef:
+            if self.critprobiright > probicount or self.critprobileft > probicount:
+                self.obsBool = True
             else:
-                print("Hinder forward, going right")
-                setVal -= 100
-                state = obs.obsStr
-                checkDist = 400
-        else:
-            if critprobileft > 5:
-                print("Critical hinder left ", critprobileft)
-                setVal += 80
-                state = obs.criObsLef
-                checkDist = 600
-            if critprobiright > 5:
-                print("critical hinder right ", critprobiright)
-                setVal += -80
-                state = obs.criObsRig
-                checkDist = 600
-            if probileft > 5:
-                print("Hinder left ", probileft)
-                setVal += 50
-                state = obs.obsLef
-                checkDist = 600
-            if probiright > 5:
-                print("Hinder right ", probiright)
-                setVal += -50
-                state = obs.obsRig
-                checkDist = 600
+                self.obsBool = False
+        elif self.state == obs.obsRig:
+            if self.critprobileft > probicount or self.critprobiright > probicount:
+                self.obsBool = True
+            else:
+                self.obsBool = False
+        '''
+        print('l_setval:', self.l_setVal, '\tr_setval:', self.r_setVal)
+        print(self.obsBool)
         
         
-    
-        
-    if setVal > 100:
-        setVal = 100
-    if setVal < -100:
-        setval = -100
-    return setVal
+    def obsDetect(self,data):
+        self.calcHitboxes(data)
+        self.calcSetVal()
+        '''
+        if not self.obsBool:
+            self.state = obs.noObs
+            self.checkDist = 1000
+            self.setVal = 0
+        '''
+        if self.setVal > 150:
+            self.setVal = 150
+        elif self.setVal < -150:
+            self.setval = -150
+        print('Setval: ', self.setVal)
 
-
-def main():
-    
-    lidar = memelidar.PyLidar()
-    lidar.start_motor()
-    lidar.start_scan()
-
-    cv2.namedWindow('image',cv2.WINDOW_NORMAL)
-    cv2.resizeWindow('image', 600,600)
-    
-    while 1:
-        try:
-            img = np.zeros(img_size, dtype=np.uint8) +255
-            sensorValue = [10,10,10,10,0]
-            data = np.array(lidar.grab_data())
-            obDetect(data,img)
-            cv2.imshow('image',img)
-            cv2.waitKey(1)
-            
-        except KeyboardInterrupt:
-            lidar.stop()
-            lidar.stop_motor()
-            break
-
-        except Exception as e:
-            print(e)
-            lidar.stop()
-            lidar.stop_motor()
-            break
-        
+        return self.setVal
