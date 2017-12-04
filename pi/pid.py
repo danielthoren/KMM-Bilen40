@@ -11,7 +11,7 @@ class PdHandler:
         self._timeSinceStart = time.time()
         self.pGain = 0.6 #Random value
         self.dGain = 0.15 #Random value
-        self.iGain = 0.08
+        self.iGain = 0.00
         self._iAccumulated = 0
         self.setVal = 0 #This is the goal.
         self._time = time.time()

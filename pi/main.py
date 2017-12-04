@@ -98,7 +98,7 @@ def main():
                 stop()
                 break
             ''' 
-            pd.setVal = obsDetect(data)
+            pd.setVal = obsDetect(data, averageDistance)
             print(pd.setVal)
             pd.regulateAngle(sensorValue, averageDistance)
             print("speed: ", regulateSpeed(averageDistance[0], averageDistance[5], averageDistance[6]))
