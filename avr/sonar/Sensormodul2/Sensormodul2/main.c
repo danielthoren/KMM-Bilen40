@@ -88,7 +88,7 @@ void send_spi(){
 
 ISR(TIMER3_OVF_vect)
 {		
-		data.lapsensor = 0;
+		//data.lapsensor = 0;
 		clear_lap();
 		unclear_lap();
 }
@@ -105,6 +105,7 @@ ISR(INT2_vect){
 			data.lapsensor = 1;
 			TCNT3 = 0;
 			send_spi();
+			data.lapsensor = 0;
 			//clear_lap();
 			//_delay_ms(10);
 			//unclear_lap();
