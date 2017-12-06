@@ -16,6 +16,9 @@ volatile short int tranciever_count=0;
 sensormodul_AP_data outgoing_data;
 sensormodul_AP_data buffer;
 
+#define clear_lap()  PORTB &= ~_BV(3)
+#define unclear_lap()  PORTB |= _BV(3)
+
 //Calculates a simple XOR checksum for the outgoing package
 unsigned char calc_outgoing_checksum(volatile unsigned char data[OUTGOING_PACKET_SIZE - 1]){
 	unsigned char checksum = 0;
@@ -50,8 +53,8 @@ void set_outgoing_data(sensormodul_AP_data data){
 // Initialize SPI Slave Device
 void spi_init (void)
 {
-	DDRB = (1 << DDB6);			//Set MISO as output
-	DDRD = (1 << DDD0);			//Set pin 0 of PORTD as output, used to tell pi when new data is available
+	DDRB |= (1 << DDB6);			//Set MISO as output
+	DDRD |= _BV(0);			//Set pin 0 of PORTD as output, used to tell pi when new data is available
 	PORTD &= 0b11111110;		//Inits pin 0 of PORTD to 0
 	SPCR=(1<<SPE)|(1<<SPIE);	//Enable SPI && interrupt enable bit
 	buffer.lapsensor = 0xFF;
@@ -59,16 +62,18 @@ void spi_init (void)
 
 //Checks if this is the end of the message, else sends next byte
 void spi_tranciever(){
+		
 	if (tranciever_count == OUTGOING_PACKET_SIZE){
 		tranciever_count = 0;
 		PORTD &= 0b11111110;
-		if (buffer.lapsensor != 0xFF){
-			set_outgoing_data(buffer);
-			buffer.lapsensor = 0xFF;
-		}
-		else{
-			set_outgoing(outgoing_data);
-		}
+			/*
+			if (buffer.lapsensor != 2){
+				set_outgoing_data(buffer);
+				buffer.lapsensor = 0xFF;
+			}	
+			else{
+				set_outgoing(outgoing_data);
+		}*/
 	}
 	else{
 		SPDR = outgoing[tranciever_count];
