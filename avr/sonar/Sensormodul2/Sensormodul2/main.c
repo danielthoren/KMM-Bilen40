@@ -33,6 +33,10 @@ void calc_sonar_data(int sonar, uint32_t pulse);
 void ready_to_send_spi();
 //Init for sensormodul
 void sensor_init();
+//Init for lap sensor
+void lapsensor_init();
+//Might have to be changed to clear instead of set
+#define clear_lap()  PORTB |= _BV(3)
 
 int main(void)
 {
@@ -41,6 +45,9 @@ int main(void)
 	pulse++;
 	//Init sensormodule
 	//sensor_init();
+	
+	//Init lap sensor
+	lapsensor_init();
 	
 	//Enable globel interrupt
 	//sei();
@@ -107,8 +114,8 @@ void ready_to_send_spi(){
 void sensor_init(){
 	
 	//Pins is now an output
-	DDRA |= 0b00000010;
-	DDRB |= 0b00000010;
+	DDRA |= 0b00000010;		
+	DDRB |= 0b00001110;		//B2 & B3 is for the lap sensor
 	DDRC |= 0b00000010;
 	DDRD |= 0b00000010;
 	//Pins is now an input
@@ -132,6 +139,17 @@ void sensor_init(){
 	TIMSK3 |= _BV(0);	TCCR3B |= _BV(3);	TCCR3B &= ~_BV(0);	OCR3A = 50000;
 	//Timer stopped
 	TCCR1B &= ~_BV(0);
+}
+
+void lapsensor_init(){
+	//Pin B2 will serve as the interrupt pin
+	//Pin B3 will serve as a clear to the lap sensor
+	
+	//16bit Timer Set-up for lapcounter
+	TCCR3A |= _BV(WGM32);
+	TCCR3B |= _BV(CS32);		//16MHz, 16 bit timer and 256 prescaler gives 0.95367431640625Hz
+	TCNT3 = 0;					// Reset counter
+	TIMSK3 |= (1 << TOIE3);
 }
 
 
@@ -210,7 +228,7 @@ void sonar_timer_interrupt(int sonar){
 }
 //Calculate distance with timer value and speed of sound
 void calc_sonar_data(int sonar, uint32_t pulse){
-	//Longer then 86 cm, invalide value
+	//Longer then 86 cm, invalid,w value
 	if (pulse > 50000){
 		sonar_data[sonar] = 0xFF;
 	}
@@ -231,8 +249,15 @@ ISR(PCINT2_vect){sonar_timer_interrupt(2);}
 
 //Sonar 4 interrupt
 ISR(PCINT3_vect){sonar_timer_interrupt(3);}
-
-
+	
+ISR(INT2_vect){
+		if (bit_is_set(PORTB,2))
+		{
+			data.lapsensor = 1;
+			TCNT3 = 0;
+			clear_lap();
+		}
+}
 
 //Take too long time too get data, reset
 ISR (TIMER3_COMPA_vect)
@@ -262,6 +287,13 @@ ISR (TIMER3_OVF_vect)
 	else{mode = mode + 1;
 	}
 	
+}
+
+ISR(TIMER3_OVF_vect)
+{
+	if(bit_is_set(PORTB,2)){
+		data.lapsensor = 0;	
+	}	
 }
 
 //Send data to master
