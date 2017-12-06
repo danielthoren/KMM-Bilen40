@@ -27,10 +27,9 @@ if __name__ == "__main__":
     try:
         while True:
             time.sleep(0.01)
-            if server.recvd:
+            if server.message and server.message != b'1':
                 instr.decode(server.message)
                 instr.printSelf()
-                server.recvd = False
             pass
     except KeyboardInterrupt:
         print ("exiting program")

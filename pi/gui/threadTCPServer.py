@@ -5,15 +5,16 @@ import os
 import signal
 from instructions import Instruction
 
+import time
+import random
 
 class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
 
     def handle(self):
-        self.server.message = self.request.recv(1024)
-        if self.server.message:
-            self.server.recvd = True
-        cur_thread = threading.current_thread()
-        pid = os.getpid()
+        self.server.message = self.request.recv(4096)
+        self.request.sendall(str(random.randint(1,9)).encode('ascii'))
+        #cur_thread = threading.current_thread()
+        #pid = os.getpid()
 
 class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     pass
@@ -21,10 +22,15 @@ class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
 def client(ip, port, message):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.connect((ip, port))
+    response = b''
+    
     try:
         sock.sendall(message)
+        response = sock.recv(4096)
     finally:
+        #sock.shutdown(socket.SHUT_RDWR)
         sock.close()
+        return response
 
 if __name__ == "__main__":
 
