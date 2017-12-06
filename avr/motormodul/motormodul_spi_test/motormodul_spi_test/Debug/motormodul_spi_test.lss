@@ -1,0 +1,541 @@
+
+motormodul_spi_test.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .data         00000000  00800100  00800100  0000033e  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  1 .text         000002ca  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .bss          0000000a  00800100  00800100  0000033e  2**0
+                  ALLOC
+  3 .comment      00000030  00000000  00000000  0000033e  2**0
+                  CONTENTS, READONLY
+  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000370  2**2
+                  CONTENTS, READONLY
+  5 .debug_aranges 00000080  00000000  00000000  000003b0  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_info   00000cc5  00000000  00000000  00000430  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_abbrev 0000099d  00000000  00000000  000010f5  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_line   000004bb  00000000  00000000  00001a92  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_frame  00000148  00000000  00000000  00001f50  2**2
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_str    0000052a  00000000  00000000  00002098  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_loc    00000320  00000000  00000000  000025c2  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_ranges 00000060  00000000  00000000  000028e2  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	45 c0       	rjmp	.+138    	; 0x8c <__ctors_end>
+   2:	00 00       	nop
+   4:	60 c0       	rjmp	.+192    	; 0xc6 <__bad_interrupt>
+   6:	00 00       	nop
+   8:	5e c0       	rjmp	.+188    	; 0xc6 <__bad_interrupt>
+   a:	00 00       	nop
+   c:	5c c0       	rjmp	.+184    	; 0xc6 <__bad_interrupt>
+   e:	00 00       	nop
+  10:	5a c0       	rjmp	.+180    	; 0xc6 <__bad_interrupt>
+  12:	00 00       	nop
+  14:	58 c0       	rjmp	.+176    	; 0xc6 <__bad_interrupt>
+  16:	00 00       	nop
+  18:	56 c0       	rjmp	.+172    	; 0xc6 <__bad_interrupt>
+  1a:	00 00       	nop
+  1c:	54 c0       	rjmp	.+168    	; 0xc6 <__bad_interrupt>
+  1e:	00 00       	nop
+  20:	52 c0       	rjmp	.+164    	; 0xc6 <__bad_interrupt>
+  22:	00 00       	nop
+  24:	50 c0       	rjmp	.+160    	; 0xc6 <__bad_interrupt>
+  26:	00 00       	nop
+  28:	4e c0       	rjmp	.+156    	; 0xc6 <__bad_interrupt>
+  2a:	00 00       	nop
+  2c:	4c c0       	rjmp	.+152    	; 0xc6 <__bad_interrupt>
+  2e:	00 00       	nop
+  30:	4a c0       	rjmp	.+148    	; 0xc6 <__bad_interrupt>
+  32:	00 00       	nop
+  34:	48 c0       	rjmp	.+144    	; 0xc6 <__bad_interrupt>
+  36:	00 00       	nop
+  38:	46 c0       	rjmp	.+140    	; 0xc6 <__bad_interrupt>
+  3a:	00 00       	nop
+  3c:	44 c0       	rjmp	.+136    	; 0xc6 <__bad_interrupt>
+  3e:	00 00       	nop
+  40:	42 c0       	rjmp	.+132    	; 0xc6 <__bad_interrupt>
+  42:	00 00       	nop
+  44:	40 c0       	rjmp	.+128    	; 0xc6 <__bad_interrupt>
+  46:	00 00       	nop
+  48:	3e c0       	rjmp	.+124    	; 0xc6 <__bad_interrupt>
+  4a:	00 00       	nop
+  4c:	15 c1       	rjmp	.+554    	; 0x278 <__vector_19>
+  4e:	00 00       	nop
+  50:	3a c0       	rjmp	.+116    	; 0xc6 <__bad_interrupt>
+  52:	00 00       	nop
+  54:	38 c0       	rjmp	.+112    	; 0xc6 <__bad_interrupt>
+  56:	00 00       	nop
+  58:	36 c0       	rjmp	.+108    	; 0xc6 <__bad_interrupt>
+  5a:	00 00       	nop
+  5c:	34 c0       	rjmp	.+104    	; 0xc6 <__bad_interrupt>
+  5e:	00 00       	nop
+  60:	32 c0       	rjmp	.+100    	; 0xc6 <__bad_interrupt>
+  62:	00 00       	nop
+  64:	30 c0       	rjmp	.+96     	; 0xc6 <__bad_interrupt>
+  66:	00 00       	nop
+  68:	2e c0       	rjmp	.+92     	; 0xc6 <__bad_interrupt>
+  6a:	00 00       	nop
+  6c:	2c c0       	rjmp	.+88     	; 0xc6 <__bad_interrupt>
+  6e:	00 00       	nop
+  70:	2a c0       	rjmp	.+84     	; 0xc6 <__bad_interrupt>
+  72:	00 00       	nop
+  74:	28 c0       	rjmp	.+80     	; 0xc6 <__bad_interrupt>
+  76:	00 00       	nop
+  78:	26 c0       	rjmp	.+76     	; 0xc6 <__bad_interrupt>
+  7a:	00 00       	nop
+  7c:	24 c0       	rjmp	.+72     	; 0xc6 <__bad_interrupt>
+  7e:	00 00       	nop
+  80:	22 c0       	rjmp	.+68     	; 0xc6 <__bad_interrupt>
+  82:	00 00       	nop
+  84:	20 c0       	rjmp	.+64     	; 0xc6 <__bad_interrupt>
+  86:	00 00       	nop
+  88:	1e c0       	rjmp	.+60     	; 0xc6 <__bad_interrupt>
+	...
+
+0000008c <__ctors_end>:
+  8c:	11 24       	eor	r1, r1
+  8e:	1f be       	out	0x3f, r1	; 63
+  90:	cf ef       	ldi	r28, 0xFF	; 255
+  92:	d0 e4       	ldi	r29, 0x40	; 64
+  94:	de bf       	out	0x3e, r29	; 62
+  96:	cd bf       	out	0x3d, r28	; 61
+
+00000098 <__do_copy_data>:
+  98:	11 e0       	ldi	r17, 0x01	; 1
+  9a:	a0 e0       	ldi	r26, 0x00	; 0
+  9c:	b1 e0       	ldi	r27, 0x01	; 1
+  9e:	ea ec       	ldi	r30, 0xCA	; 202
+  a0:	f2 e0       	ldi	r31, 0x02	; 2
+  a2:	00 e0       	ldi	r16, 0x00	; 0
+  a4:	0b bf       	out	0x3b, r16	; 59
+  a6:	02 c0       	rjmp	.+4      	; 0xac <__do_copy_data+0x14>
+  a8:	07 90       	elpm	r0, Z+
+  aa:	0d 92       	st	X+, r0
+  ac:	a0 30       	cpi	r26, 0x00	; 0
+  ae:	b1 07       	cpc	r27, r17
+  b0:	d9 f7       	brne	.-10     	; 0xa8 <__do_copy_data+0x10>
+
+000000b2 <__do_clear_bss>:
+  b2:	21 e0       	ldi	r18, 0x01	; 1
+  b4:	a0 e0       	ldi	r26, 0x00	; 0
+  b6:	b1 e0       	ldi	r27, 0x01	; 1
+  b8:	01 c0       	rjmp	.+2      	; 0xbc <.do_clear_bss_start>
+
+000000ba <.do_clear_bss_loop>:
+  ba:	1d 92       	st	X+, r1
+
+000000bc <.do_clear_bss_start>:
+  bc:	aa 30       	cpi	r26, 0x0A	; 10
+  be:	b2 07       	cpc	r27, r18
+  c0:	e1 f7       	brne	.-8      	; 0xba <.do_clear_bss_loop>
+  c2:	02 d0       	rcall	.+4      	; 0xc8 <main>
+  c4:	00 c1       	rjmp	.+512    	; 0x2c6 <_exit>
+
+000000c6 <__bad_interrupt>:
+  c6:	9c cf       	rjmp	.-200    	; 0x0 <__vectors>
+
+000000c8 <main>:
+ISR(SPI_STC_vect){
+	spi_tranciever();
+}*/
+
+int main(void)
+{
+  c8:	cf 93       	push	r28
+  ca:	df 93       	push	r29
+  cc:	00 d0       	rcall	.+0      	; 0xce <main+0x6>
+  ce:	cd b7       	in	r28, 0x3d	; 61
+  d0:	de b7       	in	r29, 0x3e	; 62
+		spi_init();
+  d2:	6d d0       	rcall	.+218    	; 0x1ae <spi_init>
+		
+		sei();
+  d4:	78 94       	sei
+		//Clear the screen
+		//LCDClear();
+		
+		motormodul_AP_data data_out;
+		data_out.curr_rpm = 42;
+		set_spi_data(data_out);
+  d6:	8a e2       	ldi	r24, 0x2A	; 42
+
+    while (1) 
+    {
+		// OBS!!!! data_available never gets high for some reason?
+		//LCDWriteInt(data_available, 1);
+		if(get_data_available()){
+  d8:	3e d0       	rcall	.+124    	; 0x156 <set_spi_data>
+  da:	08 d0       	rcall	.+16     	; 0xec <get_data_available>
+  dc:	88 23       	and	r24, r24
+  de:	e9 f3       	breq	.-6      	; 0xda <main+0x12>
+			motormodul_PA_data data;
+			data.angle = 0;
+  e0:	1a 82       	std	Y+2, r1	; 0x02
+			data.speed = 0;
+			get_spi_data(&data);
+  e2:	19 82       	std	Y+1, r1	; 0x01
+  e4:	ce 01       	movw	r24, r28
+  e6:	01 96       	adiw	r24, 0x01	; 1
+  e8:	4c d0       	rcall	.+152    	; 0x182 <get_spi_data>
+  ea:	f7 cf       	rjmp	.-18     	; 0xda <main+0x12>
+
+000000ec <get_data_available>:
+unsigned char data_set = 0;
+unsigned char data_available;
+
+unsigned char get_data_available(){
+	return data_available;
+}
+  ec:	80 91 09 01 	lds	r24, 0x0109	; 0x800109 <data_available>
+  f0:	08 95       	ret
+
+000000f2 <calc_checksum>:
+
+//Calculates a simple XOR checksum for the incomming package
+unsigned char calc_checksum(volatile unsigned char data[], int size){
+		unsigned char checksum = 0;
+		for (int i = 0; i < (size); i++){
+  f2:	16 16       	cp	r1, r22
+  f4:	17 06       	cpc	r1, r23
+  f6:	54 f4       	brge	.+20     	; 0x10c <calc_checksum+0x1a>
+  f8:	fc 01       	movw	r30, r24
+  fa:	68 0f       	add	r22, r24
+  fc:	79 1f       	adc	r23, r25
+  fe:	80 e0       	ldi	r24, 0x00	; 0
+			checksum = checksum ^ data[i];
+ 100:	91 91       	ld	r25, Z+
+ 102:	89 27       	eor	r24, r25
+}
+
+//Calculates a simple XOR checksum for the incomming package
+unsigned char calc_checksum(volatile unsigned char data[], int size){
+		unsigned char checksum = 0;
+		for (int i = 0; i < (size); i++){
+ 104:	e6 17       	cp	r30, r22
+ 106:	f7 07       	cpc	r31, r23
+ 108:	d9 f7       	brne	.-10     	; 0x100 <calc_checksum+0xe>
+ 10a:	08 95       	ret
+	return data_available;
+}
+
+//Calculates a simple XOR checksum for the incomming package
+unsigned char calc_checksum(volatile unsigned char data[], int size){
+		unsigned char checksum = 0;
+ 10c:	80 e0       	ldi	r24, 0x00	; 0
+		for (int i = 0; i < (size); i++){
+			checksum = checksum ^ data[i];
+		}
+		return checksum;
+}
+ 10e:	08 95       	ret
+
+00000110 <set_outgoing>:
+
+//converts the data of the outgoing 'sensormodul_AP_data' to the 'outgoing' char array
+void set_outgoing(motormodul_AP_data* data){
+ 110:	cf 93       	push	r28
+ 112:	df 93       	push	r29
+	outgoing[0] = data->curr_rpm;
+ 114:	fc 01       	movw	r30, r24
+ 116:	80 81       	ld	r24, Z
+ 118:	c5 e0       	ldi	r28, 0x05	; 5
+ 11a:	d1 e0       	ldi	r29, 0x01	; 1
+ 11c:	88 83       	st	Y, r24
+	
+	outgoing[1] = calc_checksum(outgoing, OUTGOING_PACKET_SIZE);
+ 11e:	62 e0       	ldi	r22, 0x02	; 2
+ 120:	70 e0       	ldi	r23, 0x00	; 0
+ 122:	ce 01       	movw	r24, r28
+ 124:	e6 df       	rcall	.-52     	; 0xf2 <calc_checksum>
+ 126:	89 83       	std	Y+1, r24	; 0x01
+	
+	SPDR = outgoing[0];
+ 128:	88 81       	ld	r24, Y
+ 12a:	8e bd       	out	0x2e, r24	; 46
+	tranciever_count++;
+ 12c:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__data_end>
+ 130:	90 91 01 01 	lds	r25, 0x0101	; 0x800101 <__data_end+0x1>
+ 134:	01 96       	adiw	r24, 0x01	; 1
+ 136:	90 93 01 01 	sts	0x0101, r25	; 0x800101 <__data_end+0x1>
+ 13a:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__data_end>
+}
+ 13e:	df 91       	pop	r29
+ 140:	cf 91       	pop	r28
+ 142:	08 95       	ret
+
+00000144 <get_incomming>:
+
+//converts the incomming char array to a struct of type 'motormodul_PA_data'
+void get_incomming(motormodul_PA_data* data){
+	data->speed = incomming[0];
+ 144:	e2 e0       	ldi	r30, 0x02	; 2
+ 146:	f1 e0       	ldi	r31, 0x01	; 1
+ 148:	20 81       	ld	r18, Z
+ 14a:	dc 01       	movw	r26, r24
+ 14c:	2c 93       	st	X, r18
+	data->angle = incomming[1];
+ 14e:	21 81       	ldd	r18, Z+1	; 0x01
+ 150:	11 96       	adiw	r26, 0x01	; 1
+ 152:	2c 93       	st	X, r18
+ 154:	08 95       	ret
+
+00000156 <set_spi_data>:
+}
+
+void set_spi_data(motormodul_AP_data data){
+ 156:	cf 93       	push	r28
+ 158:	df 93       	push	r29
+ 15a:	1f 92       	push	r1
+ 15c:	cd b7       	in	r28, 0x3d	; 61
+ 15e:	de b7       	in	r29, 0x3e	; 62
+ 160:	89 83       	std	Y+1, r24	; 0x01
+	if ((PINB & 0b00010000) != 0){
+ 162:	1c 9b       	sbis	0x03, 4	; 3
+ 164:	07 c0       	rjmp	.+14     	; 0x174 <set_spi_data+0x1e>
+		//dismantling struct to outgoing data
+		memcpy((void*) &outgoing_data, (void*) &data, sizeof(data));
+ 166:	80 93 08 01 	sts	0x0108, r24	; 0x800108 <outgoing_data>
+		set_outgoing(&data);
+ 16a:	ce 01       	movw	r24, r28
+ 16c:	01 96       	adiw	r24, 0x01	; 1
+ 16e:	d0 df       	rcall	.-96     	; 0x110 <set_outgoing>
+		
+		//signal pi that there is new data
+		PORTD |= 0b00000001;
+ 170:	58 9a       	sbi	0x0b, 0	; 11
+ 172:	03 c0       	rjmp	.+6      	; 0x17a <set_spi_data+0x24>
+	}
+	else{
+		buffer = data;
+ 174:	89 81       	ldd	r24, Y+1	; 0x01
+ 176:	80 93 07 01 	sts	0x0107, r24	; 0x800107 <buffer>
+	}
+}
+ 17a:	0f 90       	pop	r0
+ 17c:	df 91       	pop	r29
+ 17e:	cf 91       	pop	r28
+ 180:	08 95       	ret
+
+00000182 <get_spi_data>:
+
+void get_spi_data(motormodul_PA_data* data){
+ 182:	cf 93       	push	r28
+ 184:	df 93       	push	r29
+ 186:	ec 01       	movw	r28, r24
+	data_available = 0;
+ 188:	10 92 09 01 	sts	0x0109, r1	; 0x800109 <data_available>
+	//building up struct from incomming data
+	if(calc_checksum(incomming, INCOMMING_PACKET_SIZE - 1) == incomming[INCOMMING_PACKET_SIZE - 1]){
+ 18c:	62 e0       	ldi	r22, 0x02	; 2
+ 18e:	70 e0       	ldi	r23, 0x00	; 0
+ 190:	82 e0       	ldi	r24, 0x02	; 2
+ 192:	91 e0       	ldi	r25, 0x01	; 1
+ 194:	ae df       	rcall	.-164    	; 0xf2 <calc_checksum>
+ 196:	90 91 04 01 	lds	r25, 0x0104	; 0x800104 <incomming+0x2>
+ 19a:	89 13       	cpse	r24, r25
+ 19c:	03 c0       	rjmp	.+6      	; 0x1a4 <get_spi_data+0x22>
+		get_incomming(data);
+ 19e:	ce 01       	movw	r24, r28
+ 1a0:	d1 df       	rcall	.-94     	; 0x144 <get_incomming>
+ 1a2:	02 c0       	rjmp	.+4      	; 0x1a8 <get_spi_data+0x26>
+	}
+	else{
+		data->speed = 0xFF;
+ 1a4:	8f ef       	ldi	r24, 0xFF	; 255
+ 1a6:	88 83       	st	Y, r24
+	}
+}
+ 1a8:	df 91       	pop	r29
+ 1aa:	cf 91       	pop	r28
+ 1ac:	08 95       	ret
+
+000001ae <spi_init>:
+
+// Initialize SPI Slave Device
+void spi_init (void)
+{
+	DDRB = (1 << DDB6);			//Set MISO as output
+ 1ae:	80 e4       	ldi	r24, 0x40	; 64
+ 1b0:	84 b9       	out	0x04, r24	; 4
+	SPCR = (1<<SPE)|(1<<SPIE);	//Enable SPI && interrupt enable bit
+ 1b2:	80 ec       	ldi	r24, 0xC0	; 192
+ 1b4:	8c bd       	out	0x2c, r24	; 44
+	DDRD = (1 << DDD0);			//Set pin 0 of PORTD as output, used to tell pi when new data is available
+ 1b6:	81 e0       	ldi	r24, 0x01	; 1
+ 1b8:	8a b9       	out	0x0a, r24	; 10
+	PORTD &= 0b11111110;		//Inits pin 0 of PORTD to 0
+ 1ba:	58 98       	cbi	0x0b, 0	; 11
+	data_available = 0;
+ 1bc:	10 92 09 01 	sts	0x0109, r1	; 0x800109 <data_available>
+	buffer.curr_rpm = 0xFF;
+ 1c0:	8f ef       	ldi	r24, 0xFF	; 255
+ 1c2:	80 93 07 01 	sts	0x0107, r24	; 0x800107 <buffer>
+ 1c6:	08 95       	ret
+
+000001c8 <spi_tranciever>:
+
+//only sets data if the SS pin is high, if it is low that means that a transfer is in progress.
+//The data is saved in a buffer and set as outgoing data when SS goes high.
+//When new data is available PORTD0 goes high until the pi has read the data, then it goes low again.
+void spi_tranciever(){
+	if (tranciever_count >= INCOMMING_PACKET_SIZE &&
+ 1c8:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__data_end>
+ 1cc:	90 91 01 01 	lds	r25, 0x0101	; 0x800101 <__data_end+0x1>
+ 1d0:	03 97       	sbiw	r24, 0x03	; 3
+ 1d2:	7c f1       	brlt	.+94     	; 0x232 <spi_tranciever+0x6a>
+		tranciever_count >= OUTGOING_PACKET_SIZE){
+ 1d4:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__data_end>
+ 1d8:	90 91 01 01 	lds	r25, 0x0101	; 0x800101 <__data_end+0x1>
+
+//only sets data if the SS pin is high, if it is low that means that a transfer is in progress.
+//The data is saved in a buffer and set as outgoing data when SS goes high.
+//When new data is available PORTD0 goes high until the pi has read the data, then it goes low again.
+void spi_tranciever(){
+	if (tranciever_count >= INCOMMING_PACKET_SIZE &&
+ 1dc:	02 97       	sbiw	r24, 0x02	; 2
+ 1de:	4c f1       	brlt	.+82     	; 0x232 <spi_tranciever+0x6a>
+		tranciever_count >= OUTGOING_PACKET_SIZE){
+			//getting the last byte of the incomming package
+			incomming[tranciever_count-1] = SPDR;
+ 1e0:	e0 91 00 01 	lds	r30, 0x0100	; 0x800100 <__data_end>
+ 1e4:	f0 91 01 01 	lds	r31, 0x0101	; 0x800101 <__data_end+0x1>
+ 1e8:	8e b5       	in	r24, 0x2e	; 46
+ 1ea:	ef 5f       	subi	r30, 0xFF	; 255
+ 1ec:	fe 4f       	sbci	r31, 0xFE	; 254
+ 1ee:	80 83       	st	Z, r24
+			PORTD &= 0b11111110;
+ 1f0:	58 98       	cbi	0x0b, 0	; 11
+			data_available = 1;
+ 1f2:	81 e0       	ldi	r24, 0x01	; 1
+ 1f4:	80 93 09 01 	sts	0x0109, r24	; 0x800109 <data_available>
+			tranciever_count = 0;
+ 1f8:	10 92 01 01 	sts	0x0101, r1	; 0x800101 <__data_end+0x1>
+ 1fc:	10 92 00 01 	sts	0x0100, r1	; 0x800100 <__data_end>
+			if(buffer.curr_rpm != 0xFF){
+ 200:	80 91 07 01 	lds	r24, 0x0107	; 0x800107 <buffer>
+ 204:	8f 3f       	cpi	r24, 0xFF	; 255
+ 206:	89 f0       	breq	.+34     	; 0x22a <spi_tranciever+0x62>
+				set_outgoing(&buffer);
+ 208:	87 e0       	ldi	r24, 0x07	; 7
+ 20a:	91 e0       	ldi	r25, 0x01	; 1
+ 20c:	81 df       	rcall	.-254    	; 0x110 <set_outgoing>
+				//signal pi that there is new data
+				tranciever_count++;
+ 20e:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__data_end>
+ 212:	90 91 01 01 	lds	r25, 0x0101	; 0x800101 <__data_end+0x1>
+ 216:	01 96       	adiw	r24, 0x01	; 1
+ 218:	90 93 01 01 	sts	0x0101, r25	; 0x800101 <__data_end+0x1>
+ 21c:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__data_end>
+				PORTD |= 0b00000001;
+ 220:	58 9a       	sbi	0x0b, 0	; 11
+				buffer.curr_rpm = 0xFF;
+ 222:	8f ef       	ldi	r24, 0xFF	; 255
+ 224:	80 93 07 01 	sts	0x0107, r24	; 0x800107 <buffer>
+ 228:	08 95       	ret
+			}
+			else{
+				set_outgoing(&outgoing_data);
+ 22a:	88 e0       	ldi	r24, 0x08	; 8
+ 22c:	91 e0       	ldi	r25, 0x01	; 1
+ 22e:	70 cf       	rjmp	.-288    	; 0x110 <set_outgoing>
+ 230:	08 95       	ret
+			}
+	}
+	else{
+		incomming[tranciever_count-1] = SPDR;
+ 232:	e0 91 00 01 	lds	r30, 0x0100	; 0x800100 <__data_end>
+ 236:	f0 91 01 01 	lds	r31, 0x0101	; 0x800101 <__data_end+0x1>
+ 23a:	8e b5       	in	r24, 0x2e	; 46
+ 23c:	ef 5f       	subi	r30, 0xFF	; 255
+ 23e:	fe 4f       	sbci	r31, 0xFE	; 254
+ 240:	80 83       	st	Z, r24
+		if(tranciever_count >= OUTGOING_PACKET_SIZE){
+ 242:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__data_end>
+ 246:	90 91 01 01 	lds	r25, 0x0101	; 0x800101 <__data_end+0x1>
+ 24a:	02 97       	sbiw	r24, 0x02	; 2
+ 24c:	1c f0       	brlt	.+6      	; 0x254 <spi_tranciever+0x8c>
+			SPDR = 0xFF;
+ 24e:	8f ef       	ldi	r24, 0xFF	; 255
+ 250:	8e bd       	out	0x2e, r24	; 46
+ 252:	08 c0       	rjmp	.+16     	; 0x264 <spi_tranciever+0x9c>
+		}
+		else{
+			SPDR = outgoing[tranciever_count];
+ 254:	e0 91 00 01 	lds	r30, 0x0100	; 0x800100 <__data_end>
+ 258:	f0 91 01 01 	lds	r31, 0x0101	; 0x800101 <__data_end+0x1>
+ 25c:	eb 5f       	subi	r30, 0xFB	; 251
+ 25e:	fe 4f       	sbci	r31, 0xFE	; 254
+ 260:	80 81       	ld	r24, Z
+ 262:	8e bd       	out	0x2e, r24	; 46
+		}
+		tranciever_count++;
+ 264:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__data_end>
+ 268:	90 91 01 01 	lds	r25, 0x0101	; 0x800101 <__data_end+0x1>
+ 26c:	01 96       	adiw	r24, 0x01	; 1
+ 26e:	90 93 01 01 	sts	0x0101, r25	; 0x800101 <__data_end+0x1>
+ 272:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__data_end>
+ 276:	08 95       	ret
+
+00000278 <__vector_19>:
+	}
+}
+
+ISR(SPI_STC_vect){
+ 278:	1f 92       	push	r1
+ 27a:	0f 92       	push	r0
+ 27c:	0f b6       	in	r0, 0x3f	; 63
+ 27e:	0f 92       	push	r0
+ 280:	11 24       	eor	r1, r1
+ 282:	0b b6       	in	r0, 0x3b	; 59
+ 284:	0f 92       	push	r0
+ 286:	2f 93       	push	r18
+ 288:	3f 93       	push	r19
+ 28a:	4f 93       	push	r20
+ 28c:	5f 93       	push	r21
+ 28e:	6f 93       	push	r22
+ 290:	7f 93       	push	r23
+ 292:	8f 93       	push	r24
+ 294:	9f 93       	push	r25
+ 296:	af 93       	push	r26
+ 298:	bf 93       	push	r27
+ 29a:	ef 93       	push	r30
+ 29c:	ff 93       	push	r31
+	spi_tranciever();
+ 29e:	94 df       	rcall	.-216    	; 0x1c8 <spi_tranciever>
+ 2a0:	ff 91       	pop	r31
+ 2a2:	ef 91       	pop	r30
+ 2a4:	bf 91       	pop	r27
+ 2a6:	af 91       	pop	r26
+ 2a8:	9f 91       	pop	r25
+ 2aa:	8f 91       	pop	r24
+ 2ac:	7f 91       	pop	r23
+ 2ae:	6f 91       	pop	r22
+ 2b0:	5f 91       	pop	r21
+ 2b2:	4f 91       	pop	r20
+ 2b4:	3f 91       	pop	r19
+ 2b6:	2f 91       	pop	r18
+ 2b8:	0f 90       	pop	r0
+ 2ba:	0b be       	out	0x3b, r0	; 59
+ 2bc:	0f 90       	pop	r0
+ 2be:	0f be       	out	0x3f, r0	; 63
+ 2c0:	0f 90       	pop	r0
+ 2c2:	1f 90       	pop	r1
+ 2c4:	18 95       	reti
+
+000002c6 <_exit>:
+ 2c6:	f8 94       	cli
+
+000002c8 <__stop_program>:
+ 2c8:	ff cf       	rjmp	.-2      	; 0x2c8 <__stop_program>
