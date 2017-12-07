@@ -12,7 +12,7 @@ class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
 
     def handle(self):
         self.server.message = self.request.recv(4096)
-        self.request.sendall(str(random.randint(1,9)).encode('ascii'))
+        self.request.sendall(self.server.sendmessage)
         #cur_thread = threading.current_thread()
         #pid = os.getpid()
 
@@ -39,6 +39,7 @@ if __name__ == "__main__":
     socketserver.TCPServer.allow_reuse_address = True
     server = ThreadedTCPServer((HOST, PORT), ThreadedTCPRequestHandler)
     ip, port = server.server_address
+    
 
 
     # Start a thread with the server -- that thread will then start one

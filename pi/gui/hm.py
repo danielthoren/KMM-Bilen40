@@ -13,6 +13,7 @@ if __name__ == "__main__":
 
     server = ThreadedTCPServer( (HOST, PORT), ThreadedTCPRequestHandler)
     server.message = b''
+    server.sendmessage = b''
     server.recvd = False
 
     server_thread = threading.Thread(target = server.serve_forever)

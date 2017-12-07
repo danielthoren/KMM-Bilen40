@@ -1,5 +1,18 @@
 import json
 
+class sendData:
+    def __init__(self):
+        self.lidar_data = [[]]
+        self.rpm = 0
+        self.lap = 0
+
+        
+    def encode(self):
+        return (json.dumps(self.__dict__)).encode("ascii")
+
+    def decode(self, msg):
+        self.__dict__ = json.loads(msg.decode("ascii"))
+        
 class Instruction:
     """
     Instructions sent over tcp.
