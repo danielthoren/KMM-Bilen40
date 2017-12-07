@@ -3,6 +3,7 @@ import socket
 from threadTCPServer import client
 from queue import Queue
 import time
+from instructions import sendData
 
 class Handler:
     def __init__(self, host = "localhost", port = 10000):
@@ -10,6 +11,7 @@ class Handler:
         self.port = port
         self.queue = Queue()
         self.response = b''
+        self.send_data = sendData()
         self.qLock = threading.Lock()
 
     def hantera(self):
@@ -23,7 +25,8 @@ class Handler:
             resp = client(self.host, self.port, s)
             # print(resp)
             with self.qLock:
-                self.response = resp
+                # self.response = resp
+                self.send_data.decode(resp)
             # print(self.response)
 
     def add(self, s):

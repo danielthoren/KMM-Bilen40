@@ -22,8 +22,8 @@ class Instruction:
         self.W = False
         self.S = False
         self.AD = 0
-        self.start = False
-        self.stop = False
+        self.run = False
+        self.auto_mode = False
         self.quit = False
         self.p = 0.0
         self.d = 0.0
@@ -39,6 +39,9 @@ class Instruction:
         self.S = False
         #self.AD = 0
 
+    def _run(self):
+        self.run = not self.run
+        
     def printSelf(self):
         print("Forward:\t", self.W)
         print("Backward:\t", self.S)
@@ -66,12 +69,8 @@ class Instruction:
     def _d(self):
         if self.AD < 1:
             self.AD += 1
-
-    def doStart(self, start):
-        self.start = start
-
-    def doStop(self, stop):
-        self.stop = stop
+    def _auto_mode(self):
+        self.auto_mode = not self.auto_mode
 
     def disconnect(self, quit):
         self.quit = quit
