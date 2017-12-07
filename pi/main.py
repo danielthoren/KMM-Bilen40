@@ -13,17 +13,10 @@ import threading
 import socketserver
 
 
+HOST = ""
+PORT = 10000
+
 SPEEDPGAIN = 10
-
-'''
-Defines the hitbox derived from the sonar sensors
-The values are in the following order:
-
-[sonar1, sonar2, sonar3, sonar4]
-'''
-
-HOST_l = ""
-HITBOX = [30, 30, 30, 30]
 TURNTHRESHOLD = 40  #Defines the threshold for when in a curve or not
 #Defines between wich degrees each cone is. Two first cones are handles as special
 #case since they represent one cone in actuality
@@ -35,7 +28,6 @@ MAXSPEED = 200
 NEUTRALSPEED = 100
 GOAL_LAPS = 3 # Amount of laps that the robot should drive
 
-lapCount = 0 #Counts the amount of laps we have driven
 
 class state(Enum):
     auto = 0
@@ -44,202 +36,200 @@ class state(Enum):
     wait = 3
     start = 4
 
-state = state.auto
 
-'''
-Calculates the avarage distance for the measurments in each cone and saves
-them in 'averageDistance' variable. The first two values in the 'CONES' constant
-are handled as a special case since theese represent the cone that exists in them
-gap (between 1 and 360 degrees).
-'''
-def calcaverageCones(lidarData):
-    average = 0
-    valueCount = 0
-    averageDistance = []
-    for i in range(len(CONES)):
-        #Lidarvalue is a list of tuples
-        for data in lidarData:
-            #data[0] is the angle of the meassurment, <18 and >342 is +- 18 degrees
-            #from angle 0, i.e straight forward. (The cone forward)
-            #data[2] > 0 is the quality of the meassurmetn, 0 is bad.
-            if(data[1] <= CONES[i][0] and data[1] >= CONES[i][1] and data[3] > 0):
-                average += data[2]
-                valueCount += 1
+class main_driver:
 
-        if i == 0:
-            pass
-        elif(average != 0 and valueCount != 0):
-            averageDistance.append(int((average/valueCount)/10))
+    def __init__(self):
+        self.state = state.wait
+        self.lapCount = 0 #Counts the amount of laps we have driven
+        self.pd = PdHandler()
+        self.obs = obsFunc()
+        self.send_data = sendData()
+        self.recv_data = Instruction()
+        self.server, self.server_thread = self.init_server()
+        self.angle = 90
+        self.speed = 100
+        self.lidar = memelidar.PyLidar()
+        self.lidar_data = [[0,0,0,0]]
+        self.averageDistance = [0,0,0,0,0] #holds average distance for all cones
+        self.lidar_data_np = np.array(lidar_data)
+        self.sensorValue = [0,0,0,0,0]
+
+    
+    '''
+    Calculates the avarage distance for the measurments in each cone and saves
+    them in 'averageDistance' variable. The first two values in the 'CONES' constant
+    are handled as a special case since theese represent the cone that exists in them
+    gap (between 1 and 360 degrees).
+    '''
+    def calcaverageCones():
+        average = 0
+        valueCount = 0
+        for i in range(len(CONES)):
+            #Lidarvalue is a list of tuples
+            for data in lidar_data_np:
+                #data[0] is the angle of the meassurment, <18 and >342 is +- 18 degrees
+                #from angle 0, i.e straight forward. (The cone forward)
+                #data[2] > 0 is the quality of the meassurmetn, 0 is bad.
+                if(data[1] <= CONES[i][0] and data[1] >= CONES[i][1] and data[3] > 0):
+                    average += data[2]
+                    valueCount += 1
+
+            if i == 0:
+                pass
+            elif(average != 0 and valueCount != 0):
+                self.averageDistance.append(int((average/valueCount)/10))
             if averageDistance[0] < 10:
-                averageDistance[0] = 100
-            valueCount = 0
-            average = 0
-        else:
-            averageDistance.append(0)
+                self.averageDistance[0] = 100
+                valueCount = 0
+                average = 0
+            else:
+                self.averageDistance.append(0)
 
-    return averageDistance
-
-#Counts the rounds
-def countLaps(sensorValue):
-        global lapCount
+    
+    #Counts the rounds
+    def countLaps(sensorValue):
+        self.apCount
         if(sensorValue[4] == 1):
            lapCount += 1
-           print(lapCount)
-           #returns true when roundCount equals GOAL_LAPS
+        #returns true when roundCount equals GOAL_LAPS
         if lapCount == GOAL_LAPS:
             return True
 
-def halt(lidar):
-    motorTransceiver([NEUTRALSPEED, NEUTRALWHEELANGLE, SPEEDPGAIN])
-    lidar.stop()
-    lidar.stop_motor()
+    def halt(lidar):
+        motorTransceiver([NEUTRALSPEED, NEUTRALWHEELANGLE, SPEEDPGAIN])
+        lidar.stop()
+        lidar.stop_motor()
 
-def start_lidar(lidar):
-    lidar.start_motor()
-    lidar.start_scan()
+        
+    def start_lidar(lidar):
+        lidar.start_motor()
+        lidar.start_scan()
+
+        
+    def init_server():
+        socketserver.TCPServer.allow_reuse_address = True        
+        server = ThreadedTCPServer( (HOST, PORT), ThreadedTCPRequestHandler)
+        server.message = b''
+        server.sendmessage = b''
+        server_thread = threading.Thread(target = server.serve_forever)
+        server_thread.daemon = True
+        server_thread.start()
+        return server, server_thread
+
+    
+    def tranceiver():
+        if self.server.message and self.server.message != b'1':
+            self.recv_data.decode(self.server.message)
+            self.recv_data.printSelf()
+            self.pGain = self.recv_data.p
+            self.dGain = self.recv_data.d
+        
+        if self.rpm != None:
+            self.send_data.rpm = self.rpm
+        self.send_data.lidar_data = self.lidar_data
+        self.send_data.lap = self.lapCount
+        send = send_data.encode()
+        self.server.sendmessage = send
+        
+        
+    def manual_drive():
+        if recv_data.W:
+            self.speed = 150
+        elif recv_data.S:
+            self.speed = 50
+        else:
+            self.speed = 100
+        if self.recv_data == 0:
+            self.angle = 90
+        elif self.recv_data == 1:
+            self.angle = 140 
+        elif self.recv_data == -1:
+            self.angle = 40
+            
+        self.lidar_data = lidar.grab_data()
+        self.rpm = motorTransceiver([speed, angle, SPEEDPGAIN])
+        if self.rpm != None:
+            self.send_data.rpm = self.rpm
+        self.send_data.lidar_data = self.lidar_data
+        self.send_data.lap = self.lapCount
 
 
-def init_server():
-    HOST, PORT = HOST_l, 10000
-    socketserver.TCPServer.allow_reuse_address = True
+    def auto_drive():
+        try:    
+            sys.stdout.flush()
+            #os.system('clear')
+            if hasNewDataSensor():
+                self.sensorValue = sensorTransceiver() #List of values, 0-3 is sonar, 4 is round count
+            self.lidar_data_np = np.array(data_temp)
+            self.lidar_data  = lidar.grab_data()
+            self.averageDistance.clear()
+            self.averageDistance = calcaverageCones()
+            
+            if countLaps(sensorValue):
+                self.state = state.halt
+                
+            self.pd.setVal = obs.obsDetect(data)
+            self.pd.regulateAngle(sensorValue, averageDistance)
+                
+            self.rpm = motorTransceiver(
+                [regulateSpeed(averageDistance[0],
+                               averageDistance[5],
+                               averageDistance[6]),
+                               pd.currOutAngle,
+                               SPEEDPGAIN])
+                
+                
+        except KeyboardInterrupt:
+            self.halt(lidar)
+            self.state = state.error
 
-    server = ThreadedTCPServer( (HOST, PORT), ThreadedTCPRequestHandler)
-    server.message = b''
-    server.sendmessage = b''
-    #server.recvd = False
+        except Exception as e:
+            print(e)
+            self.halt(lidar)
+            self.state = state.error
 
-    server_thread = threading.Thread(target = server.serve_forever)
-    server_thread.daemon = True
-    server_thread.start()
-    return server, server_thread 
+
+    
+    def mode():
+        if self.recv_data.run:
+            if self.state == state.wait:
+                self.state = state.start
+            else:
+                if self.recv_data.auto_mode:
+                    self.state = state.auto
+                else:
+                    self.state = state.manual
+        else:
+            if not self.state == state.wait:
+                self.state = state.halt
+        
+
+
+    def drive():
+        while 1:
+            self.tranceiver()
+            self.mode()
+            if self.state == state.auto:
+                self.auto_drive()
+            elif self.state == state.manual:
+                self.manual_drive()    
+            elif self.state == state.halt:
+                print("Halting...")
+                self.halt(driver.lidar)
+                self.state = state.wait
+            elif self.state == state.start:
+                self.start_lidar(driver.lidar)
+                self.state = state.manual
+            elif self.state == state.wait:
+                print("waiting")
+                time.sleep(1)        
+
 
 def main():
-    speed = 200 # 0 <= speed <= 200, 100 is neutral
-    pd = PdHandler()
-    obs = obsFunc()
-    global state
-    send_data = sendData()
-    recv_data = Instruction()
-    #Pid == true => use pid in motormodul, if false, dont use pid.
-    pid = True
-    server, server_thread = init_server()
-    angle = 90
-    speed = 100
-    lidar = memelidar.PyLidar()
-    data_temp = [[0,0,0,0]]
-    averageDistance = [0,0,0,0,0] #holds average distance for all cones
     
-
-    while 1:
-        if server.message and server.message != b'1':
-            recv_data.decode(server.message)
-            recv_data.printSelf()
-        send = send_data.encode()
-        server.sendmessage = send
-        pGain = recv_data.p
-        dGain = recv_data.d
-        if state == state.halt:
-            state == state.wait
-        if not recv_data.run and state != state.wait:
-            state = state.halt
-        elif recv_data.run:
-            if recv_data.auto_mode:
-                if state == state.wait:
-                    print("here")
-                    state = state.start
-                else:
-                    print("hjer")
-                    state = state.auto
-            elif not recv_data.auto_mode:
-                if state == state.wait:
-                    state = state.start
-                else:
-                    state = state.manual
-            else:
-                state = state.wait
-        else:
-            state = state.wait  
-                
-        
-        if state == state.auto:
-            print("Auto")
-            try:    
-                sys.stdout.flush()
-                #os.system('clear')
-                sensorValue = [0,0,0,0,0]
-                if hasNewDataSensor():
-                    sensorValue = sensorTransceiver() #List of values, 0-3 is sonar, 4 is round count
-                data = np.array(data_temp)
-                data_temp  = lidar.grab_data()
-                averageDistance.clear()
-                averageDistance = calcaverageCones(data)
-                #for i in range(len(averageDistance)):
-                    #print("cone", i , "distance :", averageDistance[i])
-
-           
-                if countLaps(sensorValue):
-                    state = state.halt
-                    print("Three laps done")
-             
-                pd.setVal = obs.obsDetect(data)
-                pd.regulateAngle(sensorValue, averageDistance)
-                
-                rpm = motorTransceiver([regulateSpeed(averageDistance[0], averageDistance[5], averageDistance[6]), pd.currOutAngle, SPEEDPGAIN])
-                
-                if rpm != None:
-                    send_data.rpm = rpm
-                #print("Rpm: ", rpm)
-                send_data.lidar_data = data_temp
-                send_data.lap = lapCount
-                
-                
-            except KeyboardInterrupt:
-                halt(lidar)
-                break
-
-            except Exception as e:
-                print(e)
-                halt(lidar)
-                break
-
-        elif state == state.manual:
-            time.sleep(0.01)
-            data_temp  = lidar.grab_data()
-            send_data.lidar_data = data_temp
-            print("Manual")
-            if recv_data.W:
-               speed = 150
-            elif recv_data.S:
-                speed = 50
-            else:
-                speed = 100
-            if recv_data == 0:
-                angle = 90
-            elif recv_data == 1:
-                angle = 140 
-            elif recv_data == -1:
-                angle = 40
-
-            rpm = motorTransceiver([speed, angle, SPEEDPGAIN])
-            if rpm != None:
-                send_data.rpm = rpm
-            #print("Rpm: ", rpm)
-            send_data.lidar_data = data_temp
-            send_data.lap = lapCount
-                
-        elif state == state.halt:
-            send_data.lidar_data = data_temp
-            print("Halting..")
-            halt(lidar)
-            state = state.wait
-
-        elif state == state.start:
-            send_data.lidar_data = data_temp
-            start_lidar(lidar)
-        elif state == state.wait:
-            send_data.lidar_data = data_temp
-            print("waiting")
-            #time.sleep(1)
+    driver = main_driver()
+    driver.drive()
 
 if __name__ == '__main__':
     main()
