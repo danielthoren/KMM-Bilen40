@@ -1,16 +1,4 @@
 from main import *
-GOAL_LAPS = 3 # Amount of laps that the robot should drive
-
-
-#Counts the rounds
-def countLaps(sensorValue, lapCount):
-        
-        if(sensorValue[4] == 1):
-            lapCount += 1
-            print(lapCount)
-        #returns true when roundCount equals GOAL_LAPS
-        if lapCount == GOAL_LAPS:
-            return True
 
 #Checks hitbox
 def hitbox(sensorValue):

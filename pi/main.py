@@ -6,8 +6,9 @@ from spi import *
 import sys
 import time
 from obs_detect import *
+from enum import Enum
 
-GOAL_LAPS = 3 # Amount of laps that the robot should drive
+
 SPEEDPGAIN = 10
 
 '''
@@ -26,6 +27,17 @@ PRODUCTSPEEDSTRAIGHT = 0.5
 PRODUCTSPEEDTURN = 0.2
 MAXSPEED = 200
 NEUTRALSPEED = 100
+GOAL_LAPS = 3 # Amount of laps that the robot should drive
+
+lapCount = 0 #Counts the amount of laps we have driven
+
+class state(Enum):
+    auto = 0
+    manuel = 1
+    halt = 2
+    wait = 3
+
+state = state.auto
 
 '''
 Calculates the avarage distance for the measurments in each cone and saves
@@ -60,66 +72,95 @@ def calcaverageCones(lidarData):
 
     return averageDistance
 
-def main():
-    speed = 200 # 0 <= speed <= 200, 100 is neutral
-    pd = PdHandler()
-    obs = obsFunc()
+#Counts the rounds
+def countLaps(sensorValue):
+        global lapCount
+        if(sensorValue[4] == 1):
+           lapCount += 1
+           print(lapCount)
+           #returns true when roundCount equals GOAL_LAPS
+        if lapCount == GOAL_LAPS:
+            return True
 
-    #Pid == true => use pid in motormodul, if false, dont use pid.
-    pid = True
-    lapCount = 0 #Counts the amount of laps we have driven
+def halt(lidar):
+    motorTransceiver([NEUTRALSPEED, NEUTRALWHEELANGLE, SPEEDPGAIN])
+    lidar.stop()
+    lidar.stop_motor()
 
-    averageDistance = [0,0,0,0,0] #holds average distance for all cones
-
-
+def start_lidar():
     lidar = memelidar.PyLidar()
     lidar.start_motor()
     lidar.start_scan()
 
+    return lidar
+        
+def main():
+    speed = 200 # 0 <= speed <= 200, 100 is neutral
+    pd = PdHandler()
+    obs = obsFunc()
+    global state
+    #Pid == true => use pid in motormodul, if false, dont use pid.
+    pid = True
+    #lapCount = 0 #Counts the amount of laps we have driven
+
+    averageDistance = [0,0,0,0,0] #holds average distance for all cones
+    
+
+    lidar = start_lidar()
+    
     while 1:
-        try:    
-            sensorValue = [10,10,10,10,0]
-            #sensorValue = sensorTransciver() #List of values, 0-3 is sonar, 4 is round count
-            print("angle :", pd.currOutAngle)
-            sys.stdout.flush()
-            data = np.array(lidar.grab_data())
-            averageDistance.clear()
-            averageDistance = calcaverageCones(data)
-            #os.system('clear')
-            #for i in range(len(averageDistance)):
-                #print("cone", i , "distance :", averageDistance[i])
+        if state == state.auto:
+            state == state.auto
+            try:    
+                sys.stdout.flush()
+                #os.system('clear')
+                sensorValue = [0,0,0,0,0]
+                if hasNewDataSensor():
+                    sensorValue = sensorTransceiver() #List of values, 0-3 is sonar, 4 is round count
+                    #print(sensorValue)
+                #print("angle :", pd.currOutAngle)
+                #print(sensorValue)
+                data = np.array(lidar.grab_data())
+                averageDistance.clear()
+                averageDistance = calcaverageCones(data)
+                #for i in range(len(averageDistance)):
+                    #print("cone", i , "distance :", averageDistance[i])
 
-            '''
-            if the hitbox is hit or if amount of laps has been completed then
-            stop the car and break
-
-            '''
-            '''
-            if hitbox(sensorValue) or countLaps(sensorValue):
-                stop()
-                break
-            ''' 
-            pd.setVal = obs.obsDetect(data)
-            print(pd.setVal)
-            pd.regulateAngle(sensorValue, averageDistance)
-            print("speed: ", regulateSpeed(averageDistance[0], averageDistance[5], averageDistance[6]))
-
-            rpm = motorTransceiver([regulateSpeed(averageDistance[0], averageDistance[5], averageDistance[6]), pd.currOutAngle, SPEEDPGAIN])
-            
            
-        except KeyboardInterrupt:
-            motorTransceiver([NEUTRALSPEED, NEUTRALWHEELANGLE, SPEEDPGAIN])
-            lidar.stop()
-            lidar.stop_motor()
-            break
+                if countLaps(sensorValue):
+                    state = state.halt
+                    print("Three laps done")
+             
+                pd.setVal = obs.obsDetect(data)
+                #print(pd.setVal)
+                pd.regulateAngle(sensorValue, averageDistance)
+                #print("speed: ", regulateSpeed(averageDistance[0], averageDistance[5], averageDistance[6]))
+                
+                rpm = motorTransceiver([regulateSpeed(averageDistance[0], averageDistance[5], averageDistance[6]), pd.currOutAngle, SPEEDPGAIN])
+                
+                if rpm != None:
+                    print("Rpm: ", rpm)
+            except KeyboardInterrupt:
+                halt(lidar)
+                break
 
-        except Exception as e:
-            print(e)
-            motorTransceiver([NEUTRALSPEED, NEUTRALWHEELANGLE, SPEEDPGAIN])
-            lidar.stop()
-            lidar.stop_motor()
-            break
+            except Exception as e:
+                print(e)
+                halt(lidar)
+                break
 
+        elif state == state.manuel:
+            time.sleep(1)
+        elif state == state.halt:
+            print("Halting..")
+            halt(lidar)
+            state = state.wait
+        elif state == state.wait:
+            print("waiting")
+            time.sleep(1)
 
 if __name__ == '__main__':
     main()
+
+
+    
