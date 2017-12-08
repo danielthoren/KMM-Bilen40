@@ -36,6 +36,7 @@ class state(Enum):
     wait = 3
     start = 4
     error = 5
+    finished = 6
 
 
 class main_driver:
@@ -84,7 +85,7 @@ class main_driver:
                 #print('average :', (average/valueCount))
                 averageDistances.append(int((average/valueCount)/10))
                 if averageDistances[0] < 10:
-                    averageDistances[0] = 100
+                    averageDistances[0] = 800
                 valueCount = 0
                 average = 0
             else:
@@ -139,17 +140,17 @@ class main_driver:
     def manual_drive(self):
         time.sleep(0.01)
         if self.recv_data.W:
-            self.speed = 150
+            self.speed = 250
         elif self.recv_data.S:
-            self.speed = 50
+            self.speed = 0
         else:
             self.speed = 100
         if self.recv_data.AD == 0:
-            self.angle = 90
+            self.angle = 80
         elif self.recv_data.AD == 1:
-            self.angle = 140 
+            self.angle = 30 
         elif self.recv_data.AD == -1:
-            self.angle = 40
+            self.angle = 150
             
         self.lidar_data = self.lidar.grab_data()
         self.rpm = motorTransceiver([self.speed, self.angle, SPEEDPGAIN])
@@ -158,21 +159,21 @@ class main_driver:
         self.send_data.lidar_data = self.lidar_data
         self.send_data.lap = self.lapCount
 
+
+    def get_sensor_data(self):
+        self.sensorValue = [0,0,0,0,0]
+        if hasNewDataSensor():
+            self.sensorValue = sensorTransceiver() #List of values, 0-3 is sonar, 4 is round count
+
     def auto_drive(self):
         try:    
             sys.stdout.flush()
             #os.system('clear')
-            self.sensorValue = [0,0,0,0,0]
-            if hasNewDataSensor():
-                self.sensorValue = sensorTransceiver() #List of values, 0-3 is sonar, 4 is round count
             self.lidar_data  = self.lidar.grab_data()
             self.lidar_data_np = np.array(self.lidar_data)
             self.averageDistance.clear()
             self.averageDistance = self.calcaverageCones()
             #print('averageDist :', self.averageDistance)
-            
-            if self.countLaps(self.sensorValue):
-                self.state = state.halt
                 
             self.pd.setVal = self.obs.obsDetect(self.lidar_data_np)
             self.pd.regulateAngle(self.sensorValue, self.averageDistance)
@@ -198,7 +199,9 @@ class main_driver:
     
     def mode(self):
         if self.recv_data.run:
-            if self.state == state.wait:
+            if self.state == state.finished:
+                pass
+            elif self.state == state.wait:
                 self.state = state.start
             else:
                 if self.recv_data.auto_mode:
@@ -206,31 +209,54 @@ class main_driver:
                 else:
                     self.state = state.manual
         else:
-            if not self.state == state.wait:
+            if self.state == state.finished:
+                self.state = state.wait
+            elif not self.state == state.wait:
                 self.state = state.halt
         
 
 
     def drive(self):
         while 1:
-            self.tranceiver()
-            self.mode()
-            if self.state == state.auto:
-                self.auto_drive()
-            if self.state == state.manual:
-                self.manual_drive()    
-            if self.state == state.halt:
-                print("Halting...")
+            try:
+                self.tranceiver()
+                self.mode()
+                self.get_sensor_data()
+                if self.state == state.auto:
+                    self.auto_drive()
+                    if self.countLaps(self.sensorValue):
+                        self.halt(self.lidar)
+                        self.state = state.finished
+                        
+                if self.state == state.manual:
+                    self.countLaps(self.sensorValue)
+                    self.manual_drive()    
+                if self.state == state.halt:
+                    print("Halting...")
+                    self.halt(self.lidar)
+                    self.state = state.wait
+                if self.state == state.start:
+                    self.start_lidar(self.lidar)
+                    self.state = state.manual
+                if self.state == state.wait:
+                    self.lapCount = 0
+                    print("waiting")
+                    #time.sleep(1)
+                if self.state == state.error:
+                    break
+                if self.state == state.finished:
+                    self.lapCount = 0
+                    print("Finished")
+                
+            except KeyboardInterrupt:
                 self.halt(self.lidar)
-                self.state = state.wait
-            if self.state == state.start:
-                self.start_lidar(self.lidar)
-                self.state = state.manual
-            if self.state == state.wait:
-                print("waiting")
-                #time.sleep(1)
-            if self.state == state.error:
-                break
+                self.state = state.error
+
+            except Exception as e:
+                print(e)
+                self.halt(self.lidar)
+                self.state = state.error
+
 
 
 def main():
