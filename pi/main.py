@@ -79,8 +79,8 @@ class main_driver:
                 pass
             elif(average != 0 and valueCount != 0):
                 self.averageDistance.append(int((average/valueCount)/10))
-            if averageDistance[0] < 10:
-                self.averageDistance[0] = 100
+                if averageDistance[0] < 10:
+                    self.averageDistance[0] = 100
                 valueCount = 0
                 average = 0
             else:
