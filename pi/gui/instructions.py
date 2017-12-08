@@ -1,4 +1,5 @@
 import json
+from design2 import *
 
 class sendData:
     def __init__(self):
@@ -34,13 +35,21 @@ class Instruction:
     def decode(self, msg):
         self.__dict__ = json.loads(msg.decode("ascii"))
 
-    def reset_wasd(self):
+    def reset_all(self):
         self.W = False
         self.S = False
-        #self.AD = 0
+        self.AD = 0
+        self.auto = False
 
-    def _run(self):
-        self.run = not self.run
+    def _run(self, stop):
+        if self.run:
+            self.reset_all()
+            self.run = not self.run
+            stop.setText("Run")
+        else:
+            stop.setText("Stop")
+            self.run = not self.run
+
         
     def printSelf(self):
         print("Forward:\t", self.W)
@@ -69,8 +78,13 @@ class Instruction:
     def _d(self):
         if self.AD < 1:
             self.AD += 1
-    def _auto_mode(self):
-        self.auto_mode = not self.auto_mode
+    def _auto_mode(self, label):
+        if self.auto_mode:
+            self.auto_mode = not self.auto_mode
+            label.setText("Manual")
+        else:
+            self.auto_mode = not self.auto_mode
+            label.setText("Auto")
 
     def disconnect(self, quit):
         self.quit = quit

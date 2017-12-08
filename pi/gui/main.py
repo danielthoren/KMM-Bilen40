@@ -93,6 +93,8 @@ class ExampleApp(QtGui.QMainWindow, design2.Ui_MainWindow, QtGui.QDialog):
         return x, y
     
     def keyPressEvent(self, event):
+        if event.isAutoRepeat():
+            return
         if event.key() == QtCore.Qt.Key_Escape:
             self.close()
 
@@ -107,6 +109,20 @@ class ExampleApp(QtGui.QMainWindow, design2.Ui_MainWindow, QtGui.QDialog):
         elif event.key() == QtCore.Qt.Key_R:
             self.reset()
 
+    def keyReleaseEvent(self, event):
+        if event.isAutoRepeat():
+            return
+        if event.key() == QtCore.Qt.Key_W:
+            self.forward()
+        elif event.key() == QtCore.Qt.Key_S:
+            self.backward()
+
+        if event.key() == QtCore.Qt.Key_A:
+            self.center()
+
+        if event.key() == QtCore.Qt.Key_D:
+            self.center()
+    
     def setupTCP(self):
         self.instr = Instruction()
         #self.send_data = sendData()
@@ -135,6 +151,10 @@ class ExampleApp(QtGui.QMainWindow, design2.Ui_MainWindow, QtGui.QDialog):
         #instr.printSelf()
         self.send()
 
+    def center(self):
+        self.instr.AD = 0
+        self.send()
+        
     def backward(self):
         #self.W.setChecked(False)
         self.instr._s()
@@ -149,7 +169,7 @@ class ExampleApp(QtGui.QMainWindow, design2.Ui_MainWindow, QtGui.QDialog):
         self.send()
 
     def run(self):
-        self.instr._run()
+        self.instr._run(self.stop)
         self.send()
 
     def gettxt(self):
@@ -163,7 +183,7 @@ class ExampleApp(QtGui.QMainWindow, design2.Ui_MainWindow, QtGui.QDialog):
             self.send_data.decode(self.handler.response)
 
     def auto_mode(self):
-        self.instr._auto_mode()
+        self.instr._auto_mode(self.label_5)
         self.send()
 
     def get_rpm(self):
