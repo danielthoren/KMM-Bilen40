@@ -20,7 +20,7 @@ SPEEDPGAIN = 10
 TURNTHRESHOLD = 40  #Defines the threshold for when in a curve or not
 #Defines between wich degrees each cone is. Two first cones are handles as special
 #case since they represent one cone in actuality
-CONES = ((10,0),(360,350),(90,54),(306,270),(53,19),(341,307),(20,10),(350,340))
+CONES = ((10,0),(360,350),(90,54),(306,270),(53,19),(341,307),(30,10),(350,330))
 NEUTRALWHEELANGLE = 80
 PRODUCTSPEEDSTRAIGHT = 0.5
 PRODUCTSPEEDTURN = 0.2
@@ -66,30 +66,100 @@ class main_driver:
     '''
     def calcaverageCones(self):
         #print('calc')
-        average = 0
-        valueCount = 0
-        averageDistances = []
-        for i in range(len(CONES)):
+        average0 = 0
+        valueCount0 = 0
+        average1 = 0
+        valueCount1 = 0
+        average2 = 0
+        valueCount2 = 0
+        average3 = 0
+        valueCount3 = 0
+        average4 = 0
+        valueCount4 = 0
+        average5 = 0
+        valueCount5 = 0
+        average6 = 0
+        valueCount6 = 0
+        averageDistances = [0,0,0,0,0,0,0]
+        #for i in range(len(CONES)):
             #Lidarvalue is a list of tuples
-            for data in self.lidar_data_np:
+        for data in self.lidar_data_np:
                 #data[0] is the angle of the meassurment, <18 and >342 is +- 18 degrees
                 #from angle 0, i.e straight forward. (The cone forward)
                 #data[2] > 0 is the quality of the meassurmetn, 0 is bad.
-                if(data[1] <= CONES[i][0] and data[1] >= CONES[i][1] and data[3] > 0):
-                    average += data[2]
-                    valueCount += 1
+            if(data[1] <= CONES[0][0] and data[1] >= CONES[0][1] and data[3] > 0):
+                average0 += data[2]
+                valueCount0 += 1
 
-            if i == 0:
-                pass
-            elif(average != 0 and valueCount != 0):
-                #print('average :', (average/valueCount))
-                averageDistances.append(int((average/valueCount)/10))
-                if averageDistances[0] < 10:
-                    averageDistances[0] = 800
-                valueCount = 0
-                average = 0
-            else:
-                averageDistances.append(0)
+            elif(data[1] <= CONES[1][0] and data[1] >= CONES[1][1] and data[3] > 0):
+                average0 += data[2]
+                valueCount0 += 1
+
+            elif(data[1] <= CONES[2][0] and data[1] >= CONES[2][1] and data[3] > 0):
+                average1 += data[2]
+                valueCount1 += 1
+
+            elif(data[1] <= CONES[3][0] and data[1] >= CONES[3][1] and data[3] > 0):
+                average2 += data[2]
+                valueCount2 += 1
+
+            elif(data[1] <= CONES[4][0] and data[1] >= CONES[4][1] and data[3] > 0):
+                average3 += data[2]
+                valueCount3 += 1
+                
+            elif(data[1] <= CONES[5][0] and data[1] >= CONES[5][1] and data[3] > 0):
+                average4 += data[2]
+                valueCount4 += 1
+
+            if(data[1] <= CONES[6][0] and data[1] >= CONES[6][1] and data[3] > 0):
+                average5 += data[2]
+                valueCount5 += 1
+                
+            if(data[1] <= CONES[7][0] and data[1] >= CONES[7][1] and data[3] > 0):
+                average6 += data[2]
+                valueCount6 += 1
+                
+        if(average0 != 0 and valueCount0 != 0):
+            #print('average0 :', (average0/valueCount0)/10)
+            averageDistances[0] = (int((average0/valueCount0)/10))
+            valueCount0 = 0
+            average0 = 0
+        if(average1 != 0 and valueCount1 != 0):
+            #print('average :', (average/valueCount))
+            averageDistances[1] = (int((average1/valueCount1)/10))
+            valueCount1 = 0
+            average1 = 0
+        if(average2 != 0 and valueCount2 != 0):
+            #print('average :', (average/valueCount))
+            averageDistances[2] = (int((average2/valueCount2)/10))
+            valueCount2 = 0
+            average2 = 0
+        if(average3 != 0 and valueCount3 != 0):
+            #print('average :', (average/valueCount))
+            averageDistances[3] = (int((average3/valueCount3)/10))
+            valueCount3 = 0
+            average3 = 0
+        if(average4 != 0 and valueCount4 != 0):
+            #print('average :', (average/valueCount))
+            averageDistances[4]= (int((average4/valueCount4)/10))
+            valueCount4 = 0
+            average4 = 0
+        if(average5 != 0 and valueCount5 != 0):
+            #print('average5 :', (average5/valueCount5)/10)
+            averageDistances[5] = (int((average5/valueCount5)/10))
+            valueCount5 = 0
+            average5 = 0
+        if(average6 != 0 and valueCount6 != 0):
+            #print('average6 :', (average6/valueCount6)/10)
+            averageDistances[6] = (int((average6/valueCount6)/10))
+            valueCount6 = 0
+            average6 = 0
+        if averageDistances[0] < 10:
+                averageDistances[0] = 800
+        if averageDistances[5] < 10:
+            averageDistances[5] = 800
+        if averageDistances[6] < 10:
+            averageDistances[6] = 800
         return averageDistances
     
     #Counts the rounds
