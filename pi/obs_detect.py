@@ -16,8 +16,11 @@ class obsFunc():
         self.r_setVal = 0
         self.l_setVal = 0
         self.setVal = 0
-        self.checkDist = 1400
-
+        self.checkDist = 1350
+        self._pGainSetVal = 0.1 #Random value
+        self.target = 0
+        self.setValOut = 0
+        
     def calcHitboxes(self, data):
         self.probileft = 0
         self.probiright = 0
@@ -36,11 +39,11 @@ class obsFunc():
                         self.critprobiright += 1
                     self.probiright += 1
             if HITBOX[2][1]<=point[1]<=HITBOX[2][0] and point[3] != 0:
-                if point[2] < 700:
+                if point[2] < 800:
                     self.probileft += 1
 
             if HITBOX[3][1]<=point[1]<=HITBOX[3][0] and point[3] != 0:
-                if point[2] < 700:
+                if point[2] < 800:
                     self.probiright += 1
 
 
@@ -66,18 +69,33 @@ class obsFunc():
         '''
 
         self.setVal = self.l_setVal + self.r_setVal
+    
+        self.setValOut = self._pLoop(self.setVal)
         #print('l_setval:', self.l_setVal, '\tr_setval:', self.r_setVal)
         #print(self.obsBool)
+
+    
+    def _pLoop(self, currVal):
+        pTerm = 0
+        
+        errorVal = self.target - currVal
+        #print('setVal: ', self.setVal)
+        pTerm = self._pGainSetVal * errorVal
+        self.target = self.setVal
+        
+        
+        return self.target + pTerm
+
     
         
     def obsDetect(self,data):
         self.calcHitboxes(data)
         self.calcSetVal()
-
+        '''
         if self.setVal > 150:
             self.setVal = 150
         if self.setVal < -150:
             self.setval = -150
         print('Setval: ', self.setVal)
-
-        return self.setVal
+        '''
+        return self.setValOut
