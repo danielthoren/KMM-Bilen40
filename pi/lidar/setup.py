@@ -1,11 +1,16 @@
+'''
+setup.py is run to compile the actual library/module that
+is imported in the rest of the project.
+'''
 from distutils.core import setup
 from Cython.Build import cythonize
 from distutils.extension import Extension
 from os import environ
-#environ["CC"] = "g++"
-#environ["CXX"] = "g++"
 
-#pyx-filen måste ha samma namn som modulen som kompileras.
+# All source files needs to be included here.
+# Also, the file.pyx need to have the same name as the module name that
+# is defined in the extensions variable:
+# Extension("modulename"...) = modulename.pyx
 sourcefiles = ['src/memelidar.pyx',
                 'src/rplidar_driver.cpp',
                 'src/memeRPlidar.cpp',
