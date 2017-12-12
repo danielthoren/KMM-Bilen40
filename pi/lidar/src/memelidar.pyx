@@ -2,7 +2,7 @@
 # distutils: sources = ["src/rplidar_driver.cpp", "src/memeRPlidar.cpp","src/arch/linux/net_serial.cpp","src/arch/linux/timer.cpp","src/hal/thread.cpp"]
 # distutils: include_dirs = ["include","src"]
 
-# The above comments are parsed when compiling the wrapper and are therefore
+# The above comments are parsed when compiling the wrapper and therefore
 # needs to correspond with the definitions in sourcefiles in setup.py.
 
 from cython.operator cimport dereference as deref
