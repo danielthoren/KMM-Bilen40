@@ -1,6 +1,12 @@
 '''
 setup.py is run to compile the actual library/module that
 is imported in the rest of the project.
+
+Needs Cython3 to build.
+Build with: python3 setup.py build_ext --inplace
+
+Generates a modulename.so that can be imported in python3.
+"import modulename"
 '''
 from distutils.core import setup
 from Cython.Build import cythonize
