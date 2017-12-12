@@ -54,7 +54,6 @@ namespace rp {namespace standalone { namespace rplidar {
       }
   }
 
-  /* Kanske kan göras i python? */
   #include <signal.h>
   bool ctrl_c_pressed;
   void ctrlc(int)
@@ -62,8 +61,6 @@ namespace rp {namespace standalone { namespace rplidar {
       ctrl_c_pressed = true;
   }
 
-  /////////////////////////////////////////
-  // Tänkt att returnera ett object som repr. rplidarn.
   bool memeRPlidar::setup() {
       const char * opt_com_path = NULL;
       _u32         opt_com_baudrate = 115200;
@@ -71,7 +68,6 @@ namespace rp {namespace standalone { namespace rplidar {
       printf("Ultra simple LIDAR data grabber for RPLIDAR.\n"
              "Version: "RPLIDAR_SDK_VERSION"\n");
 
-      // USB-porten
       opt_com_path = "/dev/ttyUSB0";
 
       // create the driver instance
@@ -90,9 +86,7 @@ namespace rp {namespace standalone { namespace rplidar {
       }
 
       rplidar_response_device_info_t devinfo;
-
-  	// retrieving the device info
-      ////////////////////////////////////////
+	  
       op_result = drv->getDeviceInfo(devinfo);
 
       if (IS_FAIL(op_result)) {
@@ -113,9 +107,6 @@ namespace rp {namespace standalone { namespace rplidar {
               , devinfo.firmware_version & 0xFF
               , (int)devinfo.hardware_version);
 
-
-
-      // check health...
       if (!checkRPLIDARHealth(drv)) {
           goto on_finished;
       }
@@ -125,11 +116,7 @@ namespace rp {namespace standalone { namespace rplidar {
       on_finished:
       RPlidarDriver::DisposeDriver(drv);
       return false;
-  } //// Setup done.
-
-  //////////////////////////////////////////
-  // Hämta en uppsättning data från lidar.//
-  //////////////////////////////////////////
+  }
 
   std::vector<std::vector<float> > memeRPlidar::grabData() {
     u_result     op_result;
