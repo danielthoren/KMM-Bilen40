@@ -1,6 +1,10 @@
 # distutils: language = c++
 # distutils: sources = ["src/rplidar_driver.cpp", "src/memeRPlidar.cpp","src/arch/linux/net_serial.cpp","src/arch/linux/timer.cpp","src/hal/thread.cpp"]
 # distutils: include_dirs = ["include","src"]
+
+# The above comments are parsed when compiling the wrapper and are therefore
+# needs to correspond with the definitions in sourcefiles in setup.py.
+
 from cython.operator cimport dereference as deref
 
 from libcpp.memory cimport unique_ptr
@@ -9,6 +13,9 @@ from libcpp.vector cimport vector
 from libcpp cimport float
 from libcpp cimport bool
 
+# Cython definitions for the contents of the C++ header file that is to be wrapped.
+# Each function fefinition should correspond to a desired python function call
+# in the wrapper definitions later on (in cdef class PyLidar).
 cdef extern from "memeRPlidar.h" namespace "rp::standalone::rplidar":
   cdef cppclass memeRPlidar:
     memeRPlidar() except +
@@ -20,6 +27,10 @@ cdef extern from "memeRPlidar.h" namespace "rp::standalone::rplidar":
     void stop()
     void stopMotor()
 
+# Corresponding functions that should be visible in python3.
+# When imported in python, an instance is initialized by calling
+# modulename.Pylidar() which then will call it's __cinit__() and 
+# init the actual C++ instance.
 cdef class PyLidar:
   cdef memeRPlidar* c_lidar
   def __cinit__(self):
