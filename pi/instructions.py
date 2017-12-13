@@ -19,8 +19,8 @@ class Instruction:
     """
 
     def __init__(self):
-        self.W = False
-        self.S = False
+        self.W = 0
+        self.S = 0
         self.AD = 0
         self.run = False
         self.auto_mode = False
@@ -56,12 +56,12 @@ class Instruction:
     def _w(self):
         self.W = not self.W
         if self.S:
-            self.S = False
+            self.S = 0
 
     def _s(self):
         self.S = not self.S
         if self.W:
-            self.W = False
+            self.W = 0
 
     def _a(self):
         if self.AD > -1:

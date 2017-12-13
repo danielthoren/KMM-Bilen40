@@ -169,18 +169,20 @@ class main_driver:
         #returns true when roundCount equals GOAL_LAPS
         if self.lapCount == GOAL_LAPS:
             return True
-
+    #Halts the car and lidar
     def halt(self,lidar):
         motorTransceiver([NEUTRALSPEED, NEUTRALWHEELANGLE, SPEEDPGAIN])
         lidar.stop()
         lidar.stop_motor()
 
-        
+    #Starts the lidar
     def start_lidar(self,lidar):
         lidar.start_motor()
         lidar.start_scan()
 
-        
+    '''
+    Init the server to commuicate with the gui
+    '''
     def init_server(self):
         socketserver.TCPServer.allow_reuse_address = True        
         server = ThreadedTCPServer( (HOST, PORT), ThreadedTCPRequestHandler)
@@ -191,7 +193,9 @@ class main_driver:
         server_thread.start()
         return server, server_thread
 
-    
+    '''
+    Sends and receives data from/to gui
+    '''
     def tranceiver(self):
         if self.server.message and self.server.message != b'1':
             self.recv_data.decode(self.server.message)
@@ -205,22 +209,13 @@ class main_driver:
         self.send_data.lap = self.lapCount
         send = self.send_data.encode()
         self.server.sendmessage = send
-        
-        
+    '''
+    Takes in arguments from gui to drive the car manualy 
+    '''        
     def manual_drive(self):
         time.sleep(0.01)
-        if self.recv_data.W:
-            self.speed = 250
-        elif self.recv_data.S:
-            self.speed = 0
-        else:
-            self.speed = 100
-        if self.recv_data.AD == 0:
-            self.angle = 80
-        elif self.recv_data.AD == 1:
-            self.angle = 30 
-        elif self.recv_data.AD == -1:
-            self.angle = 150
+        self.speed = 100+(self.recv_data.W*100+self.recv_data.S*100)
+        self.angle = 80+(self.recv_data.AD*60)
             
         self.lidar_data = self.lidar.grab_data()
         self.rpm = motorTransceiver([self.speed, self.angle, SPEEDPGAIN])
@@ -230,21 +225,24 @@ class main_driver:
         self.send_data.lap = self.lapCount
 
 
+    '''
+    If sensormodul has nu data (lapsensor), take in the new data. 
+    '''
     def get_sensor_data(self):
         self.sensorValue = [0,0,0,0,0]
         if hasNewDataSensor():
             self.sensorValue = sensorTransceiver() #List of values, 0-3 is sonar, 4 is round count
 
+    '''
+    Autonumus drive
+    '''
     def auto_drive(self):
         try:    
             sys.stdout.flush()
-            #os.system('clear')
             self.lidar_data  = self.lidar.grab_data()
             self.lidar_data_np = np.array(self.lidar_data)
             self.averageDistance.clear()
-            self.averageDistance = self.calcaverageCones()
-            #print('averageDist :', self.averageDistance)
-                
+            self.averageDistance = self.calcaverageCones()    
             self.pd.setVal = self.obs.obsDetect(self.lidar_data_np)
             self.pd.regulateAngle(self.sensorValue, self.averageDistance)
                 
@@ -311,7 +309,6 @@ class main_driver:
                 if self.state == state.wait:
                     self.lapCount = 0
                     print("waiting")
-                    #time.sleep(1)
                 if self.state == state.error:
                     break
                 if self.state == state.finished:
