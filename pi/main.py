@@ -49,7 +49,7 @@ class main_driver:
         self.send_data = sendData()
         self.recv_data = Instruction()
         self.server, self.server_thread = self.init_server()
-        self.angle = 90
+        self.angle = 80
         self.speed = 100
         self.lidar = memelidar.PyLidar()
         self.lidar_data = [[0,0,0,0]]
@@ -202,7 +202,6 @@ class main_driver:
             self.recv_data.printSelf()
             self.pGain = self.recv_data.p
             self.dGain = self.recv_data.d
-        
         if self.rpm != None:
             self.send_data.rpm = self.rpm
         self.send_data.lidar_data = self.lidar_data
@@ -214,16 +213,16 @@ class main_driver:
     '''        
     def manual_drive(self):
         time.sleep(0.01)
-        self.speed = 100+(self.recv_data.W*100+self.recv_data.S*100)
-        self.angle = 80+(self.recv_data.AD*60)
-            
+        self.speed = int(100+(self.recv_data.W*150-self.recv_data.S*100))
+        self.angle = int(80+((-self.recv_data.AD)*60))   
         self.lidar_data = self.lidar.grab_data()
         self.rpm = motorTransceiver([self.speed, self.angle, SPEEDPGAIN])
+    
         if self.rpm != None:
             self.send_data.rpm = self.rpm
         self.send_data.lidar_data = self.lidar_data
         self.send_data.lap = self.lapCount
-
+       
 
     '''
     If sensormodul has nu data (lapsensor), take in the new data. 
