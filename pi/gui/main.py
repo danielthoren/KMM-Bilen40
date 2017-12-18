@@ -1,13 +1,37 @@
+#!/usr/bin/python3
 from PyQt4 import QtGui, QtCore
 import sys
-import design
+import design2
 import threading
 from instrHandler import Handler
 from threadTCPServer import client
 import time
-from instructions import Instruction
+from instructions import *
+import cv2
+import numpy as np
+HITBOX = ((40,0),(360,320),(41,75),(319,285))
 
-class ExampleApp(QtGui.QMainWindow, design.Ui_MainWindow):
+
+class ImageWidget(QtGui.QWidget):
+    def __init__(self,parent=None):
+        super(ImageWidget,self).__init__(parent)
+        self.image=None
+
+    def setImage(self,image):
+        self.image=image
+        sz=image.size()
+        self.setMinimumSize(sz)
+        self.update()
+
+    def paintEvent(self,event):
+        qp=QtGui.QPainter()
+        qp.begin(self)
+        if self.image:
+            qp.drawImage(QtCore.QPoint(0,0),self.image)
+        qp.end()
+
+
+class ExampleApp(QtGui.QMainWindow, design2.Ui_MainWindow, QtGui.QDialog):
     def __init__(self, parent=None):
         super(ExampleApp, self).__init__(parent)
         self.setupUi(self)
@@ -16,11 +40,85 @@ class ExampleApp(QtGui.QMainWindow, design.Ui_MainWindow):
         self.S.clicked.connect(lambda: self.backward())
         self.A.clicked.connect(lambda: self.doer(self.instr._a))
         self.D.clicked.connect(lambda: self.doer(self.instr._d))
-        self.stop.clicked.connect(lambda: self.reset())
+        self.stop.clicked.connect(lambda: self.run())
+        self.pushButton.clicked.connect(lambda: self.auto_mode())
         self.sendparam.clicked.connect(lambda: self.gettxt())
-        #self.W.clicked.connect(lambda: print("hello"))
+        self.frame=ImageWidget(self.widget)
+        self.frame.setGeometry(QtCore.QRect(10, 10, 1021, 611))
+        #self.setCentralWidget(self.frame)
+        self.img_size = (self.widget.frameGeometry().height(),self.widget.frameGeometry().width(),3)
+        self.img = np.zeros(self.img_size, dtype=np.uint8) +255
+        self.offset_x = self.widget.frameGeometry().width()//2
+        self.offset_y = self.widget.frameGeometry().height()//2
+        self.checkDist = 1400
+        #self.cvImage = cv2.imread(r'cat.jpg')
+        #height, width, byteValue = self.cvImage.shape
+        #byteValue = byteValue * width
 
+        #cv2.cvtColor(self.cvImage, cv2.COLOR_BGR2RGB, self.cvImage)
+
+        #self.mQImage = QtGui.QImage(self.cvImage, width, height, byteValue, QtGui.QImage.Format_RGB888)
+
+        self.timer=QtCore.QTimer(self)
+        self.timer.timeout.connect(self.update)
+        self.timer.start(50)
+        
+# def paintEvent(self, QPaintEvent):
+#         painter = QtGui.QPainter()
+#         painter.begin(self)
+#         painter.drawImage(1021, 10, self.mQImage)
+#         painter.end()
+
+    def update(self):
+        self.img = np.zeros(self.img_size, dtype=np.uint8)
+        cv2.circle(self.img,((self.offset_x),(self.offset_y)), 2, (0,200,50), 20)
+        for point in self.handler.send_data.lidar_data:
+            self.hitBox(point)
+        self.lcdNumber.display(self.handler.send_data.lap)
+        self.lcdNumber_2.display(self.handler.send_data.rpm[0])
+
+        height, width, byteValue = self.img.shape
+        byteValue = byteValue * width
+        imgg = QtGui.QImage(self.img, width, height, byteValue, QtGui.QImage.Format_RGB888)
+        self.frame.setImage(imgg)
+
+
+    def hitBox(self, point):
+        if HITBOX[0][1]<=point[1]<=HITBOX[0][0] and point[3] != 0:
+            self.paintPoint(point, 1, 1)
+        elif HITBOX[1][1]<=point[1]<=HITBOX[1][0] and point[3] != 0:
+            self.paintPoint( point, 0, 1)
+        elif HITBOX[2][1]<=point[1]<=HITBOX[2][0] and point[3] != 0:
+            self.paintPoint(point, 1, 1)
+        elif HITBOX[3][1]<=point[1]<=HITBOX[3][0] and point[3] != 0:
+            self.paintPoint(point, 0, 1)
+        else:
+            self.paintPoint(point, 0, 0)
+        
+    def paintPoint(self, point, lefrig, hitbox):
+        x, y = self.polar2cart(point[2]//10, point[1]-90)
+        if point[2] < self.checkDist and hitbox == 1 :
+            if point[2] < self.checkDist - point[1]*10 and lefrig == 1:
+                cv2.circle(self.img,((x+self.offset_x),(y+self.offset_y)), 2, (0,255,0), 2)
+            elif point[2] < self.checkDist - (360-point[1])*10 and lefrig == 0:
+                cv2.circle(self.img,((x+self.offset_x),(y+self.offset_y)), 2, (0,255,0), 2)
+            else:
+                cv2.circle(self.img,((x+self.offset_x),(y+self.offset_y)), 2, (0,0,255), 2)
+        else:
+            cv2.circle(self.img,((x+self.offset_x),(y+self.offset_y)), 2, (255,0,0), 2)
+        
+    # polar to cartesian
+    def polar2cart(self,r, theta):
+        temp = np.radians(theta)
+        x = r * np.cos(temp)
+        y = r * np.sin(temp)
+        x = int(x)
+        y = int(y)
+        return x, y
+    
     def keyPressEvent(self, event):
+        if event.isAutoRepeat():
+            return
         if event.key() == QtCore.Qt.Key_Escape:
             self.close()
 
@@ -35,8 +133,23 @@ class ExampleApp(QtGui.QMainWindow, design.Ui_MainWindow):
         elif event.key() == QtCore.Qt.Key_R:
             self.reset()
 
+    def keyReleaseEvent(self, event):
+        if event.isAutoRepeat():
+            return
+        if event.key() == QtCore.Qt.Key_W:
+            self.forward()
+        elif event.key() == QtCore.Qt.Key_S:
+            self.backward()
+
+        if event.key() == QtCore.Qt.Key_A:
+            self.center()
+
+        if event.key() == QtCore.Qt.Key_D:
+            self.center()
+    
     def setupTCP(self):
-        self.instr = Instruction()       
+        self.instr = Instruction()
+        #self.send_data = sendData()
         """
         TCP
         """
@@ -62,6 +175,10 @@ class ExampleApp(QtGui.QMainWindow, design.Ui_MainWindow):
         #instr.printSelf()
         self.send()
 
+    def center(self):
+        self.instr.AD = 0
+        self.send()
+        
     def backward(self):
         #self.W.setChecked(False)
         self.instr._s()
@@ -75,19 +192,33 @@ class ExampleApp(QtGui.QMainWindow, design.Ui_MainWindow):
         #instr.printSelf()
         self.send()
 
+    def run(self):
+        self.instr._run(self.stop)
+        self.send()
+
     def gettxt(self):
         self.instr.set_p(self.pid_p.text())
         self.instr.set_d(self.pid_d.text())
         #instr.printSelf()
         self.send()
     
-    
-    
+    def show_data(self):
+        with self.handler.qLock:
+            self.send_data.decode(self.handler.response)
+
+    def auto_mode(self):
+        self.instr._auto_mode(self.label_5)
+        self.send()
+
+    def get_rpm(self):
+        return self.handler.send_data.rpm
+
 
 
 def main():
     app = QtGui.QApplication(sys.argv)    
     form = ExampleApp()
+    
     
     form.show()
     app.exec_()

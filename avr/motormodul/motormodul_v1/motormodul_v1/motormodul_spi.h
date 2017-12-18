@@ -14,6 +14,8 @@ struct motormodul_PA{
 	unsigned char speed;
 	//the angle of the front wheels, may be between 1-180 (90 is neutral)
 	unsigned char angle;
+	//the constant scaling the linear speed function
+	unsigned char pGain;
 };
 
 //data sent from 'motormodul' (A = AVR) to rasberry pi (=P)

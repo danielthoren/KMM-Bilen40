@@ -5,26 +5,43 @@ import os
 import signal
 from instructions import Instruction
 
+import time
+import random
 
 class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
 
     def handle(self):
-        self.server.message = self.request.recv(1024)
-        if self.server.message:
-            self.server.recvd = True
-        cur_thread = threading.current_thread()
-        pid = os.getpid()
+        self.server.message = self.request.recv(4096)
+        self.request.sendall(self.server.sendmessage)
+        #cur_thread = threading.current_thread()
+        #pid = os.getpid()
 
 class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     pass
 
 def client(ip, port, message):
+    def recv():
+        r = sock.recv(2048)
+        tot_r = r
+        while r:
+            r =sock.recv(2048)
+            tot_r += r
+            if not r:
+                break
+        
+        return tot_r
+            
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.connect((ip, port))
+    response = b''
+    
     try:
         sock.sendall(message)
+        response = recv()
     finally:
+        #sock.shutdown(socket.SHUT_RDWR)
         sock.close()
+        return response
 
 if __name__ == "__main__":
 
@@ -33,6 +50,7 @@ if __name__ == "__main__":
     socketserver.TCPServer.allow_reuse_address = True
     server = ThreadedTCPServer((HOST, PORT), ThreadedTCPRequestHandler)
     ip, port = server.server_address
+    
 
 
     # Start a thread with the server -- that thread will then start one
