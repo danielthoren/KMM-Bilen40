@@ -26,8 +26,8 @@ class Instruction:
         self.run = False
         self.auto_mode = False
         self.quit = False
-        self.p = 0.0
-        self.d = 0.0
+        self.p = 0.4
+        self.d = 0.05
 
     def encode(self):
         return (json.dumps(self.__dict__)).encode("ascii")
