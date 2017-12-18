@@ -1,0 +1,142 @@
+from lidar import memelidar
+import numpy as np
+import cv2
+import time
+
+#Defines between wich degrees each cone is. Two first cones are handles as special
+#case since they represent one cone in actuality
+CONES = ((90,54),(306,270),(53,19),(341,307))
+HITBOX = ((10,0),(360,350),(20,10),(350,340))
+minLineLength = 100
+maxLineGap = 10
+
+img_size = (5000,5000,3)
+offset = 2500
+        
+# polar to cartesian
+def polar2cart(r, theta):
+    temp = np.radians(theta)
+    x = r * np.cos(temp)
+    y = r * np.sin(temp)
+    x = int(x)
+    y = int(y)
+    return x, y
+
+
+def obDetect(data):
+    right1 = 0
+    left1 = 0
+    right2 = 0
+    left2 = 0
+    probileft = 0
+    probiright = 0
+    critprobiright = 0
+    critprobileft = 0
+    setVal = 0
+    for point in data:    
+        if point[1]<CONES[0][0] and point[1]>CONES[0][1] and point[3] != 0:
+            right1 += point[2]
+        if point[1]<CONES[1][0] and point[1]>CONES[1][1] and point[3] != 0:
+            left1 += point[2]
+        if point[1]<CONES[2][0] and point[1]>CONES[2][1] and point[3] != 0:
+            right2 += point[2]
+        if point[1]<CONES[3][0] and point[1]>CONES[3][1] and point[3] != 0:
+            left2 += point[2]
+
+        #probileft, probiright = obdetect(point,img,probileft, probiright)
+        if HITBOX[0][1]<point[1]<HITBOX[0][0] and point[3] != 0:
+            if point[2] < 800:
+                x5, y5 = polar2cart(point[2], point[1]-90)
+                #cv2.circle(img,((x5+offset),(y5+offset)), 2, (23,200,20), 80)
+                critprobiright += 1
+        elif HITBOX[1][1]<point[1]<HITBOX[1][0] and point[3] != 0:
+            if point[2] < 800:
+                x5, y5 = polar2cart(point[2], point[1]-90)
+                #cv2.circle(img,((x5+offset),(y5+offset)), 2, (23,200,20), 80)
+                critprobileft += 1
+        elif HITBOX[2][1]<point[1]<HITBOX[2][0] and point[3] != 0:
+            if point[2] < 800:
+                x5, y5 = polar2cart(point[2], point[1]-90)
+                #cv2.circle(img,((x5+offset),(y5+offset)), 2, (23,200,255), 80)
+                probiright += 1
+        elif HITBOX[3][1]<point[1]<HITBOX[3][0] and point[3] != 0:
+            if point[2] < 800:
+                x5, y5 = polar2cart(point[2], point[1]-90)
+                #cv2.circle(img,((x5+offset),(y5+offset)), 2, (23,200,255), 80)
+                probileft += 1
+        
+        x, y = polar2cart(point[2], point[1]-90)
+        #cv2.circle(img,((x+offset),(y+offset)), 2, (0,0,255), 50)
+    if critprobileft > 5:
+        print("Critical hinder left ", critprobileft)
+        setVal += 20
+    if critprobiright > 5:
+        print("critical hinder right ", critprobiright)
+        setVal += -20
+    if probileft > 5:
+        print("Hinder left ", probileft)
+        setVal += 10
+    if probiright > 5:
+        print("Hinder right ", probiright)
+        setVal += -10
+    return setVal
+
+
+def main():
+    
+    lidar = memelidar.PyLidar()
+    lidar.start_motor()
+    lidar.start_scan()
+
+    cv2.namedWindow('image',cv2.WINDOW_NORMAL)
+    cv2.resizeWindow('image', 600,600)
+    
+    while 1:
+        try:
+            img = np.zeros(img_size, dtype=np.uint8) +255
+            sensorValue = [10,10,10,10,0]
+            data = np.array(lidar.grab_data())
+            obDetect(data,img)
+            cv2.imshow('image',img)
+            cv2.waitKey(1)
+            
+        except KeyboardInterrupt:
+            lidar.stop()
+            lidar.stop_motor()
+            break
+
+        except Exception as e:
+            print(e)
+            lidar.stop()
+            lidar.stop_motor()
+            break
+        
+if _name_ == '_main_':
+    main()
+
+
+
+'''
+def driveArea(img,right1,left1,right2,left2):
+
+    rigrad1= right1/(90-54)
+    rigtheta1 = (90+54)/2
+    leftrad1= left1/(306-270)
+    lefttheta1 = (306+270)/2
+    x1, y1 = polar2cart(rigrad1, rigtheta1-90)
+    x2, y2 = polar2cart(leftrad1, lefttheta1-90)
+    cv2.circle(img,((x1+offset),(y1+offset)), 2, (255,0,0), 40)
+    cv2.circle(img,((x2+offset),(y2+offset)), 2, (255,0,0), 40)
+    rigrad2= right2/(53-19)
+    rigtheta2 = (53+19)/2
+    leftrad2= left2/(341-307)
+    lefttheta2 = (341+307)/2
+    x3, y3 = polar2cart(rigrad2, rigtheta2-90)
+    x4, y4 = polar2cart(leftrad2, lefttheta2-90)
+    cv2.circle(img,((x3+offset),(y3+offset)), 2, (255,0,0), 40)
+    cv2.circle(img,((x4+offset),(y4+offset)), 2, (255,0,0), 40)
+    cv2.line(img, (x1+offset, y1+offset), (x3+offset,y3+offset), (255,0,255), 30)
+    cv2.line(img, (x2+offset, y2+offset), (x4+offset,y4+offset), (255,0,255), 30)
+
+    cv2.rectangle(img, (x4+offset,y4+offset),(x1+offset,y1+offset), (100,255,100),10)
+'''
