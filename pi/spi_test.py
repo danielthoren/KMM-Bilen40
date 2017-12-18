@@ -10,7 +10,7 @@ stdscr = curses.initscr()
 stdscr.refresh()
 key = ''
 
-data = [100, 90]
+data = [100, 90, 10]
 recieved = 0
 temp = copy.deepcopy(data)
 while key != ord('q'):
@@ -18,19 +18,21 @@ while key != ord('q'):
     if key ==ord('w'):
         temp[0] = (temp[0] + 10)
         print('Data: ', data)
-        print('Temp: ', temp)
         data = copy.deepcopy(temp)
         recieved = motorTransceiver(data)
     elif key ==ord('s'):
         temp[0] = (temp[0] - 10)
+        print('Data: ', data)
         data = copy.deepcopy(temp)
         recieved = motorTransceiver(data)
     elif key ==ord('d'):
         temp[1] = (temp[1] - 10)
+        print('Data: ', data)
         data = copy.deepcopy(temp)
         recieved = motorTransceiver(data)
     elif key ==ord('a'):
         temp[1] = (temp[1] + 10)
+        print('Data: ', data)
         data = copy.deepcopy(temp)
         recieved = motorTransceiver(data)
     print(recieved)

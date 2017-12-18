@@ -20,24 +20,13 @@ class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     pass
 
 def client(ip, port, message):
-    def recv():
-        r = sock.recv(2048)
-        tot_r = r
-        while r:
-            r =sock.recv(2048)
-            tot_r += r
-            if not r:
-                break
-        
-        return tot_r
-            
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.connect((ip, port))
     response = b''
     
     try:
         sock.sendall(message)
-        response = recv()
+        response = sock.recv(4096)
     finally:
         #sock.shutdown(socket.SHUT_RDWR)
         sock.close()

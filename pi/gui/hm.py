@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 from threadTCPServer import *
 import threading
 import socketserver
@@ -12,6 +13,7 @@ if __name__ == "__main__":
 
     server = ThreadedTCPServer( (HOST, PORT), ThreadedTCPRequestHandler)
     server.message = b''
+    server.sendmessage = b''
     server.recvd = False
 
     server_thread = threading.Thread(target = server.serve_forever)
@@ -26,10 +28,9 @@ if __name__ == "__main__":
     try:
         while True:
             time.sleep(0.01)
-            if server.recvd:
+            if server.message and server.message != b'1':
                 instr.decode(server.message)
                 instr.printSelf()
-                server.recvd = False
             pass
     except KeyboardInterrupt:
         print ("exiting program")

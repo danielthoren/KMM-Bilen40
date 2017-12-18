@@ -27,6 +27,7 @@ sedan, i python:
 
 # grab_data() (och grab_nonzero_data()) ger 2D-array men mätningar för
 # ett varv, där varje mätning ser ut såhär:
+
 [   0.        327.828125  714.         47.      ]
 [ bool(sista mätning på varvet?), vinkel, avst., kvalitet]
 
