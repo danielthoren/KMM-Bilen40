@@ -1,104 +1,82 @@
 from lidar import memelidar
-import numpy as np
-#import cv2
-import time
 
-#Defines between wich degrees each cone is. Two first cones are handles as special
-#case since they represent one cone in actuality
-CONES = ((90,54),(306,270),(53,19),(341,307))
-HITBOX = ((10,0),(360,350),(20,10),(350,340))
-minLineLength = 100
-maxLineGap = 10
-
-img_size = (5000,5000,3)
-offset = 2500
-        
-# polar to cartesian
-def polar2cart(r, theta):
-    temp = np.radians(theta)
-    x = r * np.cos(temp)
-    y = r * np.sin(temp)
-    x = int(x)
-    y = int(y)
-    return x, y
+#Defines between wich degrees each cone is. 
+HITBOX = ((40,0),(360,320),(41,75),(319,285))
 
 
-def obsDetect(data):
-    probileft = 0
-    probiright = 0
-    critprobiright = 0
-    critprobileft = 0
-    setVal = 0
-    for point in data:   
-        #probileft, probiright = obdetect(point,img,probileft, probiright)
-        if HITBOX[0][1]<point[1]<HITBOX[0][0] and point[3] != 0:
-            if point[2] < 1000:
-                #x5, y5 = polar2cart(point[2], point[1]-90)
-                #cv2.circle(img,((x5+offset),(y5+offset)), 2, (23,200,20), 80)
-                critprobiright += 1
-        elif HITBOX[1][1]<point[1]<HITBOX[1][0] and point[3] != 0:
-            if point[2] < 1000:
-                #x5, y5 = polar2cart(point[2], point[1]-90)
-                #cv2.circle(img,((x5+offset),(y5+offset)), 2, (23,200,20), 80)
-                critprobileft += 1
-        elif HITBOX[2][1]<point[1]<HITBOX[2][0] and point[3] != 0:
-            if point[2] < 1000:
-                x5, y5 = polar2cart(point[2], point[1]-90)
-                #cv2.circle(img,((x5+offset),(y5+offset)), 2, (23,200,255), 80)
-                probiright += 1
-        elif HITBOX[3][1]<point[1]<HITBOX[3][0] and point[3] != 0:
-            if point[2] < 1000:
-                #x5, y5 = polar2cart(point[2], point[1]-90)
-                #cv2.circle(img,((x5+offset),(y5+offset)), 2, (23,200,255), 80)
-                probileft += 1
-        
-        x, y = polar2cart(point[2], point[1]-90)
-        #cv2.circle(img,((x+offset),(y+offset)), 2, (0,0,255), 50)
-    if critprobileft > 5:
-        print("Critical hinder left ", critprobileft)
-        setVal += 80
-    if critprobiright > 5:
-        print("critical hinder right ", critprobiright)
-        setVal += -80
-    if probileft > 5:
-        print("Hinder left ", probileft)
-        setVal += 50
-    if probiright > 5:
-        print("Hinder right ", probiright)
-        setVal += -50
-    if setVal > 100:
-        setVal = 100
-    if setVal < -100:
-        setval = -100
-    return setVal
-
-
-def main():
-    
-    lidar = memelidar.PyLidar()
-    lidar.start_motor()
-    lidar.start_scan()
-
-    cv2.namedWindow('image',cv2.WINDOW_NORMAL)
-    cv2.resizeWindow('image', 600,600)
-    
-    while 1:
-        try:
-            img = np.zeros(img_size, dtype=np.uint8) +255
-            sensorValue = [10,10,10,10,0]
-            data = np.array(lidar.grab_data())
-            obDetect(data,img)
-            cv2.imshow('image',img)
-            cv2.waitKey(1)
+class obsFunc():
+    def __init__(self):
+        self.probileft = 0
+        self.probiright = 0
+        self.critprobiright = 0
+        self.critprobileft = 0
+        self.r_setVal = 0
+        self.l_setVal = 0
+        self.setVal = 0
+        self.checkDist = 1350
+        self._pGainSetVal = 0.1 #Random value
+        self.target = 0
+        self.setValOut = 0
+    '''
+    Takes in lidar data and adds point to variabels if someting is inside the hitbox. 
+    '''
+    def calcHitboxes(self, data):
+        self.probileft = 0
+        self.probiright = 0
+        self.critprobiright = 0
+        self.critprobileft = 0
+        for point in data:
             
-        except KeyboardInterrupt:
-            lidar.stop()
-            lidar.stop_motor()
-            break
+            if HITBOX[0][1]<=point[1]<=HITBOX[0][0] and point[3] != 0:
+                if point[2] < self.checkDist:
+                    if point[2] < self.checkDist - point[1]*10:
+                        self.critprobileft += 1
+                    self.probileft += 1
+            if HITBOX[1][1]<=point[1]<=HITBOX[1][0] and point[3] != 0:
+                if point[2] < self.checkDist:
+                    if point[2] < self.checkDist - (360-point[1])*10:
+                        self.critprobiright += 1
+                    self.probiright += 1
+            if HITBOX[2][1]<=point[1]<=HITBOX[2][0] and point[3] != 0:
+                if point[2] < 800:
+                    self.probileft += 1
 
-        except Exception as e:
-            print(e)
-            lidar.stop()
-            lidar.stop_motor()
-            break
+            if HITBOX[3][1]<=point[1]<=HITBOX[3][0] and point[3] != 0:
+                if point[2] < 800:
+                    self.probiright += 1
+
+
+                    
+    '''
+    Sets a setval by checking how many points in the hitbox
+    '''
+    def calcSetVal(self):
+        self.l_setVal = -(self.probileft*5 + self.critprobileft*20)
+        self.r_setVal = self.probiright*5 + self.critprobiright*20
+    
+        self.setVal = self.l_setVal + self.r_setVal
+    
+        self.setValOut = self._pLoop(self.setVal)
+    
+    '''
+    Uses old setval and pGainSetVal to make the transition between setval more smooth 
+    '''
+    def _pLoop(self, currVal):
+        pTerm = 0
         
+        errorVal = self.target - currVal
+        pTerm = self._pGainSetVal * errorVal
+        self.target = self.setVal
+        
+        
+        return self.target + pTerm
+
+    
+    '''
+    Sends a setval depending on if there is any obstacles in the way.
+    '''
+    def obsDetect(self,data):
+        self.calcHitboxes(data)
+        self.calcSetVal()
+        
+        return self.setValOut

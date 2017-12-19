@@ -5,25 +5,12 @@
  *  Author: marli763, krisi211, gussö811
  */
 
-
-
-/* --- TODO TODO TODO TODO TODO TODO ---
- * Fix data types when calculating RPM/RPS
- * Comment properly
- * Merge with master
- * Incorporate RPM into scale
- * Remove lcd compability (?)
- *
-*/
-
 #define F_CPU 16000000
 
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
 #include "motormodul_spi.h"
-
-#include "lcd.h"
 
 // DEBUG LED
 #define led_on()  PORTA |= _BV(1)
@@ -95,16 +82,7 @@ void halleffect_init()
 	PCMSK0 |= (1 << PCINT0);	// set PCINT0 to trigger an interrupt on state change
 	tot_overflow = 0;
 }
-void lcd_init(){
-		//		--- LCD SETUP ---
-		//Initialize LCD module
-		LCDInit(LS_BLINK|LS_ULINE);
-		
-		//Clear the screen
-		LCDClear();
-		
-		LCDWriteString("STARTING");
-}
+
 void scale(){
 	if(data_in.angle <= 180 && data_in.angle >= 0)
 	{
@@ -149,7 +127,6 @@ void p_loop()
 int main(void)
 {
 	//		--- Initialize timers & 'modules' ---
-	//lcd_init();
 	pwm_init();
 	halleffect_init();
 	spi_init();

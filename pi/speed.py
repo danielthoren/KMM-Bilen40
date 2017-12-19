@@ -1,9 +1,13 @@
 from main import *
+GOAL_LAPS = 3 # Amount of laps that the robot should drive
+
 
 #Counts the rounds
-def countLaps(sensorValue):
-        if(sensorValue[4]):
+def countLaps(sensorValue, lapCount):
+        
+        if(sensorValue[4] == 1):
             lapCount += 1
+            print(lapCount)
         #returns true when roundCount equals GOAL_LAPS
         if lapCount == GOAL_LAPS:
             return True
@@ -19,16 +23,16 @@ def hitbox(sensorValue):
 def regulateSpeed(averageForwardDistance, rightVal, leftVal):
 
     #Free road ahed
-    if(averageForwardDistance > 130 and rightVal > 50 and leftVal > 50):
-        return 170 #Full speed
+    if(averageForwardDistance > 180 and rightVal > 100 and leftVal > 100):
+        return 160 #Full speed
  
-    if (70 < averageForwardDistance <= 130 and rightVal > 50 and leftVal > 50):
-        return 140
+    if (50 < averageForwardDistance <= 180 and rightVal > 100 and leftVal > 100):
+        return 120
     #To close to a obsticle
     if averageForwardDistance <= 50:
          return 100 #stops car
     #Free road ahead, but not for long
-    if 50 < averageForwardDistance <= 70 or rightVal <= 50 or leftVal <= 50:
+    if 50 < averageForwardDistance <= 180 or rightVal <= 100 or leftVal <= 100:
         return 120
     else:
         print("in else")

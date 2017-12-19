@@ -39,8 +39,8 @@ outgoing[0] = curr_rpm
 void set_spi_data(motormodul_AP_data data);
 
 /*
-sets the data that has been recieved from the pi in the pointer 'data_in' if the checksum checks out. If new data has not
-been recieved then does nothing.
+sets the data that has been recieved from the pi in the pointer 'data_in' if the checksum checks out. If new data 
+has not been recieved then does nothing.
 
 The recieved data is expected in the following order:
 incomming[0] = speed;	incomming[1] = angle;

@@ -9,9 +9,9 @@ import time
 class PdHandler:
     def __init__(self):
         self._timeSinceStart = time.time()
-        self.pGain = 0.6 #Random value
-        self.dGain = 0.15 #Random value
-        self.iGain = 0.08
+        self.pGain = 0.4 #Random value
+        self.dGain = 0.05 #Random value
+        self.iGain = 0.00
         self._iAccumulated = 0
         self.setVal = 0 #This is the goal.
         self._time = time.time()
@@ -53,7 +53,7 @@ class PdHandler:
 
         
         errorVal = self.setVal - currVal
-        print('setVal: ', self.setVal)
+        #print('setVal: ', self.setVal)
         pTerm = self.pGain * errorVal
         dTerm = self.dGain * ((errorVal - self._preError) / timeSince)
         self._iAccumulated += errorVal * timeSince

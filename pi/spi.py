@@ -77,12 +77,13 @@ def motorTransceiver(data):
         if motor_data[i] == 255:
             motor_data = motor_data[:i]
             break
-
+ 
+        
     if len(motor_data) > 1 and calcChecksum(motor_data[:-1]) == motor_data[-1]:
         return motor_data[:-1]
-    #else:
-    #     print("Invalid checksum, data: ", motor_data)
-    return None
+    else:
+         #print("Invalid checksum, data: ", motor_data)
+         return None
 
 '''
 Receives data from sensor and returns it in a list

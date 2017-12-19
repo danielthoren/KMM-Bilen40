@@ -6,9 +6,7 @@
  */ 
 #include <string.h>
 #include <stdlib.h>
-#include <stdlib.h>
 
-#include "lcd.h"
 #include "motormodul_spi.h"
 
 #define OUTGOING_PACKET_SIZE 2
@@ -51,6 +49,7 @@ void get_incomming(motormodul_PA_data* data){
 	data->pGain = incomming[2];
 }
 
+//Sets the outgoing spi data. Function decladed i header file thus part of the api
 void set_spi_data(motormodul_AP_data data){
 	if ((PINB & 0b00010000) != 0){
 		//dismantling struct to outgoing data
@@ -61,7 +60,7 @@ void set_spi_data(motormodul_AP_data data){
 		buffer = data;
 	}
 }
-
+//Puts the recieved data in the incomming 'data' parameter
 void get_spi_data(motormodul_PA_data* data){
 	//building up struct from incomming data
 	data_available = 0;
