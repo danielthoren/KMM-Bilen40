@@ -5,8 +5,6 @@
  *  Author: marli763, krisi211, gussö811
  */
 
-
-
 #define F_CPU 16000000
 
 #include <avr/io.h>
@@ -86,16 +84,7 @@ void halleffect_init()
 	PCMSK0 |= (1 << PCINT0);	// set PCINT0 to trigger an interrupt on state change
 	tot_overflow = 0;
 }
-void lcd_init(){
-		//		--- LCD SETUP ---
-		//Initialize LCD module
-		LCDInit(LS_BLINK|LS_ULINE);
-		
-		//Clear the screen
-		LCDClear();
-		
-		LCDWriteString("STARTING");
-}
+
 void scale(){
 	if(data_in.angle <= 180 && data_in.angle >= 0)
 	{
@@ -140,7 +129,6 @@ void p_loop()
 int main(void)
 {
 	//		--- Initialize timers & 'modules' ---
-	//lcd_init();
 	pwm_init();
 	halleffect_init();
 	spi_init();
