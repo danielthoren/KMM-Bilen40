@@ -6,7 +6,6 @@
  */ 
 #include <string.h>
 
-#include "lcd.h"
 #include "sensormodul_spi.h"
 
 #define OUTGOING_PACKET_SIZE 6
@@ -66,14 +65,6 @@ void spi_tranciever(){
 	if (tranciever_count == OUTGOING_PACKET_SIZE){
 		tranciever_count = 0;
 		PORTD &= 0b11111110;
-			/*
-			if (buffer.lapsensor != 2){
-				set_outgoing_data(buffer);
-				buffer.lapsensor = 0xFF;
-			}	
-			else{
-				set_outgoing(outgoing_data);
-		}*/
 	}
 	else{
 		SPDR = outgoing[tranciever_count];

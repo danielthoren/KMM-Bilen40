@@ -12,8 +12,6 @@
 #include <avr/interrupt.h>
 #include "motormodul_spi.h"
 
-#include "lcd.h"
-
 // DEBUG LED
 #define led_on()  PORTA |= _BV(1)
 #define led_off()  PORTA &= ~_BV(1)

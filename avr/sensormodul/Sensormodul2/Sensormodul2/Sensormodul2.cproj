@@ -138,19 +138,7 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="custom_char.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="lcd.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="lcd.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="main.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="myutils.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="sensormodul_spi.c">

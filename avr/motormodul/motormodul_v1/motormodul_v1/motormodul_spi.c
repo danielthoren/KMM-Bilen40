@@ -6,9 +6,7 @@
  */ 
 #include <string.h>
 #include <stdlib.h>
-#include <stdlib.h>
 
-#include "lcd.h"
 #include "motormodul_spi.h"
 
 #define OUTGOING_PACKET_SIZE 2

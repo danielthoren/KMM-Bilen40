@@ -37,7 +37,6 @@ SUBDIRS :=
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
-../lcd.c \
 ../motormodul_spi.c \
 ../motormodul_v1.c
 
@@ -49,22 +48,18 @@ ASM_SRCS +=
 
 
 OBJS +=  \
-lcd.o \
 motormodul_spi.o \
 motormodul_v1.o
 
 OBJS_AS_ARGS +=  \
-lcd.o \
 motormodul_spi.o \
 motormodul_v1.o
 
 C_DEPS +=  \
-lcd.d \
 motormodul_spi.d \
 motormodul_v1.d
 
 C_DEPS_AS_ARGS +=  \
-lcd.d \
 motormodul_spi.d \
 motormodul_v1.d
 
@@ -82,8 +77,6 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
-
-
 
 
 
