@@ -9,6 +9,7 @@ import time
 from instructions import *
 import cv2
 import numpy as np
+import pygame
 HITBOX = ((40,0),(360,320),(41,75),(319,285))
 
 
@@ -51,27 +52,26 @@ class ExampleApp(QtGui.QMainWindow, design2.Ui_MainWindow, QtGui.QDialog):
         self.offset_x = self.widget.frameGeometry().width()//2
         self.offset_y = self.widget.frameGeometry().height()//2
         self.checkDist = 1400
-        #self.cvImage = cv2.imread(r'cat.jpg')
-        #height, width, byteValue = self.cvImage.shape
-        #byteValue = byteValue * width
-
-        #cv2.cvtColor(self.cvImage, cv2.COLOR_BGR2RGB, self.cvImage)
-
-        #self.mQImage = QtGui.QImage(self.cvImage, width, height, byteValue, QtGui.QImage.Format_RGB888)
-
+    
         self.timer=QtCore.QTimer(self)
         self.timer.timeout.connect(self.update)
         self.timer.start(50)
+        self.joystick = self.init_joystick()
         
-# def paintEvent(self, QPaintEvent):
-#         painter = QtGui.QPainter()
-#         painter.begin(self)
-#         painter.drawImage(1021, 10, self.mQImage)
-#         painter.end()
-
     def update(self):
+        
+        if pygame.event.get() and self.joystick != None and not self.instr.auto_mode and self.instr.run:
+            self.instr.W = (1+self.joystick.get_axis(5))/2
+            self.instr.S = (1+self.joystick.get_axis(2))/2
+            self.instr.AD = (self.joystick.get_axis(0))
+            self.send()
         self.img = np.zeros(self.img_size, dtype=np.uint8)
-        cv2.circle(self.img,((self.offset_x),(self.offset_y)), 2, (0,200,50), 20)
+        #cv2.circle(self.img,((self.offset_x),(self.offset_y)), 2, (0,200,50), 20)
+        cv2.rectangle(self.img, (self.offset_x-3, self.offset_y-20),( self.offset_x+3, self.offset_y+20),(255,255,0),20)
+        cv2.rectangle(self.img, ( self.offset_x-20, self.offset_y-18),( self.offset_x-5, self.offset_y-5),(255,255,0),8)
+        cv2.rectangle(self.img, ( self.offset_x+5, self.offset_y-18),( self.offset_x+20, self.offset_y-5),(255,255,0),8)
+        cv2.rectangle(self.img, ( self.offset_x+5, self.offset_y+7),( self.offset_x+20, self.offset_y+20),(255,255,0),8)
+        cv2.rectangle(self.img, ( self.offset_x-20, self.offset_y+7),( self.offset_x-5, self.offset_y+20),(255,255,0),8)
         for point in self.handler.send_data.lidar_data:
             self.hitBox(point)
         self.lcdNumber.display(self.handler.send_data.lap)
@@ -115,7 +115,18 @@ class ExampleApp(QtGui.QMainWindow, design2.Ui_MainWindow, QtGui.QDialog):
         x = int(x)
         y = int(y)
         return x, y
-    
+
+    def init_joystick(self):
+        pygame.init()
+        if (pygame.joystick.get_count() != 0):
+            my_joystick = pygame.joystick.Joystick(0)
+            my_joystick.init()
+            return my_joystick
+        else:
+            return None
+        
+
+        
     def keyPressEvent(self, event):
         if event.isAutoRepeat():
             return

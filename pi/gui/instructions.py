@@ -20,14 +20,14 @@ class Instruction:
     """
 
     def __init__(self):
-        self.W = False
-        self.S = False
+        self.W = 0
+        self.S = 0
         self.AD = 0
         self.run = False
         self.auto_mode = False
         self.quit = False
-        self.p = 0.0
-        self.d = 0.0
+        self.p = 0.4
+        self.d = 0.05
 
     def encode(self):
         return (json.dumps(self.__dict__)).encode("ascii")
@@ -64,12 +64,12 @@ class Instruction:
     def _w(self):
         self.W = not self.W
         if self.S:
-            self.S = False
+            self.S = 0
 
     def _s(self):
         self.S = not self.S
         if self.W:
-            self.W = False
+            self.W = 0
 
     def _a(self):
         if self.AD > -1:
