@@ -71,7 +71,12 @@ class ExampleApp(QtGui.QMainWindow, design2.Ui_MainWindow, QtGui.QDialog):
 
     def update(self):
         self.img = np.zeros(self.img_size, dtype=np.uint8)
-        cv2.circle(self.img,((self.offset_x),(self.offset_y)), 2, (0,200,50), 20)
+        #cv2.circle(self.img,((self.offset_x),(self.offset_y)), 2, (0,200,50), 20)
+        cv2.rectangle(self.img, (self.offset_x-3, self.offset_y-20),( self.offset_x+3, self.offset_y+20),(255,255,0),20)
+        cv2.rectangle(self.img, ( self.offset_x-20, self.offset_y-18),( self.offset_x-5, self.offset_y-5),(255,255,0),8)
+        cv2.rectangle(self.img, ( self.offset_x+5, self.offset_y-18),( self.offset_x+20, self.offset_y-5),(255,255,0),8)
+        cv2.rectangle(self.img, ( self.offset_x+5, self.offset_y+7),( self.offset_x+20, self.offset_y+20),(255,255,0),8)
+        cv2.rectangle(self.img, ( self.offset_x-20, self.offset_y+7),( self.offset_x-5, self.offset_y+20),(255,255,0),8)
         for point in self.handler.send_data.lidar_data:
             self.hitBox(point)
         self.lcdNumber.display(self.handler.send_data.lap)
