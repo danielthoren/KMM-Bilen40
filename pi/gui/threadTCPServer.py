@@ -1,6 +1,5 @@
 '''
-Defines the sendData type that is used to send data from RPi to GUI.
-Defines the instruction type that is used to send data from GUI to RPi.
+Defines TCP-socket functionality both for RPi and GUI
 
 Participants:
     Alexander Zeijlon
