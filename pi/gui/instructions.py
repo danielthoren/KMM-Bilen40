@@ -11,6 +11,10 @@ Last changed:
 import json
 from design2 import *
 
+
+"""
+Data recived from car
+"""
 class sendData:
     def __init__(self):
         self.lidar_data = [[]]

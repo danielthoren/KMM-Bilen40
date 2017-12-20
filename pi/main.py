@@ -52,7 +52,7 @@ class state(Enum):
 
 
 class main_driver:
-
+    #Values for class main_driver
     def __init__(self):
         self.state = state.wait
         self.lapCount = 0 #Counts the amount of laps we have driven
@@ -93,6 +93,7 @@ class main_driver:
         average6 = 0
         valueCount6 = 0
         averageDistances = [0,0,0,0,0,0,0]
+
         #Lidarvalue is a list of tuples
         for data in self.lidar_data_np:
                 #data[0] is the angle of the meassurment, <18 and >342 is +- 18 degrees
@@ -166,7 +167,7 @@ class main_driver:
             averageDistances[6] = 800
         return averageDistances
     
-    #Counts the rounds
+    #Counts the laps, if GOAL_LAPS is reached, return true
     def countLaps(self,sensorValue):
         if(sensorValue[4] == 1):
            self.lapCount += 1
@@ -184,9 +185,8 @@ class main_driver:
         lidar.start_motor()
         lidar.start_scan()
 
-    '''
-    Init the server to commuicate with the gui
-    '''
+    
+    #Init the server to commuicate with the gui
     def init_server(self):
         socketserver.TCPServer.allow_reuse_address = True        
         server = ThreadedTCPServer( (HOST, PORT), ThreadedTCPRequestHandler)
@@ -197,10 +197,10 @@ class main_driver:
         server_thread.start()
         return server, server_thread
 
-    '''
-    Sends and receives data from/to gui
-    '''
+    
+    #Sends and receives data from/to gui
     def tranceiver(self):
+        #if new message, read it
         if self.server.message and self.server.message != b'1':
             self.recv_data.decode(self.server.message)
             self.recv_data.printSelf()
@@ -208,16 +208,18 @@ class main_driver:
             self.pd.dGain = self.recv_data.d
         if self.rpm != None:
             self.send_data.rpm = self.rpm
+        #Sends data to gui    
         self.send_data.lidar_data = self.lidar_data
         self.send_data.lap = self.lapCount
         send = self.send_data.encode()
         self.server.sendmessage = send
-    '''
-    Takes in arguments from gui to drive the car manualy 
-    '''        
+    
+    #Takes in arguments from gui to drive the car manualy         
     def manual_drive(self):
         time.sleep(0.01)
+        #set speed for car
         self.speed = int(100+(self.recv_data.W*150-self.recv_data.S*100))
+        #set angle for car
         self.angle = int(80+((-self.recv_data.AD)*60))   
         #self.lidar_data = self.lidar.grab_data()
         self.rpm = motorTransceiver([self.speed, self.angle, SPEEDPGAIN])
@@ -228,27 +230,30 @@ class main_driver:
         self.send_data.lap = self.lapCount
        
 
-    '''
-    If sensormodul has nu data (lapsensor), take in the new data. 
-    '''
+    
+    #If sensormodul has nu data (lapsensor), take in the new data. 
     def get_sensor_data(self):
         self.sensorValue = [0,0,0,0,0]
+        #If sensormodule has new data to send, recive it
         if hasNewDataSensor():
+            #and read it
             self.sensorValue = sensorTransceiver() #List of values, 0-3 is sonar, 4 is round count
 
-    '''
-    Autonumus drive
-    '''
+    #Autonumus drive. Takes in lidardata, and regulates speed and angle
     def auto_drive(self):
         try:    
             sys.stdout.flush()
+            #Get lidar data
             self.lidar_data  = self.lidar.grab_data()
             self.lidar_data_np = np.array(self.lidar_data)
             self.averageDistance.clear()
-            self.averageDistance = self.calcaverageCones()    
+            #Calculate average distance and return it
+            self.averageDistance = self.calcaverageCones()
+            #Check for obstecales and set setVal if there are any
             self.pd.setVal = self.obs.obsDetect(self.lidar_data_np)
+            #Calculate angle depending on what the average distances are
             self.pd.regulateAngle(self.sensorValue, self.averageDistance)
-                
+            #Regualate what speed the car should have and sends it to the motormodule, and recives rpm
             self.rpm = motorTransceiver(
                 [regulateSpeed(self.averageDistance[0],
                                self.averageDistance[5],
@@ -267,7 +272,8 @@ class main_driver:
             self.state = state.error
 
 
-    'In this function a certain mode i selected'
+
+    #Switches mode depending on input from gui
     def mode(self):
         if self.recv_data.run:
             if self.state == state.finished:
@@ -286,7 +292,7 @@ class main_driver:
                 self.state = state.halt
         
 
-    'Here we decide what the cr should do, either be in manual drive mode, aoutonomus mode, halt, finished or error'
+    #Here we decide what the cr should do, either be in manual drive mode, aoutonomus mode, halt, finished or error
     def drive(self):
         while 1:
             try:
@@ -317,7 +323,7 @@ class main_driver:
                 if self.state == state.finished:
                     self.lapCount = 0
                     print("Finished")
-                
+            #if Error, halt
             except KeyboardInterrupt:
                 self.halt(self.lidar)
                 self.state = state.error
@@ -330,8 +336,9 @@ class main_driver:
 
 
 def main():
-    
+    #Init main_driver
     driver = main_driver()
+    #Starts the car 
     driver.drive()
 
 if __name__ == '__main__':
