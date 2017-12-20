@@ -15,7 +15,7 @@ import threading
 import socketserver
 import os
 import signal
-from gui.instructions import Instruction
+from instructions import Instruction
 import time
 
 class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):

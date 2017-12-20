@@ -4,12 +4,13 @@ Defines the instruction type that is used to send data from GUI to RPi.
 
 Participants:
     Alexander Zeijlon
+    Gustaf Soderholm
 Last changed:
-    13/12-2017
+    20/12-2017
 '''
 
 import json
-
+from design2 import *
 
 """
 Data recived from car
