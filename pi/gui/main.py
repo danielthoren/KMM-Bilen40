@@ -114,7 +114,7 @@ class ExampleApp(QtGui.QMainWindow, design2.Ui_MainWindow, QtGui.QDialog):
             else:
                 cv2.circle(self.img,((x+self.offset_x),(y+self.offset_y)), 2, (0,0,255), 2)
         else:
-            cv2.circle(self.img,((x+self.offset_x),(y+self.offset_y)), 2, (255,0,0), 2)
+            cv2.circle(self.img,((x+self.offset_x),(y+self.offset_y)), 2, (0,0,0), 2)
         
     # polar to cartesian
     def polar2cart(self,r, theta):
