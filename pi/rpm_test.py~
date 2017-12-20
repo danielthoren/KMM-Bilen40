@@ -1,7 +1,0 @@
-from spi import *
-
-data = [110,90]
-
-while 1:
-    recieved = motorTransceiver(data)
-    print(recieved)

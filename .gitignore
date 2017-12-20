@@ -7,6 +7,15 @@
 
 # Prerequisites
 .d
+###########
+EMACS
+###########
+*~
+#*#
+## Python
+__pycache__/
+
+
 
 # Object files
 .o
