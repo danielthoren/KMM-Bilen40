@@ -5,6 +5,17 @@
 # Created by: PyQt4 UI code generator 4.11.4
 #
 # WARNING! All changes made in this file will be lost!
+'''
+Design of the gui
+Participants:
+    Gustaf Soderholm
+    Alexander Zeijlon
+Last changed:
+    20/12-2017
+'''
+
+
+
 
 from PyQt4 import QtCore, QtGui
 

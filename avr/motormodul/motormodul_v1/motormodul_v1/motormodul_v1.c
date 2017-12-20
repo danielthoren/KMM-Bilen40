@@ -2,7 +2,7 @@
  * motormodul_v1.c
  *
  * Created: 11/12/2017 4:28:20 PM
- *  Author: marli763, krisi211, gussö811
+ *  Author: marli763, krisi211, gusso811
  */
 
 #define F_CPU 16000000

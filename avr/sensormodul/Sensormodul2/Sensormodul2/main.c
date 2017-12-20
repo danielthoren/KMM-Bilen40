@@ -1,3 +1,12 @@
+/*
+ * Sensormodul
+ *
+ * Created: 9/12/2017 4:28:20 PM
+ *  Author: marli763, krisi211, gusso811
+ */
+
+
+
 //Frequency
 #define F_CPU 16000000
 #include <stdio.h>

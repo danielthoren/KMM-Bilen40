@@ -1,3 +1,16 @@
+'''
+This is the main file of the project. All the decision makng is made here.
+Participants:
+    Gustaf Soderholm
+    Daniel Thoren 
+    Kristian Sikiric
+    Alexander Zeijlon
+    Gustav Svennas
+    Martin Lindkvist
+Last changed:
+    20/12-2017
+'''
+
 from main import *
 GOAL_LAPS = 3 # Amount of laps that the robot should drive
 

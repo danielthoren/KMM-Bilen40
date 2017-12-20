@@ -1,3 +1,13 @@
+'''
+PID-loop
+Participants:
+    Daniel Thoren 
+    Kristian Sikiric
+Last changed:
+    20/12-2017
+'''
+
+
 from main import NEUTRALWHEELANGLE
 
 import numpy as np
