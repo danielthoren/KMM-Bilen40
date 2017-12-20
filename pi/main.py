@@ -1,3 +1,16 @@
+'''''''''
+This is the main file of the project. All the decision makng is made here.
+Participants:
+    Gustaf SÃderholm
+    Daniel Thoren 
+    Kristian Sikiric
+    Alexander Zeijlon
+    Gustav Svennas
+    Martin Lindkvist
+Last changed:
+    20/12-2017
+'''''''''
+
 from pid import *
 from speed import *
 from lidar import memelidar
@@ -16,19 +29,18 @@ import socketserver
 HOST = ""
 PORT = 10000
 
-SPEEDPGAIN = 10
-TURNTHRESHOLD = 40  #Defines the threshold for when in a curve or not
+SPEEDPGAIN = 10 #The gain sent to the p-loop in motormodul
 #Defines between wich degrees each cone is. Two first cones are handles as special
 #case since they represent one cone in actuality
 CONES = ((10,0),(360,350),(90,54),(306,270),(53,19),(341,307),(30,10),(350,330))
-NEUTRALWHEELANGLE = 80
-PRODUCTSPEEDSTRAIGHT = 0.5
+NEUTRALWHEELANGLE = 80 #At this value, the wheels are straight
+PRODUCTSPEEDSTRAIGHT = 0.5 
 PRODUCTSPEEDTURN = 0.2
-MAXSPEED = 200
-NEUTRALSPEED = 100
+MAXSPEED = 200 #The maximum speed we cn set
+NEUTRALSPEED = 100 #At this vlue, the car is nt moving.
 GOAL_LAPS = 3 # Amount of laps that the robot should drive
 
-
+'The dfferent states we use.'
 class state(Enum):
     auto = 0
     manual = 1
@@ -81,7 +93,10 @@ class main_driver:
         average6 = 0
         valueCount6 = 0
         averageDistances = [0,0,0,0,0,0,0]
+<<<<<<< HEAD
         
+=======
+>>>>>>> f766e58e0bd767b9adc92b5fa8ba5864c7e72110
         #Lidarvalue is a list of tuples
         for data in self.lidar_data_np:
                 #data[0] is the angle of the meassurment, <18 and >342 is +- 18 degrees
@@ -120,37 +135,30 @@ class main_driver:
                 valueCount6 += 1
                 
         if(average0 != 0 and valueCount0 != 0):
-            #print('average0 :', (average0/valueCount0)/10)
             averageDistances[0] = (int((average0/valueCount0)/10))
             valueCount0 = 0
             average0 = 0
         if(average1 != 0 and valueCount1 != 0):
-            #print('average :', (average/valueCount))
             averageDistances[1] = (int((average1/valueCount1)/10))
             valueCount1 = 0
             average1 = 0
         if(average2 != 0 and valueCount2 != 0):
-            #print('average :', (average/valueCount))
             averageDistances[2] = (int((average2/valueCount2)/10))
             valueCount2 = 0
             average2 = 0
         if(average3 != 0 and valueCount3 != 0):
-            #print('average :', (average/valueCount))
             averageDistances[3] = (int((average3/valueCount3)/10))
             valueCount3 = 0
             average3 = 0
         if(average4 != 0 and valueCount4 != 0):
-            #print('average :', (average/valueCount))
             averageDistances[4]= (int((average4/valueCount4)/10))
             valueCount4 = 0
             average4 = 0
         if(average5 != 0 and valueCount5 != 0):
-            #print('average5 :', (average5/valueCount5)/10)
             averageDistances[5] = (int((average5/valueCount5)/10))
             valueCount5 = 0
             average5 = 0
         if(average6 != 0 and valueCount6 != 0):
-            #print('average6 :', (average6/valueCount6)/10)
             averageDistances[6] = (int((average6/valueCount6)/10))
             valueCount6 = 0
             average6 = 0
@@ -267,7 +275,11 @@ class main_driver:
             self.state = state.error
 
 
+<<<<<<< HEAD
     #Switches mode depending on input from gui
+=======
+    'In this function a certain mode i selected'
+>>>>>>> f766e58e0bd767b9adc92b5fa8ba5864c7e72110
     def mode(self):
         if self.recv_data.run:
             if self.state == state.finished:
@@ -286,7 +298,11 @@ class main_driver:
                 self.state = state.halt
         
 
+<<<<<<< HEAD
     #Decides what to do for each mode 
+=======
+    'Here we decide what the cr should do, either be in manual drive mode, aoutonomus mode, halt, finished or error'
+>>>>>>> f766e58e0bd767b9adc92b5fa8ba5864c7e72110
     def drive(self):
         while 1:
             try:
