@@ -83,6 +83,7 @@ void halleffect_init()
 	tot_overflow = 0;
 }
 
+//Scale speed and angle so motorcontroller and servo can recive the corresponding pwm-signal
 void scale(){
 	if(data_in.angle <= 180 && data_in.angle >= 0)
 	{
@@ -114,6 +115,7 @@ void scale(){
 	float currVal = 3000;						// latest input , current value
 
 
+
 void p_loop()
 {	
 	float currOutVal = currVal;
@@ -140,6 +142,7 @@ int main(void)
 		
 		data_out.curr_rpm = rpm;
 		set_spi_data(data_out);
+		//If new data from huvudmodule, read it
 		if(get_data_available()){
 			get_spi_data(&data_in);
 			pGain = ((float)data_in.pGain)/1000;
@@ -151,7 +154,7 @@ int main(void)
     }
 }
 
-
+//Interrupt function for hall effect sensor
 ISR(PCINT0_vect)
 {
 	//		--- Pin change interrupt for hall effect sensor ---
