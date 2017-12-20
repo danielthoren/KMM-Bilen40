@@ -1,7 +1,7 @@
-'''''''''
+'''
 This is the main file of the project. All the decision makng is made here.
 Participants:
-    Gustaf SÃderholm
+    Gustaf Soderholm
     Daniel Thoren 
     Kristian Sikiric
     Alexander Zeijlon
@@ -9,7 +9,7 @@ Participants:
     Martin Lindkvist
 Last changed:
     20/12-2017
-'''''''''
+'''
 
 from pid import *
 from speed import *
@@ -20,8 +20,8 @@ import sys
 import time
 from obs_detect import *
 from enum import Enum
-from instructions import *
-from threadTCPServer import *
+from gui.instructions import *
+from gui.threadTCPServer import *
 import threading
 import socketserver
 

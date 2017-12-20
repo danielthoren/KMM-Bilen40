@@ -1,4 +1,16 @@
 #!/usr/bin/python3
+
+'''
+Defines functionality of the GUI, uses PyQt4
+
+Participants:
+    Alexander Zeijlon
+    Gustaf Soderholm
+Last changed:
+    18/12-2017
+'''
+
+
 from PyQt4 import QtGui, QtCore
 import sys
 import design2
