@@ -1,3 +1,15 @@
+'''
+This file is for finding and avoiding obstacles.
+Participants:
+    Gustaf SÃderholm
+    Alexander Zeijlon
+    Kristian Sikiric
+    Daniel Thoren
+    Gustav Svennas
+    Martin Lindkvist
+Last changed:
+    20/12-2017
+'''
 from lidar import memelidar
 
 #Defines between wich degrees each cone is. 
