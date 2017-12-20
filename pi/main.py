@@ -200,8 +200,8 @@ class main_driver:
         if self.server.message and self.server.message != b'1':
             self.recv_data.decode(self.server.message)
             self.recv_data.printSelf()
-            self.pGain = self.recv_data.p
-            self.dGain = self.recv_data.d
+            self.pd.pGain = self.recv_data.p
+            self.pd.dGain = self.recv_data.d
         if self.rpm != None:
             self.send_data.rpm = self.rpm
         self.send_data.lidar_data = self.lidar_data
@@ -215,7 +215,7 @@ class main_driver:
         time.sleep(0.01)
         self.speed = int(100+(self.recv_data.W*150-self.recv_data.S*100))
         self.angle = int(80+((-self.recv_data.AD)*60))   
-        self.lidar_data = self.lidar.grab_data()
+        #self.lidar_data = self.lidar.grab_data()
         self.rpm = motorTransceiver([self.speed, self.angle, SPEEDPGAIN])
     
         if self.rpm != None:
