@@ -25,6 +25,7 @@ class obsFunc():
         self.probiright = 0
         self.critprobiright = 0
         self.critprobileft = 0
+        #For each value from lidar, check if it is in the hitbox and check if it is close ( < checkDist)
         for point in data:
             
             if HITBOX[0][1]<=point[1]<=HITBOX[0][0] and point[3] != 0:
@@ -63,12 +64,9 @@ class obsFunc():
     '''
     def _pLoop(self, currVal):
         pTerm = 0
-        
         errorVal = self.target - currVal
         pTerm = self._pGainSetVal * errorVal
         self.target = self.setVal
-        
-        
         return self.target + pTerm
 
     

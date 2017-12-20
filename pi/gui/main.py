@@ -57,23 +57,31 @@ class ExampleApp(QtGui.QMainWindow, design2.Ui_MainWindow, QtGui.QDialog):
         self.timer.timeout.connect(self.update)
         self.timer.start(50)
         self.joystick = self.init_joystick()
-        
+
+    #Update the gui
     def update(self):
-        
+        #takes input from joystick
         if pygame.event.get() and self.joystick != None and not self.instr.auto_mode and self.instr.run:
             self.instr.W = (1+self.joystick.get_axis(5))/2
             self.instr.S = (1+self.joystick.get_axis(2))/2
             self.instr.AD = (self.joystick.get_axis(0))
             self.send()
+
+        #Makes new frame for lidar data
         self.img = np.zeros(self.img_size, dtype=np.uint8)
-        #cv2.circle(self.img,((self.offset_x),(self.offset_y)), 2, (0,200,50), 20)
+
+        #Paint car on frame
         cv2.rectangle(self.img, (self.offset_x-3, self.offset_y-20),( self.offset_x+3, self.offset_y+20),(255,255,0),20)
         cv2.rectangle(self.img, ( self.offset_x-20, self.offset_y-18),( self.offset_x-5, self.offset_y-5),(255,255,0),8)
         cv2.rectangle(self.img, ( self.offset_x+5, self.offset_y-18),( self.offset_x+20, self.offset_y-5),(255,255,0),8)
         cv2.rectangle(self.img, ( self.offset_x+5, self.offset_y+7),( self.offset_x+20, self.offset_y+20),(255,255,0),8)
         cv2.rectangle(self.img, ( self.offset_x-20, self.offset_y+7),( self.offset_x-5, self.offset_y+20),(255,255,0),8)
+
+        #Paint lidar data for each value from lidar
         for point in self.handler.send_data.lidar_data:
             self.hitBox(point)
+
+        #Show rpm and lapcount in gui
         self.lcdNumber.display(self.handler.send_data.lap)
         self.lcdNumber_2.display(self.handler.send_data.rpm[0])
 
@@ -82,7 +90,7 @@ class ExampleApp(QtGui.QMainWindow, design2.Ui_MainWindow, QtGui.QDialog):
         imgg = QtGui.QImage(self.img, width, height, byteValue, QtGui.QImage.Format_RGB888)
         self.frame.setImage(imgg)
 
-
+    #Checks if points are inside hitbox, then color them green or blue, else paint them red
     def hitBox(self, point):
         if HITBOX[0][1]<=point[1]<=HITBOX[0][0] and point[3] != 0:
             self.paintPoint(point, 1, 1)
@@ -94,7 +102,8 @@ class ExampleApp(QtGui.QMainWindow, design2.Ui_MainWindow, QtGui.QDialog):
             self.paintPoint(point, 0, 1)
         else:
             self.paintPoint(point, 0, 0)
-        
+
+    #Paints a point
     def paintPoint(self, point, lefrig, hitbox):
         x, y = self.polar2cart(point[2]//10, point[1]-90)
         if point[2] < self.checkDist and hitbox == 1 :
@@ -116,6 +125,7 @@ class ExampleApp(QtGui.QMainWindow, design2.Ui_MainWindow, QtGui.QDialog):
         y = int(y)
         return x, y
 
+    #Init the joystick, if any is detected
     def init_joystick(self):
         pygame.init()
         if (pygame.joystick.get_count() != 0):
@@ -124,9 +134,8 @@ class ExampleApp(QtGui.QMainWindow, design2.Ui_MainWindow, QtGui.QDialog):
             return my_joystick
         else:
             return None
-        
 
-        
+    #Register a keyboard press
     def keyPressEvent(self, event):
         if event.isAutoRepeat():
             return
@@ -143,7 +152,8 @@ class ExampleApp(QtGui.QMainWindow, design2.Ui_MainWindow, QtGui.QDialog):
             self.doer(self.instr._d)
         elif event.key() == QtCore.Qt.Key_R:
             self.reset()
-
+            
+    #Register i keyborad release
     def keyReleaseEvent(self, event):
         if event.isAutoRepeat():
             return
@@ -171,25 +181,30 @@ class ExampleApp(QtGui.QMainWindow, design2.Ui_MainWindow, QtGui.QDialog):
         self.handler_thread.daemon = True
         self.handler_thread.start()
 
+    #Sends a message to the car
     def send(self):
         message = self.instr.encode()
         self.handler.add(message)
 
+    #Do the function input and send to car
     def doer(self, func):
         func()
         #instr.printSelf()
         self.send()
 
+    #Trigged by "W" press, sends command
     def forward(self):
         #self.S.setChecked(False)
         self.instr._w()
         #instr.printSelf()
         self.send()
 
+    #Trigged by "A" or "D" press, sends command
     def center(self):
         self.instr.AD = 0
         self.send()
-        
+
+    #Trigged by "S" press, sends command
     def backward(self):
         #self.W.setChecked(False)
         self.instr._s()
@@ -203,24 +218,28 @@ class ExampleApp(QtGui.QMainWindow, design2.Ui_MainWindow, QtGui.QDialog):
         #instr.printSelf()
         self.send()
 
+    #Change run mode to true or false, and send 
     def run(self):
         self.instr._run(self.stop)
         self.send()
-
+    
+    #Get pGain or dGain value and send to car
     def gettxt(self):
         self.instr.set_p(self.pid_p.text())
         self.instr.set_d(self.pid_d.text())
-        #instr.printSelf()
         self.send()
+    
     
     def show_data(self):
         with self.handler.qLock:
             self.send_data.decode(self.handler.response)
 
+    #Change auto mode to true or false, and send
     def auto_mode(self):
         self.instr._auto_mode(self.label_5)
         self.send()
 
+    #Read rpm from recieved data
     def get_rpm(self):
         return self.handler.send_data.rpm
 
