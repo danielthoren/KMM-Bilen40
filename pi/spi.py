@@ -1,4 +1,14 @@
 #!/usr/bin/python3
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+This file sets up the communication and datatransfer between the RaspberryPi
+and the Slave components (AVRs). Uses the wiringPi library.
+Participants: 
+    Gustav Svennas
+    Alexander Zeijlon
+    Daniel Thoren
+Last changed:
+    07/12-2017
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 import wiringpi
 import time
 '''''''''''''''''
