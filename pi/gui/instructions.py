@@ -1,3 +1,13 @@
+'''
+Defines the sendData type that is used to send data from RPi to GUI.
+Defines the instruction type that is used to send data from GUI to RPi.
+
+Participants:
+    Alexander Zeijlon
+Last changed:
+    13/12-2017
+'''
+
 import json
 from design2 import *
 
