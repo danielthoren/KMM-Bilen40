@@ -9,7 +9,6 @@ Last changed:
 '''
 
 import json
-from design2 import *
 
 
 """
@@ -69,11 +68,11 @@ class Instruction:
         print("Forward:\t", self.W)
         print("Backward:\t", self.S)
         print("AD =\t\t", self.AD)
-        print("Start:\t\t", self.start)
-        print("Stop:\t\t", self.stop)
+        print("Start:\t\t", self.run)
         print("Quit:\t\t", self.quit)
         print("pid-P =\t\t", self.p)
         print("pid-D =\t\t", self.d)
+        print("Auto =\t\t", self.auto_mode)
 
     def _w(self):
         self.W = not self.W

@@ -1,7 +1,7 @@
 '''
 This file is for finding and avoiding obstacles.
 Participants:
-    Gustaf SÃderholm
+    Gustaf Soderholm
     Alexander Zeijlon
     Kristian Sikiric
     Daniel Thoren

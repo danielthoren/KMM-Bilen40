@@ -3,7 +3,7 @@ Defines TCP-socket functionality both for RPi and GUI
 
 Participants:
     Alexander Zeijlon
-    Gustaf Söderholm
+    Gustaf Soderholm
 
 Last changed:
     17/12-2017
@@ -15,7 +15,7 @@ import threading
 import socketserver
 import os
 import signal
-from instructions import Instruction
+from gui.instructions import Instruction
 import time
 
 class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):

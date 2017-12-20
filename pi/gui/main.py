@@ -5,7 +5,7 @@ Defines functionality of the GUI, uses PyQt4
 
 Participants:
     Alexander Zeijlon
-    Gustaf Söderholm
+    Gustaf Soderholm
 Last changed:
     18/12-2017
 '''
