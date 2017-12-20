@@ -93,10 +93,7 @@ class main_driver:
         average6 = 0
         valueCount6 = 0
         averageDistances = [0,0,0,0,0,0,0]
-<<<<<<< HEAD
-        
-=======
->>>>>>> f766e58e0bd767b9adc92b5fa8ba5864c7e72110
+
         #Lidarvalue is a list of tuples
         for data in self.lidar_data_np:
                 #data[0] is the angle of the meassurment, <18 and >342 is +- 18 degrees
@@ -275,11 +272,8 @@ class main_driver:
             self.state = state.error
 
 
-<<<<<<< HEAD
+
     #Switches mode depending on input from gui
-=======
-    'In this function a certain mode i selected'
->>>>>>> f766e58e0bd767b9adc92b5fa8ba5864c7e72110
     def mode(self):
         if self.recv_data.run:
             if self.state == state.finished:
@@ -298,11 +292,7 @@ class main_driver:
                 self.state = state.halt
         
 
-<<<<<<< HEAD
-    #Decides what to do for each mode 
-=======
-    'Here we decide what the cr should do, either be in manual drive mode, aoutonomus mode, halt, finished or error'
->>>>>>> f766e58e0bd767b9adc92b5fa8ba5864c7e72110
+    #Here we decide what the cr should do, either be in manual drive mode, aoutonomus mode, halt, finished or error
     def drive(self):
         while 1:
             try:
