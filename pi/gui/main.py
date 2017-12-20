@@ -10,7 +10,7 @@ from instructions import *
 import cv2
 import numpy as np
 import pygame
-HITBOX = ((40,0),(360,320),(41,75),(319,285))
+HITBOX = ((40,0),(360,320),(41,75),(319,285),(90,270))
 
 
 class ImageWidget(QtGui.QWidget):
@@ -71,11 +71,11 @@ class ExampleApp(QtGui.QMainWindow, design2.Ui_MainWindow, QtGui.QDialog):
         self.img = np.zeros(self.img_size, dtype=np.uint8)
 
         #Paint car on frame
-        cv2.rectangle(self.img, (self.offset_x-3, self.offset_y-20),( self.offset_x+3, self.offset_y+20),(255,255,0),20)
-        cv2.rectangle(self.img, ( self.offset_x-20, self.offset_y-18),( self.offset_x-5, self.offset_y-5),(255,255,0),8)
-        cv2.rectangle(self.img, ( self.offset_x+5, self.offset_y-18),( self.offset_x+20, self.offset_y-5),(255,255,0),8)
-        cv2.rectangle(self.img, ( self.offset_x+5, self.offset_y+7),( self.offset_x+20, self.offset_y+20),(255,255,0),8)
-        cv2.rectangle(self.img, ( self.offset_x-20, self.offset_y+7),( self.offset_x-5, self.offset_y+20),(255,255,0),8)
+        cv2.rectangle(self.img, (self.offset_x-3, self.offset_y-20),( self.offset_x+3, self.offset_y+20),(50,25,100),15)
+        cv2.rectangle(self.img, ( self.offset_x-20, self.offset_y-18),( self.offset_x-5, self.offset_y-5),(50,25,100),6)
+        cv2.rectangle(self.img, ( self.offset_x+5, self.offset_y-18),( self.offset_x+20, self.offset_y-5),(50,25,100),6)
+        cv2.rectangle(self.img, ( self.offset_x+5, self.offset_y+7),( self.offset_x+20, self.offset_y+20),(50,25,100),6)
+        cv2.rectangle(self.img, ( self.offset_x-20, self.offset_y+7),( self.offset_x-5, self.offset_y+20),(50,25,100),6)
 
         #Paint lidar data for each value from lidar
         for point in self.handler.send_data.lidar_data:
@@ -100,21 +100,25 @@ class ExampleApp(QtGui.QMainWindow, design2.Ui_MainWindow, QtGui.QDialog):
             self.paintPoint(point, 1, 1)
         elif HITBOX[3][1]<=point[1]<=HITBOX[3][0] and point[3] != 0:
             self.paintPoint(point, 0, 1)
+        elif HITBOX[4][1]<=point[1]<=HITBOX[4][0] and point[3] != 0:
+            self.paintPoint(point, 0, 1, 1)
         else:
             self.paintPoint(point, 0, 0)
 
     #Paints a point
-    def paintPoint(self, point, lefrig, hitbox):
+    def paintPoint(self, point, lefrig, hitbox, side=0):
         x, y = self.polar2cart(point[2]//10, point[1]-90)
         if point[2] < self.checkDist and hitbox == 1 :
             if point[2] < self.checkDist - point[1]*10 and lefrig == 1:
-                cv2.circle(self.img,((x+self.offset_x),(y+self.offset_y)), 2, (0,255,0), 2)
+                cv2.circle(self.img,((x+self.offset_x),(y+self.offset_y)), 2, (255,0,0), 2)
             elif point[2] < self.checkDist - (360-point[1])*10 and lefrig == 0:
-                cv2.circle(self.img,((x+self.offset_x),(y+self.offset_y)), 2, (0,255,0), 2)
+                cv2.circle(self.img,((x+self.offset_x),(y+self.offset_y)), 2, (255,0,0), 2)
+            elif side == 1:
+                cv2.circle(self.img,((x+self.offset_x),(y+self.offset_y)), 2, (255,255,255), 2)
             else:
-                cv2.circle(self.img,((x+self.offset_x),(y+self.offset_y)), 2, (0,0,255), 2)
+                cv2.circle(self.img,((x+self.offset_x),(y+self.offset_y)), 2, (0,255,255), 2)
         else:
-            cv2.circle(self.img,((x+self.offset_x),(y+self.offset_y)), 2, (0,0,0), 2)
+            cv2.circle(self.img,((x+self.offset_x),(y+self.offset_y)), 2, (0,55,255), 2)
         
     # polar to cartesian
     def polar2cart(self,r, theta):
