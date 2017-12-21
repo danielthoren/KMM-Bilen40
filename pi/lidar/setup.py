@@ -1,4 +1,6 @@
 '''
+Author: Alexander Zeijlon
+
 setup.py is run to compile the actual library/module that
 is imported in the rest of the project.
 

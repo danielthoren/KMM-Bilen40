@@ -12,19 +12,20 @@ Last changed:
 
 
 from PyQt4 import QtGui, QtCore
+from instrHandler import Handler
+from threadTCPServer import client
+from instructions import *
 import sys
 import design2
 import threading
-from instrHandler import Handler
-from threadTCPServer import client
 import time
-from instructions import *
 import cv2
-import numpy as np
 import pygame
+import numpy as np
+
 HITBOX = ((40,0),(360,320),(41,75),(319,285),(90,270))
 
-
+# Used for drawing the lidar image.
 class ImageWidget(QtGui.QWidget):
     def __init__(self,parent=None):
         super(ImageWidget,self).__init__(parent)
@@ -44,9 +45,10 @@ class ImageWidget(QtGui.QWidget):
         qp.end()
 
 
-class ExampleApp(QtGui.QMainWindow, design2.Ui_MainWindow, QtGui.QDialog):
+# Main window.
+class GUIApp(QtGui.QMainWindow, design2.Ui_MainWindow, QtGui.QDialog):
     def __init__(self, parent=None):
-        super(ExampleApp, self).__init__(parent)
+        super(GUIApp, self).__init__(parent)
         self.setupUi(self)
         self.setupTCP()
         self.W.clicked.connect(lambda: self.forward())
@@ -58,13 +60,12 @@ class ExampleApp(QtGui.QMainWindow, design2.Ui_MainWindow, QtGui.QDialog):
         self.sendparam.clicked.connect(lambda: self.gettxt())
         self.frame=ImageWidget(self.widget)
         self.frame.setGeometry(QtCore.QRect(10, 10, 1021, 611))
-        #self.setCentralWidget(self.frame)
         self.img_size = (self.widget.frameGeometry().height(),self.widget.frameGeometry().width(),3)
         self.img = np.zeros(self.img_size, dtype=np.uint8) +255
         self.offset_x = self.widget.frameGeometry().width()//2
         self.offset_y = self.widget.frameGeometry().height()//2
         self.checkDist = 1400
-    
+
         self.timer=QtCore.QTimer(self)
         self.timer.timeout.connect(self.update)
         self.timer.start(50)
@@ -131,7 +132,7 @@ class ExampleApp(QtGui.QMainWindow, design2.Ui_MainWindow, QtGui.QDialog):
                 cv2.circle(self.img,((x+self.offset_x),(y+self.offset_y)), 2, (0,255,255), 2)
         else:
             cv2.circle(self.img,((x+self.offset_x),(y+self.offset_y)), 2, (0,55,255), 2)
-        
+
     # polar to cartesian
     def polar2cart(self,r, theta):
         temp = np.radians(theta)
@@ -168,7 +169,7 @@ class ExampleApp(QtGui.QMainWindow, design2.Ui_MainWindow, QtGui.QDialog):
             self.doer(self.instr._d)
         elif event.key() == QtCore.Qt.Key_R:
             self.reset()
-            
+
     #Register i keyborad release
     def keyReleaseEvent(self, event):
         if event.isAutoRepeat():
@@ -183,7 +184,7 @@ class ExampleApp(QtGui.QMainWindow, design2.Ui_MainWindow, QtGui.QDialog):
 
         if event.key() == QtCore.Qt.Key_D:
             self.center()
-    
+
     def setupTCP(self):
         self.instr = Instruction()
         #self.send_data = sendData()
@@ -192,8 +193,8 @@ class ExampleApp(QtGui.QMainWindow, design2.Ui_MainWindow, QtGui.QDialog):
         """
         host, port = "192.168.1.10", 10000
         self.handler = Handler(host, port)
-        
-        self.handler_thread = threading.Thread(target = self.handler.hantera)
+
+        self.handler_thread = threading.Thread(target = self.handler.handle)
         self.handler_thread.daemon = True
         self.handler_thread.start()
 
@@ -205,14 +206,11 @@ class ExampleApp(QtGui.QMainWindow, design2.Ui_MainWindow, QtGui.QDialog):
     #Do the function input and send to car
     def doer(self, func):
         func()
-        #instr.printSelf()
         self.send()
 
     #Trigged by "W" press, sends command
     def forward(self):
-        #self.S.setChecked(False)
         self.instr._w()
-        #instr.printSelf()
         self.send()
 
     #Trigged by "A" or "D" press, sends command
@@ -222,30 +220,26 @@ class ExampleApp(QtGui.QMainWindow, design2.Ui_MainWindow, QtGui.QDialog):
 
     #Trigged by "S" press, sends command
     def backward(self):
-        #self.W.setChecked(False)
         self.instr._s()
-        #instr.printSelf()
         self.send()
 
+    #Reset all directional instructions.
     def reset(self):
         self.instr.reset_wasd()
-        # self.S.setChecked(False)
-        # self.W.setChecked(False)
-        #instr.printSelf()
         self.send()
 
-    #Change run mode to true or false, and send 
+    #Change run mode to true or false, and send
     def run(self):
         self.instr._run(self.stop)
         self.send()
-    
+
     #Get pGain or dGain value and send to car
     def gettxt(self):
         self.instr.set_p(self.pid_p.text())
         self.instr.set_d(self.pid_d.text())
         self.send()
-    
-    
+
+
     def show_data(self):
         with self.handler.qLock:
             self.send_data.decode(self.handler.response)
@@ -262,10 +256,10 @@ class ExampleApp(QtGui.QMainWindow, design2.Ui_MainWindow, QtGui.QDialog):
 
 
 def main():
-    app = QtGui.QApplication(sys.argv)    
-    form = ExampleApp()
-    
-    
+    app = QtGui.QApplication(sys.argv)
+    form = GUIApp()
+
+
     form.show()
     app.exec_()
 

@@ -2,7 +2,7 @@
 This is the main file of the project. All the decision makng is made here.
 Participants:
     Gustaf Soderholm
-    Daniel Thoren 
+    Daniel Thoren
     Kristian Sikiric
     Alexander Zeijlon
     Gustav Svennas
@@ -11,17 +11,17 @@ Last changed:
     20/12-2017
 '''
 
-from pid import *
-from speed import *
 from lidar import memelidar
-import numpy as np
+from pid import *
 from spi import *
-import sys
-import time
+from speed import *
 from obs_detect import *
 from enum import Enum
 from gui.instructions import *
 from gui.threadTCPServer import *
+import numpy as np
+import sys
+import time
 import threading
 import socketserver
 
@@ -34,7 +34,7 @@ SPEEDPGAIN = 10 #The gain sent to the p-loop in motormodul
 #case since they represent one cone in actuality
 CONES = ((10,0),(360,350),(90,54),(306,270),(53,19),(341,307),(30,10),(350,330))
 NEUTRALWHEELANGLE = 80 #At this value, the wheels are straight
-PRODUCTSPEEDSTRAIGHT = 0.5 
+PRODUCTSPEEDSTRAIGHT = 0.5
 PRODUCTSPEEDTURN = 0.2
 MAXSPEED = 200 #The maximum speed we cn set
 NEUTRALSPEED = 100 #At this vlue, the car is nt moving.
@@ -69,7 +69,7 @@ class main_driver:
         self.lidar_data_np = np.array(self.lidar_data)
         self.sensorValue = [0,0,0,0,0]
         self.rpm = [0]
-    
+
     '''
     Calculates the avarage distance for the measurments in each cone and saves
     them in 'averageDistance' variable. The first two values in the 'CONES' constant
@@ -118,7 +118,7 @@ class main_driver:
             elif(data[1] <= CONES[4][0] and data[1] >= CONES[4][1] and data[3] > 0):
                 average3 += data[2]
                 valueCount3 += 1
-                
+
             elif(data[1] <= CONES[5][0] and data[1] >= CONES[5][1] and data[3] > 0):
                 average4 += data[2]
                 valueCount4 += 1
@@ -126,11 +126,11 @@ class main_driver:
             if(data[1] <= CONES[6][0] and data[1] >= CONES[6][1] and data[3] > 0):
                 average5 += data[2]
                 valueCount5 += 1
-                
+
             if(data[1] <= CONES[7][0] and data[1] >= CONES[7][1] and data[3] > 0):
                 average6 += data[2]
                 valueCount6 += 1
-                
+
         if(average0 != 0 and valueCount0 != 0):
             averageDistances[0] = (int((average0/valueCount0)/10))
             valueCount0 = 0
@@ -166,7 +166,7 @@ class main_driver:
         if averageDistances[6] < 10:
             averageDistances[6] = 800
         return averageDistances
-    
+
     #Counts the laps, if GOAL_LAPS is reached, return true
     def countLaps(self,sensorValue):
         if(sensorValue[4] == 1):
@@ -185,10 +185,10 @@ class main_driver:
         lidar.start_motor()
         lidar.start_scan()
 
-    
+
     #Init the server to commuicate with the gui
     def init_server(self):
-        socketserver.TCPServer.allow_reuse_address = True        
+        socketserver.TCPServer.allow_reuse_address = True
         server = ThreadedTCPServer( (HOST, PORT), ThreadedTCPRequestHandler)
         server.message = b''
         server.sendmessage = b''
@@ -197,7 +197,7 @@ class main_driver:
         server_thread.start()
         return server, server_thread
 
-    
+
     #Sends and receives data from/to gui
     def tranceiver(self):
         #if new message, read it
@@ -208,30 +208,30 @@ class main_driver:
             self.pd.dGain = self.recv_data.d
         if self.rpm != None:
             self.send_data.rpm = self.rpm
-        #Sends data to gui    
+        #Sends data to gui
         self.send_data.lidar_data = self.lidar_data
         self.send_data.lap = self.lapCount
         send = self.send_data.encode()
         self.server.sendmessage = send
-    
-    #Takes in arguments from gui to drive the car manualy         
+
+    #Takes in arguments from gui to drive the car manualy
     def manual_drive(self):
         time.sleep(0.01)
         #set speed for car
         self.speed = int(100+(self.recv_data.W*150-self.recv_data.S*100))
         #set angle for car
-        self.angle = int(80+((-self.recv_data.AD)*60))   
+        self.angle = int(80+((-self.recv_data.AD)*60))
         #self.lidar_data = self.lidar.grab_data()
         self.rpm = motorTransceiver([self.speed, self.angle, SPEEDPGAIN])
-    
+
         if self.rpm != None:
             self.send_data.rpm = self.rpm
         self.send_data.lidar_data = self.lidar_data
         self.send_data.lap = self.lapCount
-       
 
-    
-    #If sensormodul has nu data (lapsensor), take in the new data. 
+
+
+    #If sensormodul has nu data (lapsensor), take in the new data.
     def get_sensor_data(self):
         self.sensorValue = [0,0,0,0,0]
         #If sensormodule has new data to send, recive it
@@ -241,7 +241,7 @@ class main_driver:
 
     #Autonumus drive. Takes in lidardata, and regulates speed and angle
     def auto_drive(self):
-        try:    
+        try:
             sys.stdout.flush()
             #Get lidar data
             self.lidar_data  = self.lidar.grab_data()
@@ -260,8 +260,8 @@ class main_driver:
                                self.averageDistance[6]),
                                self.pd.currOutAngle,
                                SPEEDPGAIN])
-                
-                
+
+
         except KeyboardInterrupt:
             self.halt(self.lidar)
             self.state = state.error
@@ -290,7 +290,7 @@ class main_driver:
                 self.state = state.wait
             elif not self.state == state.wait:
                 self.state = state.halt
-        
+
 
     #Here we decide what the cr should do, either be in manual drive mode, aoutonomus mode, halt, finished or error
     def drive(self):
@@ -304,10 +304,10 @@ class main_driver:
                     if self.countLaps(self.sensorValue):
                         self.halt(self.lidar)
                         self.state = state.finished
-                        
+
                 if self.state == state.manual:
                     self.countLaps(self.sensorValue)
-                    self.manual_drive()    
+                    self.manual_drive()
                 if self.state == state.halt:
                     print("Halting...")
                     self.halt(self.lidar)
@@ -338,11 +338,8 @@ class main_driver:
 def main():
     #Init main_driver
     driver = main_driver()
-    #Starts the car 
+    #Starts the car
     driver.drive()
 
 if __name__ == '__main__':
     main()
-
-
-    

@@ -1,5 +1,6 @@
 '''
-Handler for connections from client side.
+Defines client side connection handler.
+
 Participants:
     Alexander Zeijlon
 Last changed:
@@ -7,10 +8,10 @@ Last changed:
 '''
 import threading
 import socket
-from threadTCPServer import client
-from queue import Queue
 import time
+from threadTCPServer import client
 from instructions import sendData
+from queue import Queue
 
 # Uses queue with lock to be thread safe when running in separate thread.
 class Handler:
@@ -22,7 +23,7 @@ class Handler:
         self.send_data = sendData()
         self.qLock = threading.Lock()
 
-    def hantera(self):
+    def handle(self):
         while True:
             time.sleep(0.01) # Send and request data at interval.
             if self.queue.empty():

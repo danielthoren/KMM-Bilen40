@@ -1,6 +1,4 @@
-Nu funkar pythonwrappern för SDK-koden.
-
-se till att följande är installerat:
+Se till att följande är installerat:
 - cython3
 - numpy (inte ett måste men numpy arrays är snabbare än python-listor)
 
