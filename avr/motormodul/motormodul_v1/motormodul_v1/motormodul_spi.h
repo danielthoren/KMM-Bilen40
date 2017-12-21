@@ -14,6 +14,8 @@ struct motormodul_PA{
 	unsigned char speed;
 	//the angle of the front wheels, may be between 1-180 (90 is neutral)
 	unsigned char angle;
+	//the constant scaling the linear speed function
+	unsigned char pGain;
 };
 
 //data sent from 'motormodul' (A = AVR) to rasberry pi (=P)
@@ -37,8 +39,8 @@ outgoing[0] = curr_rpm
 void set_spi_data(motormodul_AP_data data);
 
 /*
-sets the data that has been recieved from the pi in the pointer 'data_in' if the checksum checks out. If new data has not
-been recieved then does nothing.
+sets the data that has been recieved from the pi in the pointer 'data_in' if the checksum checks out. If new data 
+has not been recieved then does nothing.
 
 The recieved data is expected in the following order:
 incomming[0] = speed;	incomming[1] = angle;

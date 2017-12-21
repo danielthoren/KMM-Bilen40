@@ -1,4 +1,14 @@
 #!/usr/bin/python3
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+This file sets up the communication and datatransfer between the RaspberryPi
+and the Slave components (AVRs). Uses the wiringPi library.
+Participants: 
+    Gustav Svennas
+    Alexander Zeijlon
+    Daniel Thoren
+Last changed:
+    07/12-2017
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 import wiringpi
 import time
 '''''''''''''''''
@@ -59,13 +69,11 @@ def motorTransceiver(data):
     wiringpi.digitalWrite(SSM, LOW)
 
     data.append(calcChecksum(data))
-    buff = bytes([data[0], data[1], data[2]])
-
-    print("data: ", data)
+    buff = bytes([data[0], data[1], data[2], data[3]])
     
     retlen, retdata = wiringpi.wiringPiSPIDataRW(0, buff)
 
-    motor_data = [retdata[0], retdata[1], retdata[2]]
+    motor_data = [retdata[0], retdata[1], retdata[2], retdata[3]]
 
     wiringpi.digitalWrite(SSM, HIGH)
 
@@ -75,17 +83,17 @@ def motorTransceiver(data):
     outgoing data there must be dummy elements 
     because of the full duplex bus (dummy = 255).
     '''
-    #print("before cleanup: ", motor_data)
     for i in range(len(motor_data)):
         if motor_data[i] == 255:
             motor_data = motor_data[:i]
             break
-
+ 
+        
     if len(motor_data) > 1 and calcChecksum(motor_data[:-1]) == motor_data[-1]:
         return motor_data[:-1]
     else:
-         print("Invalid checksum, data: ", motor_data)
-    return None
+         #print("Invalid checksum, data: ", motor_data)
+         return None
 
 '''
 Receives data from sensor and returns it in a list

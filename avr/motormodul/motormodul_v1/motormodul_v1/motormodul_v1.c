@@ -2,19 +2,8 @@
  * motormodul_v1.c
  *
  * Created: 11/12/2017 4:28:20 PM
- *  Author: marli763, krisi211, gussö811
+ *  Author: marli763, krisi211, gusso811
  */
-
-
-
-/* --- TODO TODO TODO TODO TODO TODO ---
- * Fix data types when calculating RPM/RPS
- * Comment properly
- * Merge with master
- * Incorporate RPM into scale
- * Remove lcd compability (?)
- *
-*/
 
 #define F_CPU 16000000
 
@@ -22,8 +11,6 @@
 #include <util/delay.h>
 #include <avr/interrupt.h>
 #include "motormodul_spi.h"
-
-#include "lcd.h"
 
 // DEBUG LED
 #define led_on()  PORTA |= _BV(1)
@@ -43,25 +30,19 @@ int turn;						//Turn < natural => right, turn > natural => left
 int scale_speed;
 
 //		--- HALLEFFECT ---
-volatile long ticks_elapsed;	//ticks since last timer-intr
-volatile float time_elapsed;	//ticks converted into time
-volatile float rpm;				//revolutions per minute
-volatile int tot_overflow;
-uint32_t current_ticks;
-volatile long TIMER_TICKS = 65536;
-volatile float seconds_per_tick = 0.000016;
+volatile uint32_t ticks_elapsed;	//ticks since last timer-intr
+volatile uint32_t time_elapsed;	//ticks (ys) converted into time
+volatile uint8_t rpm;				//revolutions per minute
+volatile uint32_t tot_overflow = 0; //unset when ready
+volatile uint32_t current_ticks;
+volatile uint32_t TIMER_TICKS = 65536;
+volatile uint32_t micro_seconds_per_tick = 16;
 int new_rpm;
 
 motormodul_PA_data data_in;
  
-//data sent from 'motormodul' (A = AVR) to rasberry pi (=P)
+//data sent from 'motormodul' (A = AVR) to raspberry pi (=P)
 motormodul_AP_data data_out;
-
-//      --- P algorithm ---
-double currVal ;
-
-
-
 
 void timer3_init()
 {
@@ -76,8 +57,8 @@ void pwm_init()
 {
 	//		--- PWM SETUP ---
 	//Pin set-up
-	DDRD |= _BV(5);				//Pinne 19, styrservot
-	DDRD |= _BV(4);				//Pinne 18, motorn
+	DDRD |= _BV(5);				//Pin 19, styrservot ()
+	DDRD |= _BV(4);				//Pin 18, motor
 	//timer set-up
 	TCCR1A |= _BV(1) | _BV(7) | _BV(5);
 	TCCR1B |= _BV(3)| _BV(4) | _BV(1);
@@ -101,16 +82,8 @@ void halleffect_init()
 	PCMSK0 |= (1 << PCINT0);	// set PCINT0 to trigger an interrupt on state change
 	tot_overflow = 0;
 }
-void lcd_init(){
-		//		--- LCD SETUP ---
-		//Initialize LCD module
-		LCDInit(LS_BLINK|LS_ULINE);
-		
-		//Clear the screen
-		LCDClear();
-		
-		LCDWriteString("STARTING");
-}
+
+//Scale speed and angle so motorcontroller and servo can recive the corresponding pwm-signal
 void scale(){
 	if(data_in.angle <= 180 && data_in.angle >= 0)
 	{
@@ -123,7 +96,7 @@ void scale(){
 	}
 	//Update speed limits,
 	//Probable max speed = 40000
-	if(data_in.speed <= 200 && data_in.speed >= 101)
+	if(data_in.speed <= 300 && data_in.speed >= 101)
 	{
 		scale_speed = (int)(3180 + (data_in.speed - 100));
 	}
@@ -137,11 +110,25 @@ void scale(){
 	}
 	
 }
+//      --- P algorithm ---
+	float pGain = 0.001;						//Default value
+	float currVal = 3000;						// latest input , current value
+
+
+
+void p_loop()
+{	
+	float currOutVal = currVal;
+	float setVal = (float)scale_speed;		// the desired value of the controller
+	float errorVal = setVal - currVal;		// calculate proportional term
+	float pTerm = pGain * errorVal ;		// calculate the new output
+	currVal = currOutVal + pTerm ;
+}
+
 
 int main(void)
 {
 	//		--- Initialize timers & 'modules' ---
-	//lcd_init();
 	pwm_init();
 	halleffect_init();
 	spi_init();
@@ -152,22 +139,26 @@ int main(void)
 	//		--- Main loop, receive tasks from master ---
     while(1)
     {
+		
 		data_out.curr_rpm = rpm;
 		set_spi_data(data_out);
+		//If new data from huvudmodule, read it
 		if(get_data_available()){
 			get_spi_data(&data_in);
+			pGain = ((float)data_in.pGain)/1000;
 			scale();
 			}
+		p_loop();
 		OCR1A = turn;
-		OCR1B = scale_speed;
+		OCR1B = (int)currVal;
     }
 }
 
-
+//Interrupt function for hall effect sensor
 ISR(PCINT0_vect)
 {
 	//		--- Pin change interrupt for hall effect sensor ---
-	// Just messure on incomming magnet, not outgoing
+	// Just measure on incoming magnet, not outgoing
 	if( PINA & ((1 << PIND0) == 1)){
 		
 		// Debug LED
@@ -179,11 +170,11 @@ ISR(PCINT0_vect)
 		// RPM Calculations TODO: CHANGE DATA TYPES
 		current_ticks = TCNT3;
 		ticks_elapsed = (tot_overflow * TIMER_TICKS) + current_ticks;
-		time_elapsed = (float) ticks_elapsed * seconds_per_tick;//seconds
+		time_elapsed = ticks_elapsed * micro_seconds_per_tick;//seconds
 		tot_overflow = 0;		//Reset registered overflows and timer counter
 		TCNT3 = 0;
 	
-		rpm = (float) (1/(time_elapsed*4))*60 ;
+		rpm = (uint8_t) (60000000/(time_elapsed*4));//60*1.000.000 minute and scale microseconds
 	}
 }
 
